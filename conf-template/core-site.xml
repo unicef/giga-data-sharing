@@ -7,6 +7,6 @@
     </property>
     <property>
         <name>fs.azure.account.key.tmgigasandboxadlsg2.dfs.core.windows.net</name>
-        <value>SAS_TOKEN</value>
+        <value>{{.SAS_TOKEN}}</value>
     </property>
 </configuration>

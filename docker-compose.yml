@@ -1,18 +1,7 @@
-x-common-config: &common-config
-  restart: unless-stopped
-  init: true
-
 services:
   server:
-    <<: *common-config
-    image: deltaio/delta-docker:0.8.1_2.3.0
-    platform: linux/amd64
-    command: [ delta_quickstart ]
-    ports:
-      - "8888-8889:8888-8889"
-
-  sharing:
-    <<: *common-config
+    restart: unless-stopped
+    init: true
     image: deltaio/delta-sharing-server:0.6.7
     platform: linux/amd64
     command:

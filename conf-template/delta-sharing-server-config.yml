@@ -39,4 +39,4 @@ queryTablePageTokenTtlMs: 259200000
 refreshTokenTtlMs: 3600000
 
 authorization:
-  bearerToken: "DELTA_BEARER_TOKEN"
+  bearerToken: "{{.DELTA_BEARER_TOKEN}}"
