@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+<configuration>
+    <property>
+        <name>fs.azure.account.auth.type.tmgigasandboxadlsg2.dfs.core.windows.net</name>
+        <value>SharedKey</value>
+    </property>
+    <property>
+        <name>fs.azure.account.key.tmgigasandboxadlsg2.dfs.core.windows.net</name>
+        <value>SAS_TOKEN</value>
+    </property>
+</configuration>

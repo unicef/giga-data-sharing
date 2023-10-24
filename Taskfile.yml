@@ -1,0 +1,53 @@
+version: '3'
+
+dotenv:
+  - .env
+
+vars:
+  NAME: giga-dataops-platform_delta-lake
+
+tasks:
+  default:
+    desc: Build and start Docker containers
+    cmds:
+      - task: config
+      - docker compose --project-name {{.NAME}} up --detach --build --remove-orphans {{.CLI_ARGS}}
+
+  setup:
+    desc: Run initial setup
+    cmds:
+      - pip install -U pre-commit
+      - pre-commit install
+      - poetry env use 3.11
+      - poetry install
+
+  config:
+    desc: Generate config files
+    cmds:
+      - sed 's!STORAGE_ACCOUNT_KEY!{{.STORAGE_ACCOUNT_KEY}}!g' conf-template/core-site.xml > conf/core-site.xml
+      - sed 's!DELTA_BEARER_TOKEN!{{.DELTA_BEARER_TOKEN}}!g' conf-template/delta-sharing-server-config.yml > conf/delta-sharing-server-config.yml
+
+  logs:
+    desc: Attach to Docker logs
+    cmds:
+      - docker compose --project-name {{.NAME}} logs --follow {{.CLI_ARGS}}
+
+  stop:
+    desc: Stop containers
+    cmds:
+      - docker compose --project-name {{.NAME}} stop {{.CLI_ARGS}}
+
+  restart:
+    desc: Restart containers
+    cmds:
+      - docker compose --project-name {{.NAME}} restart {{.CLI_ARGS}}
+
+  exec:
+    desc: Run a command in the specified container
+    cmds:
+      - docker compose --project-name {{.NAME}} exec {{.CLI_ARGS}}
+
+  clean:
+    desc: Remove containers
+    cmds:
+      - docker compose --project-name {{.NAME}} down --volumes --remove-orphans {{.CLI_ARGS}}

@@ -1,0 +1,42 @@
+# The format version of this config file
+version: 1
+# Config shares/schemas/tables to share
+shares:
+  - name: "qos"
+    schemas:
+      - name: "proco-api"
+        tables:
+          - name: "uz"
+            # Azure Blob Storage. See https://github.com/delta-io/delta-sharing#azure-blob-storage for how to config the credentials
+            location: "wasbs://fake-gold@tmgigasandboxadlsg2.dfs.core.windows.net/qos/proco-api/2023-10-23_Proco-API_QoS"
+            id: "458dc4db-666e-41e6-8c12-3f025b060a9b"
+
+# Set the host name that the server will use
+host: "localhost"
+# Set the port that the server will listen on. Note: using ports below 1024
+# may require a privileged user in some operating systems.
+port: 8890
+# Set the url prefix for the REST APIs
+endpoint: "/delta-sharing"
+# Set the timeout of S3 presigned url in seconds
+preSignedUrlTimeoutSeconds: 3600
+# How many tables to cache in the server
+deltaTableCacheSize: 10
+# Whether we can accept working with a stale version of the table. This is useful when sharing
+# static tables that will never be changed.
+stalenessAcceptable: false
+# Whether to evaluate user provided `predicateHints`
+evaluatePredicateHints: false
+# Whether to evaluate user provided `jsonPredicateHints`
+evaluateJsonPredicateHints: false
+# Whether to evaluate user provided `jsonPredicateHints` for V2 predicates.
+evaluateJsonPredicateHintsV2: false
+# The maximum page size permitted by queryTable/queryTableChanges API.
+queryTablePageSizeLimit: 10000
+# The TTL of the page token generated in queryTable/queryTableChanges API (in milliseconds).
+queryTablePageTokenTtlMs: 259200000
+# The TTL of the refresh token generated in queryTable API (in milliseconds).
+refreshTokenTtlMs: 3600000
+
+authorization:
+  bearerToken: "DELTA_BEARER_TOKEN"
