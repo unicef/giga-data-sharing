@@ -4,7 +4,7 @@ dotenv:
   - .env
 
 vars:
-  NAME: giga-dataops-platform_data-sharing
+  NAME: giga-dataops_data-sharing
 
 tasks:
   default:
@@ -26,10 +26,10 @@ tasks:
     cmds:
       - mkdir -p conf
       - >
-        sed 's!{{`{{.SAS_TOKEN}}`}}!{{.SAS_TOKEN}}!g'
+        sed 's|{{`{{.STORAGE_ACCESS_KEY}}`}}|{{.STORAGE_ACCESS_KEY}}|'
         conf-template/core-site.xml > conf/core-site.xml
       - >
-        sed 's!{{`{{.DELTA_BEARER_TOKEN}}`}}!{{.DELTA_BEARER_TOKEN}}!g'
+        sed 's!{{`{{.DELTA_BEARER_TOKEN}}`}}!{{.DELTA_BEARER_TOKEN}}!'
         conf-template/delta-sharing-server-config.yml > conf/delta-sharing-server-config.yml
 
   logs:

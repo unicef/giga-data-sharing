@@ -1,8 +1,13 @@
+networks:
+  giga-dataops:
+    external: true
+
 services:
-  server:
+  sharing-server:
     restart: unless-stopped
     init: true
     image: deltaio/delta-sharing-server:0.6.7
+    env_file: .env
     platform: linux/amd64
     command:
       - --config
@@ -11,3 +16,18 @@ services:
       - "8890:8890"
     volumes:
       - ./conf:/opt/docker/conf
+    networks:
+      - giga-dataops
+
+  sharing-proxy:
+    build: .
+    image: unicef/giga-data-sharing/proxy
+    restart: unless-stopped
+    init: true
+    env_file: .env
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./:/app
+    networks:
+      - giga-dataops
