@@ -1,13 +1,16 @@
 from datetime import datetime
+from typing import Any, Literal
 
 import httpx
 import orjson
 from fastapi import APIRouter, Depends, Security
 from fastapi.requests import Request
 from fastapi.responses import Response
+from pydantic import BaseModel
 
 from data_sharing.permissions import header_scheme, is_authenticated
 from data_sharing.schemas import delta_sharing
+from data_sharing.utils.qs import query_parametrize
 
 router = APIRouter(
     tags=["delta_sharing"],
@@ -15,6 +18,26 @@ router = APIRouter(
 )
 
 sharing_client = httpx.AsyncClient(base_url="http://sharing-server:8890", timeout=30)
+
+
+async def forward_sharing_request(
+    request: Request,
+    response: Response,
+    token: str,
+    query: str = "",
+    body: BaseModel = None,
+    response_type: Literal["json", "text"] = "json",
+) -> dict[str, Any] | str:
+    url = httpx.URL(path=f"/sharing{request.url.path}", query=query.encode())
+    sharing_req = sharing_client.build_request(
+        url=url,
+        method=request.method,
+        headers={"Authorization": f"Bearer {token}"},
+        json=body.model_dump(),
+    )
+    sharing_res = await sharing_client.send(sharing_req)
+    response.status_code = sharing_res.status_code
+    return sharing_res.json() if response_type == "json" else sharing_res.text
 
 
 @router.get(
@@ -28,36 +51,12 @@ async def list_shares(
     pageToken: str = None,
     token=Depends(header_scheme),
 ):
-    url = httpx.URL(path="/sharing/shares", query=request.url.query.encode())
-    sharing_req = sharing_client.build_request(
-        url=url,
-        method=request.method,
-        headers={"Authorization": f"Bearer {token}"},
+    return await forward_sharing_request(
+        request,
+        response,
+        token,
+        query_parametrize(dict(maxResults=maxResults, pageToken=pageToken)),
     )
-    sharing_res = await sharing_client.send(sharing_req)
-    response.status_code = sharing_res.status_code
-    return sharing_res.json()
-
-
-@router.get(
-    "/shares/{share_name}",
-    response_model=delta_sharing.Share,
-)
-async def get_share(
-    share_name: str,
-    request: Request,
-    response: Response,
-    token=Depends(header_scheme),
-):
-    url = httpx.URL(path=f"/sharing/shares/{share_name}")
-    sharing_req = sharing_client.build_request(
-        url=url,
-        method=request.method,
-        headers={"Authorization": f"Bearer {token}"},
-    )
-    sharing_res = await sharing_client.send(sharing_req)
-    response.status_code = sharing_res.status_code
-    return sharing_res.json()
 
 
 @router.get(
@@ -72,17 +71,12 @@ async def list_schemas(
     pageToken: str = None,
     token=Depends(header_scheme),
 ):
-    url = httpx.URL(
-        path=f"/sharing/shares/{share_name}/schemas", query=request.url.query.encode()
+    return await forward_sharing_request(
+        request,
+        response,
+        token,
+        query_parametrize(dict(maxResults=maxResults, pageToken=pageToken)),
     )
-    sharing_req = sharing_client.build_request(
-        url=url,
-        method=request.method,
-        headers={"Authorization": f"Bearer {token}"},
-    )
-    sharing_res = await sharing_client.send(sharing_req)
-    response.status_code = sharing_res.status_code
-    return sharing_res.json()
 
 
 @router.get(
@@ -98,18 +92,12 @@ async def list_tables(
     pageToken: str = None,
     token=Depends(header_scheme),
 ):
-    url = httpx.URL(
-        path=f"/sharing/shares/{share_name}/schemas/{schema_name}/tables",
-        query=request.url.query.encode(),
+    return await forward_sharing_request(
+        request,
+        response,
+        token,
+        query_parametrize(dict(maxResults=maxResults, pageToken=pageToken)),
     )
-    sharing_req = sharing_client.build_request(
-        url=url,
-        method=request.method,
-        headers={"Authorization": f"Bearer {token}"},
-    )
-    sharing_res = await sharing_client.send(sharing_req)
-    response.status_code = sharing_res.status_code
-    return sharing_res.json()
 
 
 @router.get(
@@ -124,18 +112,12 @@ async def list_tables_in_share(
     pageToken: str = None,
     token=Depends(header_scheme),
 ):
-    url = httpx.URL(
-        path=f"/sharing/shares/{share_name}/all-tables",
-        query=request.url.query.encode(),
+    return await forward_sharing_request(
+        request,
+        response,
+        token,
+        query_parametrize(dict(maxResults=maxResults, pageToken=pageToken)),
     )
-    sharing_req = sharing_client.build_request(
-        url=url,
-        method=request.method,
-        headers={"Authorization": f"Bearer {token}"},
-    )
-    sharing_res = await sharing_client.send(sharing_req)
-    response.status_code = sharing_res.status_code
-    return sharing_res.json()
 
 
 @router.get(
@@ -151,18 +133,12 @@ async def query_table_version(
     startingTimestamp: datetime = None,
     token=Depends(header_scheme),
 ):
-    url = httpx.URL(
-        path=f"/sharing/shares/{share_name}/schemas/{schema_name}/tables/{table_name}/version",
-        query=request.url.query.encode(),
+    return await forward_sharing_request(
+        request,
+        response,
+        token,
+        query_parametrize(dict(startingTimestamp=startingTimestamp)),
     )
-    sharing_req = sharing_client.build_request(
-        url=url,
-        method=request.method,
-        headers={"Authorization": f"Bearer {token}"},
-    )
-    sharing_res = await sharing_client.send(sharing_req)
-    response.status_code = sharing_res.status_code
-    return sharing_res.headers
 
 
 @router.get(
@@ -177,17 +153,10 @@ async def query_table_metadata(
     response: Response,
     token=Depends(header_scheme),
 ):
-    url = httpx.URL(
-        path=f"/sharing/shares/{share_name}/schemas/{schema_name}/tables/{table_name}/metadata"
+    sharing_res = await forward_sharing_request(
+        request, response, token, response_type="text"
     )
-    sharing_req = sharing_client.build_request(
-        url=url,
-        method=request.method,
-        headers={"Authorization": f"Bearer {token}"},
-    )
-    sharing_res = await sharing_client.send(sharing_req)
-    response.status_code = sharing_res.status_code
-    protocol, metadata = sharing_res.text.split()
+    protocol, metadata = sharing_res.split()
     return {**orjson.loads(protocol), **orjson.loads(metadata)}
 
 
@@ -204,20 +173,16 @@ async def query_table_data(
     body: delta_sharing.TableQueryRequest = None,
     token=Depends(header_scheme),
 ):
-    url = httpx.URL(
-        path=f"/sharing/shares/{share_name}/schemas/{schema_name}/tables/{table_name}/query"
+    sharing_res = await forward_sharing_request(
+        request,
+        response,
+        token,
+        body=body,
+        response_type="text",
     )
-    sharing_req = sharing_client.build_request(
-        url=url,
-        method=request.method,
-        headers={"Authorization": f"Bearer {token}"},
-        json=body.model_dump(),
-    )
-    sharing_res = await sharing_client.send(sharing_req)
-    response.status_code = sharing_res.status_code
-    protocol, metadata, *files = sharing_res.text.split()
+    protocol, metadata, *files = sharing_res.split()
     return {
         **orjson.loads(protocol),
         **orjson.loads(metadata),
-        "files": [orjson.loads(file) for file in files],
+        "files": [orjson.loads(file).get("file") for file in files],
     }

@@ -55,7 +55,7 @@ class Metadata(BaseModel):
 
 
 class File(BaseModel):
-    id: UUID4
+    id: str
     url: AnyHttpUrl
     partitionValues: dict[str, str]
     size: conint(ge=0)
