@@ -8,12 +8,12 @@ T = TypeVar("T")
 
 class Pagination(BaseModel, Generic[T]):
     items: list[T]
-    nextPageToken: str | None = Field("")
+    nextPageToken: str = Field("")
 
 
 class Share(BaseModel):
     name: str
-    id: UUID4 | None = Field(None)
+    id: UUID4 = Field(None)
 
 
 class Schema(BaseModel):
@@ -24,9 +24,9 @@ class Schema(BaseModel):
 class Table(BaseModel):
     id: UUID4
     name: str
-    schema: str
+    tableSchema: str = Field(alias="schema")
     share: str
-    shareId: UUID4 | None = Field(None)
+    shareId: UUID4 = Field(None)
 
 
 class TableVersion(BaseModel):
@@ -43,26 +43,26 @@ class Format(BaseModel):
 
 class Metadata(BaseModel):
     id: UUID4
-    name: str | None = Field(None)
-    description: str | None = Field(None)
+    name: str = Field(None)
+    description: str = Field(None)
     format: Format
     schemaString: str
     partitionColumns: list[str]
     configuration: dict[str, str]
-    version: int | None = Field(None)
-    size: int | None = Field(None)
-    numFile: int | None = Field(None)
+    version: conint(ge=1) = Field(None)
+    size: conint(ge=0) = Field(None)
+    numFile: conint(ge=0) = Field(None)
 
 
 class File(BaseModel):
     id: UUID4
     url: AnyHttpUrl
     partitionValues: dict[str, str]
-    size: int
-    stats: str | None = Field(None)
-    version: int | None = Field(None)
-    timestamp: int | None = Field(None)
-    expirationTimestamp: int | None = Field(None)
+    size: conint(ge=0)
+    stats: str = Field(None)
+    version: conint(ge=1) = Field(None)
+    timestamp: conint(ge=0) = Field(None)
+    expirationTimestamp: conint(ge=0) = Field(None)
 
 
 class TableMetadataResponse(BaseModel):
@@ -75,10 +75,10 @@ class TableDataResponse(TableMetadataResponse):
 
 
 class TableQueryRequest(BaseModel):
-    predicateHints: list[str] | None = Field(None)
-    jsonPredicateHints: str | None = Field(None)
-    limitHint: int | None = Field(None)
-    version: conint(ge=1) | None = Field(None)
-    timestamp: datetime | None = Field(None)
-    startingVersion: int | None = Field(None)
-    endingVersion: int | None = Field(None)
+    predicateHints: list[str] = Field(None)
+    jsonPredicateHints: str = Field(None)
+    limitHint: int = Field(None)
+    version: conint(ge=1) = Field(None)
+    timestamp: datetime = Field(None)
+    startingVersion: conint(ge=1) = Field(None)
+    endingVersion: conint(ge=1) = Field(None)

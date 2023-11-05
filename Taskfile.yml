@@ -11,6 +11,7 @@ tasks:
     desc: Build and start Docker containers
     cmds:
       - task: config
+      - docker compose --project-name giga-dataops-platform --file docker-compose-network.yaml up --detach --build --remove-orphans {{.CLI_ARGS}}
       - docker compose --project-name {{.NAME}} up --detach --build --remove-orphans {{.CLI_ARGS}}
 
   setup:
@@ -23,6 +24,11 @@ tasks:
 
   config:
     desc: Generate config files
+    sources:
+      - ./conf-template/*
+      - ./.env
+    generates:
+      - ./conf/*
     cmds:
       - mkdir -p conf
       - >
@@ -57,3 +63,4 @@ tasks:
     desc: Remove containers
     cmds:
       - docker compose --project-name {{.NAME}} down --volumes --remove-orphans {{.CLI_ARGS}}
+      - docker compose --project-name giga-dataops-platform --file docker-compose-network.yaml down --volumes --remove-orphans {{.CLI_ARGS}}
