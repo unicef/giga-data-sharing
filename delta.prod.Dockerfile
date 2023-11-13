@@ -10,5 +10,6 @@ FROM eclipse-temurin:17-jre-alpine as prod
 WORKDIR /app
 
 COPY --from=extract /tmp/delta-sharing-server-1.0.2 ./
+COPY delta-prod-docker-entrypoint.sh docker-entrypoint.sh
 
-CMD [ "./bin/delta-sharing-server", "--", "--config", "./conf/delta-sharing-server.yaml" ]
+CMD [ "./docker-entrypoint.sh" ]
