@@ -1,3 +1,12 @@
+x-health-check: &health-check
+  command:
+    - /bin/sh
+    - -c
+    - >-
+      wget --spider
+      --header "Authorization: Bearer $DELTA_BEARER_TOKEN"
+      http://localhost:{{ .Values.service.port }}/sharing/shares
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -47,13 +56,10 @@ spec:
               containerPort: {{ .Values.service.port }}
               protocol: TCP
           livenessProbe:
-            httpGet:
-              path: /
-              port: http
+            exec: *health-check
           readinessProbe:
-            httpGet:
-              path: /
-              port: http
+            exec: *health-check
+
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       {{- with .Values.nodeSelector }}
