@@ -1,4 +1,4 @@
-# Delta Sharing POC
+# Giga Data Sharing
 
 ## Prerequisites
 

@@ -4,13 +4,14 @@ dotenv:
   - .env
 
 vars:
-  NAME: giga-dataops-platform_data-sharing
+  NAME: giga-dataops_data-sharing
 
 tasks:
   default:
     desc: Build and start Docker containers
     cmds:
       - task: config
+      - docker compose --project-name giga-dataops-platform --file docker-compose-network.yaml up --detach --build --remove-orphans {{.CLI_ARGS}}
       - docker compose --project-name {{.NAME}} up --detach --build --remove-orphans {{.CLI_ARGS}}
 
   setup:
@@ -23,13 +24,18 @@ tasks:
 
   config:
     desc: Generate config files
+    sources:
+      - ./conf-template/*
+      - ./.env
+    generates:
+      - ./conf/*
     cmds:
       - mkdir -p conf
       - >
-        sed 's!{{`{{.SAS_TOKEN}}`}}!{{.SAS_TOKEN}}!g'
+        sed 's|{{`{{.STORAGE_ACCESS_KEY}}`}}|{{.STORAGE_ACCESS_KEY}}|'
         conf-template/core-site.xml > conf/core-site.xml
       - >
-        sed 's!{{`{{.DELTA_BEARER_TOKEN}}`}}!{{.DELTA_BEARER_TOKEN}}!g'
+        sed 's!{{`{{.DELTA_BEARER_TOKEN}}`}}!{{.DELTA_BEARER_TOKEN}}!'
         conf-template/delta-sharing-server-config.yml > conf/delta-sharing-server-config.yml
 
   logs:
@@ -57,3 +63,4 @@ tasks:
     desc: Remove containers
     cmds:
       - docker compose --project-name {{.NAME}} down --volumes --remove-orphans {{.CLI_ARGS}}
+      - docker compose --project-name giga-dataops-platform --file docker-compose-network.yaml down --volumes --remove-orphans {{.CLI_ARGS}}

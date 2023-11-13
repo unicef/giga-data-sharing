@@ -2,14 +2,16 @@
 version: 1
 # Config shares/schemas/tables to share
 shares:
-  - name: "qos"
+  - name: "gold"
+    id: "4bfa74c2-f1af-44e8-bc42-205d4d92dd15"
     schemas:
-      - name: "proco-api"
+      - name: "fake-school-geolocation"
         tables:
-          - name: "uz"
+          - name: "delta-test"
             # Azure Blob Storage. See https://github.com/delta-io/delta-sharing#azure-blob-storage for how to config the credentials
-            location: "wasbs://fake-gold@tmgigasandboxadlsg2.dfs.core.windows.net/qos/proco-api/2023-10-23_Proco-API_QoS"
-            id: "458dc4db-666e-41e6-8c12-3f025b060a9b"
+            location: "wasbs://dataops-dev@tmgigasandboxadlsg2.blob.core.windows.net/fake-gold/delta-spark"
+            id: "093f2fe7-fdc8-4438-85dd-6da7610d0e74"
+            cdfEnabled: true
 
 # Set the host name that the server will use
 host: "localhost"
@@ -17,7 +19,7 @@ host: "localhost"
 # may require a privileged user in some operating systems.
 port: 8890
 # Set the url prefix for the REST APIs
-endpoint: "/delta-sharing"
+endpoint: "/sharing"
 # Set the timeout of S3 presigned url in seconds
 preSignedUrlTimeoutSeconds: 3600
 # How many tables to cache in the server
@@ -26,11 +28,11 @@ deltaTableCacheSize: 10
 # static tables that will never be changed.
 stalenessAcceptable: false
 # Whether to evaluate user provided `predicateHints`
-evaluatePredicateHints: false
+evaluatePredicateHints: true
 # Whether to evaluate user provided `jsonPredicateHints`
-evaluateJsonPredicateHints: false
+evaluateJsonPredicateHints: true
 # Whether to evaluate user provided `jsonPredicateHints` for V2 predicates.
-evaluateJsonPredicateHintsV2: false
+evaluateJsonPredicateHintsV2: true
 # The maximum page size permitted by queryTable/queryTableChanges API.
 queryTablePageSizeLimit: 10000
 # The TTL of the page token generated in queryTable/queryTableChanges API (in milliseconds).
