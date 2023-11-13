@@ -77,8 +77,8 @@ tasks:
     internal: true
     desc: Build Docker image
     cmds:
-      - docker build --tag {{.DATA_SHARING_PROXY_IMAGE_REPOSITORY}}:{{.SHORT_SHA}} --no-cache -f proxy.prod.Dockerfile .
-      - docker build --tag {{.DATA_SHARING_DELTA_IMAGE_REPOSITORY}}:{{.SHORT_SHA}} --no-cache -f delta.prod.Dockerfile .
+      - docker build --tag {{.DATA_SHARING_PROXY_IMAGE_REPOSITORY}}:{{.SHORT_SHA}} -f proxy.prod.Dockerfile .
+      - docker build --tag {{.DATA_SHARING_DELTA_IMAGE_REPOSITORY}}:{{.SHORT_SHA}} -f delta.prod.Dockerfile .
 
   push:
     internal: true
