@@ -11,5 +11,6 @@ WORKDIR /app
 
 COPY --from=extract /tmp/delta-sharing-server-1.0.2 ./
 COPY delta-prod-docker-entrypoint.sh docker-entrypoint.sh
+COPY ./conf-template ./conf
 
 CMD [ "./docker-entrypoint.sh" ]
