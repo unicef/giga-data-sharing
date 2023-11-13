@@ -4,22 +4,24 @@ networks:
     external: true
 
 services:
-  sharing-server:
+  delta:
+    build:
+      context: .
+      dockerfile: delta.dev.Dockerfile
+    image: unicef/giga-data-sharing/delta-sharing
     restart: unless-stopped
     init: true
-    image: deltaio/delta-sharing-server:0.6.7
     env_file: .env
     platform: linux/amd64
-    command:
-      - --config
-      - /opt/docker/conf/delta-sharing-server-config.yml
     ports:
       - "8890:8890"
     volumes:
-      - ./conf:/opt/docker/conf
+      - ./conf:/app/conf
 
-  sharing-proxy:
-    build: .
+  proxy:
+    build:
+      context: .
+      dockerfile: proxy.dev.Dockerfile
     image: unicef/giga-data-sharing/proxy
     restart: unless-stopped
     init: true
