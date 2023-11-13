@@ -33,7 +33,7 @@ async def forward_sharing_request(
         url=url,
         method=request.method,
         headers={"Authorization": f"Bearer {token}"},
-        json=body.model_dump(),
+        json=body.model_dump() if body else None,
     )
     sharing_res = await sharing_client.send(sharing_req)
     response.status_code = sharing_res.status_code

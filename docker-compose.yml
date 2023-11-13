@@ -1,5 +1,6 @@
 networks:
-  giga-dataops:
+  default:
+    name: giga-dataops
     external: true
 
 services:
@@ -16,8 +17,6 @@ services:
       - "8890:8890"
     volumes:
       - ./conf:/opt/docker/conf
-    networks:
-      - giga-dataops
 
   sharing-proxy:
     build: .
@@ -29,5 +28,3 @@ services:
       - "5000:5000"
     volumes:
       - ./:/app
-    networks:
-      - giga-dataops
