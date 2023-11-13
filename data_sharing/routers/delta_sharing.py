@@ -10,6 +10,7 @@ from pydantic import BaseModel
 
 from data_sharing.permissions import header_scheme, is_authenticated
 from data_sharing.schemas import delta_sharing
+from data_sharing.settings import settings
 from data_sharing.utils.qs import query_parametrize
 
 router = APIRouter(
@@ -17,7 +18,9 @@ router = APIRouter(
     dependencies=[Security(is_authenticated)],
 )
 
-sharing_client = httpx.AsyncClient(base_url="http://sharing-server:8890", timeout=30)
+sharing_client = httpx.AsyncClient(
+    base_url=f"http://{settings.DELTA_SHARING_HOST}", timeout=30
+)
 
 
 async def forward_sharing_request(

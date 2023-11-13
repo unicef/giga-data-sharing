@@ -4,7 +4,9 @@ dotenv:
   - .env
 
 vars:
-  NAME: giga-dataops_data-sharing
+  PROJECT_NAME: giga-dataops_data-sharing
+  SHORT_SHA:
+    sh: git rev-parse --short HEAD
 
 tasks:
   default:
@@ -12,7 +14,7 @@ tasks:
     cmds:
       - task: config
       - docker compose --project-name giga-dataops-platform --file docker-compose-network.yaml up --detach --build --remove-orphans {{.CLI_ARGS}}
-      - docker compose --project-name {{.NAME}} up --detach --build --remove-orphans {{.CLI_ARGS}}
+      - docker compose --project-name {{.PROJECT_NAME}} up --detach --build --remove-orphans {{.CLI_ARGS}}
 
   setup:
     desc: Run initial setup
@@ -32,35 +34,82 @@ tasks:
     cmds:
       - mkdir -p conf
       - >
-        sed 's|{{`{{.STORAGE_ACCESS_KEY}}`}}|{{.STORAGE_ACCESS_KEY}}|'
+        sed -e 's|{{`{{.STORAGE_ACCESS_KEY}}`}}|{{.STORAGE_ACCESS_KEY}}|'
+        -e 's|{{`{{.STORAGE_ACCOUNT_NAME}}`}}|{{.STORAGE_ACCOUNT_NAME}}|'
         conf-template/core-site.xml > conf/core-site.xml
       - >
-        sed 's!{{`{{.DELTA_BEARER_TOKEN}}`}}!{{.DELTA_BEARER_TOKEN}}!'
-        conf-template/delta-sharing-server-config.yml > conf/delta-sharing-server-config.yml
+        sed -e 's!{{`{{.DELTA_BEARER_TOKEN}}`}}!{{.DELTA_BEARER_TOKEN}}!'
+        -e 's!{{`{{.STORAGE_ACCOUNT_NAME}}`}}!{{.STORAGE_ACCOUNT_NAME}}!'
+        -e 's!{{`{{.CONTAINER_NAME}}`}}!{{.CONTAINER_NAME}}!'
+        conf-template/delta-sharing-server.yaml > conf/delta-sharing-server.yaml
 
   logs:
     desc: Attach to Docker logs
     cmds:
-      - docker compose --project-name {{.NAME}} logs --follow {{.CLI_ARGS}}
+      - docker compose --project-name {{.PROJECT_NAME}} logs --follow {{.CLI_ARGS}}
 
   stop:
     desc: Stop containers
     cmds:
-      - docker compose --project-name {{.NAME}} stop {{.CLI_ARGS}}
+      - docker compose --project-name {{.PROJECT_NAME}} stop {{.CLI_ARGS}}
 
   restart:
     desc: Restart containers
     cmds:
       - task: config
-      - docker compose --project-name {{.NAME}} restart {{.CLI_ARGS}}
+      - docker compose --project-name {{.PROJECT_NAME}} restart {{.CLI_ARGS}}
 
   exec:
     desc: Run a command in the specified container
     cmds:
-      - docker compose --project-name {{.NAME}} exec {{.CLI_ARGS}}
+      - docker compose --project-name {{.PROJECT_NAME}} exec {{.CLI_ARGS}}
 
   clean:
     desc: Remove containers
     cmds:
-      - docker compose --project-name {{.NAME}} down --volumes --remove-orphans {{.CLI_ARGS}}
+      - docker compose --project-name {{.PROJECT_NAME}} down --volumes --remove-orphans {{.CLI_ARGS}}
       - docker compose --project-name giga-dataops-platform --file docker-compose-network.yaml down --volumes --remove-orphans {{.CLI_ARGS}}
+
+  build-and-push:
+    desc: Build and push Docker image
+    cmds:
+      - task: build
+      - task: push
+
+  build:
+    internal: true
+    desc: Build Docker image
+    cmds:
+      - docker build --tag {{.DATA_SHARING_PROXY_IMAGE_REPOSITORY}}:{{.SHORT_SHA}} -f proxy.prod.Dockerfile .
+      - docker build --tag {{.DATA_SHARING_DELTA_IMAGE_REPOSITORY}}:{{.SHORT_SHA}} -f delta.prod.Dockerfile .
+
+  push:
+    internal: true
+    desc: Push Docker image
+    cmds:
+      - docker push {{.DATA_SHARING_PROXY_IMAGE_REPOSITORY}}:{{.SHORT_SHA}}
+      - docker push {{.DATA_SHARING_DELTA_IMAGE_REPOSITORY}}:{{.SHORT_SHA}}
+
+  helm-up:
+    desc: Install/upgrade Helm chart
+    dir: infra
+    cmds:
+      - kubectl apply -f k8s/configmap.yaml
+      - kubectl apply -f k8s/secrets.yaml
+      - >
+        helm upgrade --install data-sharing-delta ./helm/data-sharing-delta
+        --set image.repository={{.DATA_SHARING_DELTA_IMAGE_REPOSITORY}}
+        --set image.tag={{.SHORT_SHA}}
+      - >
+        helm upgrade --install data-sharing-proxy ./helm/data-sharing-proxy
+        --set image.repository={{.DATA_SHARING_PROXY_IMAGE_REPOSITORY}}
+        --set image.tag={{.SHORT_SHA}}
+
+  helm-down:
+    desc: Uninstall Helm chart
+    dir: infra/helm
+    cmds:
+      - helm uninstall data-sharing-proxy
+      - helm uninstall data-sharing-delta
+      - kubectl delete all --all
+      - kubectl delete pvc --all

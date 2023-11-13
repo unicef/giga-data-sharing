@@ -13,6 +13,7 @@ class Settings(BaseSettings):
     CORS_ALLOWED_ORIGINS: list[str] = ["*"]
     DELTA_BEARER_TOKEN: str
     STORAGE_ACCESS_KEY: str
+    DELTA_SHARING_HOST: str
 
 
 @lru_cache

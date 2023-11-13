@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: giga-data-sharing
+  labels:
+    app: giga-data-sharing
+data:
+  DELTA_SHARING_HOST: "data-sharing-delta:8890"
