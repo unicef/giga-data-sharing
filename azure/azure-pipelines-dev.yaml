@@ -108,3 +108,4 @@ steps:
       arguments: >
         --set image.repository="$(containerRegistryName).azurecr.io/giga-data-sharing-proxy"
         --set image.tag="$(Build.SourceVersion)"
+        --set ingress.enabled=true
