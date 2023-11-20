@@ -184,7 +184,6 @@ async def query_table_data(
         token,
         body=body,
         response_type="text",
-        additional_headers={"Accept": "text/plain"},
     )
     protocol, metadata, *files = sharing_res.split("\n")
 
