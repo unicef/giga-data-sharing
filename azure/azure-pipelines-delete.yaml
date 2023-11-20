@@ -9,44 +9,46 @@ pool:
   vmImage: ubuntu-latest
 
 variables:
-  kubernetesServiceConnection: $(KUBERNETES_SERVICE_CONNECTION)
+  kubernetesEnvironment: $(KUBERNETES_ENVIRONMENT)
   kubernetesNamespace: $(KUBERNETES_NAMESPACE)
   system.debug: true
 
-steps:
-  - task: HelmDeploy@0
-    displayName: Helm uninstall Data Sharing proxy
-    inputs:
-      connectionType: Kubernetes Service Connection
-      kubernetesServiceEndpoint: $(kubernetesServiceConnection)
-      namespace: $(kubernetesNamespace)
-      command: uninstall
-      arguments: data-sharing-proxy
+stages:
+  - stage: Delete
+    displayName: Delete Data Sharing
+    jobs:
+      - deployment: Delete
+        displayName: Delete Data Sharing deployment
+        environment: $(kubernetesEnvironment)
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - task: HelmDeploy@0
+                  displayName: Helm uninstall Data Sharing proxy
+                  inputs:
+                    namespace: $(kubernetesNamespace)
+                    command: uninstall
+                    arguments: data-sharing-proxy
 
-  - task: HelmDeploy@0
-    displayName: Helm uninstall Data Sharing Delta
-    inputs:
-      connectionType: Kubernetes Service Connection
-      kubernetesServiceEndpoint: $(kubernetesServiceConnection)
-      namespace: $(kubernetesNamespace)
-      command: uninstall
-      arguments: data-sharing-delta
+                - task: HelmDeploy@0
+                  displayName: Helm uninstall Data Sharing Delta
+                  inputs:
+                    namespace: $(kubernetesNamespace)
+                    command: uninstall
+                    arguments: data-sharing-delta
 
-  - task: Kubernetes@1
-    displayName: Delete resources in namespace
-    inputs:
-      connectionType: Kubernetes Service Connection
-      kubernetesServiceEndpoint: $(kubernetesServiceConnection)
-      command: delete
-      arguments: all --all
-      namespace: $(kubernetesNamespace)
+                - task: Kubernetes@1
+                  displayName: Delete resources in namespace
+                  inputs:
+                    command: delete
+                    arguments: all --all
+                    namespace: $(kubernetesNamespace)
 
-  - task: Kubernetes@1
-    displayName: Delete PVCs in namespace
-    continueOnError: true
-    inputs:
-      connectionType: Kubernetes Service Connection
-      kubernetesServiceEndpoint: $(kubernetesServiceConnection)
-      command: delete
-      arguments: pvc --all
-      namespace: $(kubernetesNamespace)
+                - task: Kubernetes@1
+                  displayName: Delete PVCs in namespace
+                  continueOnError: true
+                  inputs:
+                    command: delete
+                    arguments: pvc --all
+                    namespace: $(kubernetesNamespace)
