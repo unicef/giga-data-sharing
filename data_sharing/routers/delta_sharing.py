@@ -30,12 +30,14 @@ async def forward_sharing_request(
     query: str = "",
     body: BaseModel = None,
     response_type: Literal["json", "text"] = "json",
+    additional_headers: dict[str, str] = None,
 ) -> dict[str, Any] | str:
+    additional_headers = additional_headers or {}
     url = httpx.URL(path=f"/sharing{request.url.path}", query=query.encode())
     sharing_req = sharing_client.build_request(
         url=url,
         method=request.method,
-        headers={"Authorization": f"Bearer {token}"},
+        headers={**additional_headers, "Authorization": f"Bearer {token}"},
         json=body.model_dump() if body else None,
     )
     sharing_res = await sharing_client.send(sharing_req)
@@ -183,9 +185,10 @@ async def query_table_data(
         body=body,
         response_type="text",
     )
-    protocol, metadata, *files = sharing_res.split()
+    protocol, metadata, *files = sharing_res.split("\n")
+
     return {
         **orjson.loads(protocol),
         **orjson.loads(metadata),
-        "files": [orjson.loads(file).get("file") for file in files],
+        "files": [orjson.loads(file).get("file") for file in files if len(file) > 0],
     }
