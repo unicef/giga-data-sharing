@@ -65,6 +65,13 @@ class File(BaseModel):
     expirationTimestamp: conint(ge=0) = Field(None)
 
 
+class ProfileFile(BaseModel):
+    shareCredentialsVersion: int
+    endpoint: str
+    bearerToken: str
+    expirationTimestamp: datetime
+
+
 class TableMetadataResponse(BaseModel):
     protocol: Protocol
     metaData: Metadata
