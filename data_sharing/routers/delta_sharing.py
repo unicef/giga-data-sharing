@@ -65,6 +65,26 @@ async def list_shares(
 
 
 @router.get(
+    "/shares/{share_name}",
+    response_model=delta_sharing.ShareData,
+)
+async def get_share(
+    share_name: str,
+    request: Request,
+    response: Response,
+    maxResults: int = None,
+    pageToken: str = None,
+    token=Depends(header_scheme),
+):
+    return await forward_sharing_request(
+        request,
+        response,
+        token,
+        query_parametrize(dict(maxResults=maxResults, pageToken=pageToken)),
+    )
+
+
+@router.get(
     "/shares/{share_name}/schemas",
     response_model=delta_sharing.Pagination[delta_sharing.Schema],
 )

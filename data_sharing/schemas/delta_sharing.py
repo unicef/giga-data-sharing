@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Generic, TypeVar
+from typing import Generic, Optional, TypeVar
 
 from pydantic import UUID4, AnyHttpUrl, BaseModel, Field, conint
 
@@ -13,7 +13,11 @@ class Pagination(BaseModel, Generic[T]):
 
 class Share(BaseModel):
     name: str
-    id: UUID4 = Field(None)
+    id: Optional[UUID4] = Field(None)
+
+
+class ShareData(BaseModel):
+    share: Share
 
 
 class Schema(BaseModel):
