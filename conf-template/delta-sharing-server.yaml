@@ -5,12 +5,16 @@ shares:
   - name: "gold"
     id: "4bfa74c2-f1af-44e8-bc42-205d4d92dd15"
     schemas:
-      - name: "fake-school-geolocation"
+      - name: "school-data"
         tables:
-          - name: "delta-test"
+          - name: "BEN"
             # Azure Blob Storage. See https://github.com/delta-io/delta-sharing#azure-blob-storage for how to config the credentials
-            location: "wasbs://{{.CONTAINER_NAME}}@{{.STORAGE_ACCOUNT_NAME}}.blob.core.windows.net/fake-gold/delta-spark"
+            location: "wasbs://{{.CONTAINER_NAME}}@{{.STORAGE_ACCOUNT_NAME}}.blob.core.windows.net/fake-gold/BEN-school_geolocation_coverage-master"
             id: "093f2fe7-fdc8-4438-85dd-6da7610d0e74"
+            cdfEnabled: true
+          - name: "AIA"
+            location: "wasbs://{{.CONTAINER_NAME}}@{{.STORAGE_ACCOUNT_NAME}}.blob.core.windows.net/fake-gold/AIA-school_geolocation_coverage-master"
+            id: "7f80d243-9ef2-47df-83f6-7fbeafea9050"
             cdfEnabled: true
 
 # Set the host name that the server will use

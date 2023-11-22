@@ -82,3 +82,8 @@ class TableQueryRequest(BaseModel):
     timestamp: datetime = Field(None)
     startingVersion: conint(ge=1) = Field(None)
     endingVersion: conint(ge=1) = Field(None)
+
+
+class Error(BaseModel):
+    errorCode: str = Field("")
+    message: str = Field("")
