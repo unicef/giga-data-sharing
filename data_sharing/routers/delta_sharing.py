@@ -70,13 +70,14 @@ async def list_shares(
     pageToken: str = None,
     token=Depends(header_scheme),
 ):
-    sharing_res, error = await forward_sharing_request(
-        request,
-        response,
-        token,
-        query_parametrize(dict(maxResults=maxResults, pageToken=pageToken)),
-    )
-    return sharing_res if error else sharing_res.json()
+    return (
+        await forward_sharing_request(
+            request,
+            response,
+            token,
+            query_parametrize(dict(maxResults=maxResults, pageToken=pageToken)),
+        )
+    )[0]
 
 
 @router.get(
@@ -91,13 +92,14 @@ async def list_schemas(
     pageToken: str = None,
     token=Depends(header_scheme),
 ):
-    sharing_res, error = await forward_sharing_request(
-        request,
-        response,
-        token,
-        query_parametrize(dict(maxResults=maxResults, pageToken=pageToken)),
-    )
-    return sharing_res if error else sharing_res.json()
+    return (
+        await forward_sharing_request(
+            request,
+            response,
+            token,
+            query_parametrize(dict(maxResults=maxResults, pageToken=pageToken)),
+        )
+    )[0]
 
 
 @router.get(
@@ -113,13 +115,14 @@ async def list_tables(
     pageToken: str = None,
     token=Depends(header_scheme),
 ):
-    sharing_res, error = await forward_sharing_request(
-        request,
-        response,
-        token,
-        query_parametrize(dict(maxResults=maxResults, pageToken=pageToken)),
-    )
-    return sharing_res if error else sharing_res.json()
+    return (
+        await forward_sharing_request(
+            request,
+            response,
+            token,
+            query_parametrize(dict(maxResults=maxResults, pageToken=pageToken)),
+        )
+    )[0]
 
 
 @router.get(
