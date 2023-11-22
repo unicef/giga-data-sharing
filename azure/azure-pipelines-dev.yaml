@@ -31,11 +31,13 @@ stages:
           runOnce:
             deploy:
               steps:
+                - checkout: self
+                  
                 - task: Docker@2
                   displayName: Login to container Registry
                   inputs:
                     command: login
-                    containerRegistry: $(containerRegistryServiceConnection)
+                    containerRegistry: $(ACR_SERVICE_CONNECTION)
 
                 - task: Docker@2
                   displayName: Build and push Data Sharing proxy image to container registry
@@ -43,7 +45,7 @@ stages:
                     command: buildAndPush
                     repository: giga-data-sharing-proxy
                     dockerfile: $(Build.SourcesDirectory)/proxy.prod.Dockerfile
-                    containerRegistry: $(containerRegistryServiceConnection)
+                    containerRegistry: $(ACR_SERVICE_CONNECTION)
                     tags: |
                       $(Build.SourceVersion)
 
@@ -53,7 +55,7 @@ stages:
                     command: buildAndPush
                     repository: giga-data-sharing-delta
                     dockerfile: $(Build.SourcesDirectory)/delta.prod.Dockerfile
-                    containerRegistry: $(containerRegistryServiceConnection)
+                    containerRegistry: $(ACR_SERVICE_CONNECTION)
                     tags: |
                       $(Build.SourceVersion)
 
