@@ -188,7 +188,7 @@ async def query_table_metadata(
     if error:
         return sharing_res
 
-    res_split = sharing_res.text.split("\n")
+    res_split = [s for s in sharing_res.text.split("\n") if s != ""]
     if len(res_split) == 1:
         return ORJSONResponse(sharing_res.json(), status_code=sharing_res.status_code)
     else:
@@ -219,7 +219,7 @@ async def query_table_data(
     if error:
         return sharing_res
 
-    res_split = sharing_res.text.split("\n")
+    res_split = [s for s in sharing_res.text.split("\n") if s != ""]
     if len(res_split) == 2:
         protocol, metadata = res_split
         return {
