@@ -5,7 +5,7 @@ import httpx
 import orjson
 from fastapi import APIRouter, Depends, Security
 from fastapi.requests import Request
-from fastapi.responses import Response
+from fastapi.responses import ORJSONResponse, Response
 from pydantic import BaseModel
 
 from data_sharing.permissions import header_scheme, is_authenticated
@@ -29,9 +29,9 @@ async def forward_sharing_request(
     token: str,
     query: str = "",
     body: BaseModel = None,
-    response_type: Literal["json", "text"] = "json",
+    response_type: Literal["json", "text", "full"] = "json",
     additional_headers: dict[str, str] = None,
-) -> dict[str, Any] | str:
+) -> tuple[dict[str, Any] | str | httpx.Response | Response, bool]:
     additional_headers = additional_headers or {}
     url = httpx.URL(path=f"/sharing{request.url.path}", query=query.encode())
     sharing_req = sharing_client.build_request(
@@ -41,8 +41,22 @@ async def forward_sharing_request(
         json=body.model_dump() if body else None,
     )
     sharing_res = await sharing_client.send(sharing_req)
+    if sharing_res.is_error:
+        return (
+            ORJSONResponse(sharing_res.json(), status_code=sharing_res.status_code),
+            True,
+        )
+
     response.status_code = sharing_res.status_code
-    return sharing_res.json() if response_type == "json" else sharing_res.text
+    match response_type:
+        case "json":
+            return sharing_res.json(), False
+        case "text":
+            return sharing_res.text, False
+        case "full":
+            return sharing_res, False
+        case _:
+            raise ValueError(f"Unknown {response_type=}")
 
 
 @router.get(
@@ -56,12 +70,14 @@ async def list_shares(
     pageToken: str = None,
     token=Depends(header_scheme),
 ):
-    return await forward_sharing_request(
-        request,
-        response,
-        token,
-        query_parametrize(dict(maxResults=maxResults, pageToken=pageToken)),
-    )
+    return (
+        await forward_sharing_request(
+            request,
+            response,
+            token,
+            query_parametrize(dict(maxResults=maxResults, pageToken=pageToken)),
+        )
+    )[0]
 
 
 @router.get(
@@ -96,12 +112,14 @@ async def list_schemas(
     pageToken: str = None,
     token=Depends(header_scheme),
 ):
-    return await forward_sharing_request(
-        request,
-        response,
-        token,
-        query_parametrize(dict(maxResults=maxResults, pageToken=pageToken)),
-    )
+    return (
+        await forward_sharing_request(
+            request,
+            response,
+            token,
+            query_parametrize(dict(maxResults=maxResults, pageToken=pageToken)),
+        )
+    )[0]
 
 
 @router.get(
@@ -117,12 +135,14 @@ async def list_tables(
     pageToken: str = None,
     token=Depends(header_scheme),
 ):
-    return await forward_sharing_request(
-        request,
-        response,
-        token,
-        query_parametrize(dict(maxResults=maxResults, pageToken=pageToken)),
-    )
+    return (
+        await forward_sharing_request(
+            request,
+            response,
+            token,
+            query_parametrize(dict(maxResults=maxResults, pageToken=pageToken)),
+        )
+    )[0]
 
 
 @router.get(
@@ -137,12 +157,14 @@ async def list_tables_in_share(
     pageToken: str = None,
     token=Depends(header_scheme),
 ):
-    return await forward_sharing_request(
+    sharing_res, error = await forward_sharing_request(
         request,
         response,
         token,
         query_parametrize(dict(maxResults=maxResults, pageToken=pageToken)),
+        response_type="full",
     )
+    return sharing_res if error else sharing_res.json()
 
 
 @router.get(
@@ -158,12 +180,14 @@ async def query_table_version(
     startingTimestamp: datetime = None,
     token=Depends(header_scheme),
 ):
-    return await forward_sharing_request(
+    sharing_res, error = await forward_sharing_request(
         request,
         response,
         token,
         query_parametrize(dict(startingTimestamp=startingTimestamp)),
+        response_type="full",
     )
+    return sharing_res if error else sharing_res.headers
 
 
 @router.get(
@@ -178,11 +202,18 @@ async def query_table_metadata(
     response: Response,
     token=Depends(header_scheme),
 ):
-    sharing_res = await forward_sharing_request(
-        request, response, token, response_type="text"
+    sharing_res, error = await forward_sharing_request(
+        request, response, token, response_type="full"
     )
-    protocol, metadata = sharing_res.split()
-    return {**orjson.loads(protocol), **orjson.loads(metadata)}
+    if error:
+        return sharing_res
+
+    res_split = [s for s in sharing_res.text.split("\n") if s != ""]
+    if len(res_split) == 1:
+        return ORJSONResponse(sharing_res.json(), status_code=sharing_res.status_code)
+    else:
+        protocol, metadata = res_split
+        return {**orjson.loads(protocol), **orjson.loads(metadata)}
 
 
 @router.post(
@@ -198,17 +229,30 @@ async def query_table_data(
     body: delta_sharing.TableQueryRequest = None,
     token=Depends(header_scheme),
 ):
-    sharing_res = await forward_sharing_request(
+    sharing_res, error = await forward_sharing_request(
         request,
         response,
         token,
         body=body,
-        response_type="text",
+        response_type="full",
     )
-    protocol, metadata, *files = sharing_res.split("\n")
+    if error:
+        return sharing_res
 
-    return {
-        **orjson.loads(protocol),
-        **orjson.loads(metadata),
-        "files": [orjson.loads(file).get("file") for file in files if len(file) > 0],
-    }
+    res_split = [s for s in sharing_res.text.split("\n") if s != ""]
+    if len(res_split) == 2:
+        protocol, metadata = res_split
+        return {
+            **orjson.loads(protocol),
+            **orjson.loads(metadata),
+            "files": [],
+        }
+    else:
+        protocol, metadata, *files = res_split
+        return {
+            **orjson.loads(protocol),
+            **orjson.loads(metadata),
+            "files": [
+                orjson.loads(file).get("file") for file in files if len(file) > 0
+            ],
+        }
