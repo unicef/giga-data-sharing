@@ -113,3 +113,8 @@ tasks:
       - helm uninstall data-sharing-delta
       - kubectl delete all --all
       - kubectl delete pvc --all
+
+  generate-delta-config:
+    desc: Generate Delta Sharing config
+    cmds:
+      - poetry run python -m scripts.generate_delta_config
