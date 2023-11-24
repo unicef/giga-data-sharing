@@ -33,10 +33,6 @@ class Table(BaseModel):
     shareId: UUID4 = Field(None)
 
 
-class TableVersion(BaseModel):
-    deltaTableVersion: str = Field(alias="delta-table-version")
-
-
 class ParquetProtocol(BaseModel):
     minReaderVersion: conint(ge=1)
 

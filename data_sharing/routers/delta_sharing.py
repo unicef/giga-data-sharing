@@ -181,7 +181,6 @@ async def list_tables_in_share(
 
 @router.get(
     "/shares/{share_name}/schemas/{schema_name}/tables/{table_name}/version",
-    response_model=delta_sharing.TableVersion,
 )
 async def query_table_version(
     share_name: str,
@@ -199,7 +198,8 @@ async def query_table_version(
         query_parametrize(dict(startingTimestamp=startingTimestamp)),
         response_type="full",
     )
-    return sharing_res if error else sharing_res.headers
+
+    return sharing_res if error else Response(headers=sharing_res.headers, content=None)
 
 
 @router.get(
