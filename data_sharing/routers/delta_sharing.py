@@ -122,14 +122,15 @@ async def list_schemas(
 ):
     query_params = dict(maxResults=maxResults, pageToken=pageToken)
     parametrized_query = query_parametrize(query_params)
-    return (
-        await forward_sharing_request(
-            request,
-            response,
-            token,
-            parametrized_query,
-        )
-    )[0]
+
+    sharing_res, error = await forward_sharing_request(
+        request,
+        response,
+        token,
+        parametrized_query,
+    )
+    headers = {"Content-Type": "application/json; charset=utf-8"}
+    return JSONResponse(content=sharing_res, headers=headers)
 
 
 @router.get(
@@ -147,14 +148,14 @@ async def list_tables(
 ):
     query_params = dict(maxResults=maxResults, pageToken=pageToken)
     parametrized_query = query_parametrize(query_params)
-    return (
-        await forward_sharing_request(
-            request,
-            response,
-            token,
-            parametrized_query,
-        )
-    )[0]
+    sharing_res, error = await forward_sharing_request(
+        request,
+        response,
+        token,
+        parametrized_query,
+    )
+    headers = {"Content-Type": "application/json; charset=utf-8"}
+    return JSONResponse(content=sharing_res, headers=headers)
 
 
 @router.get(
@@ -176,7 +177,9 @@ async def list_tables_in_share(
         query_parametrize(dict(maxResults=maxResults, pageToken=pageToken)),
         response_type="full",
     )
-    return sharing_res if error else sharing_res.json()
+    headers = {"Content-Type": "application/json; charset=utf-8"}
+    sharing_res_json = JSONResponse(content=sharing_res.json(), headers=headers)
+    return sharing_res if error else sharing_res_json
 
 
 @router.get(
