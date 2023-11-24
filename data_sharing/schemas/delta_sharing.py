@@ -37,7 +37,7 @@ class TableVersion(BaseModel):
     deltaTableVersion: str = Field(alias="delta-table-version")
 
 
-class Protocol(BaseModel):
+class ParquetProtocol(BaseModel):
     minReaderVersion: conint(ge=1)
 
 
@@ -45,7 +45,7 @@ class Format(BaseModel):
     provider: str
 
 
-class Metadata(BaseModel):
+class ParquetMetadata(BaseModel):
     id: UUID4
     name: Optional[str] = Field(None)
     description: Optional[str] = Field(None)
@@ -58,7 +58,7 @@ class Metadata(BaseModel):
     numFile: Optional[conint(ge=0)] = Field(None)
 
 
-class File(BaseModel):
+class ParquetFile(BaseModel):
     id: str
     url: AnyHttpUrl
     partitionValues: dict[str, str]
@@ -77,12 +77,12 @@ class ProfileFile(BaseModel):
 
 
 class TableMetadataResponse(BaseModel):
-    protocol: Protocol
-    metaData: Metadata
+    protocol: ParquetProtocol
+    metaData: ParquetMetadata
 
 
 class TableDataResponse(TableMetadataResponse):
-    files: list[File]
+    files: list[ParquetFile]
 
 
 class TableQueryRequest(BaseModel):
