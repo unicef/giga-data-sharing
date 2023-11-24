@@ -42,7 +42,7 @@ class DeletionVector(BaseModel):
     storageType: str
     pathOrInlineDv: str
     offSet: Optional[int] = Field(None)
-    sizeINBytes: Optional[int] = Field(None)
+    sizeInBytes: Optional[int] = Field(None)
     cardinality: Optional[conint(ge=0)] = Field(None)
 
 
@@ -69,7 +69,7 @@ class Remove(BaseModel):
     size: Optional[conint(ge=0)] = Field(None)
     stats: Optional[str] = Field(None)
     tags: Optional[Dict[str, str]] = Field(None)
-    DeletionVector: Optional[DeletionVector] = Field(None)
+    deletionVector: Optional[DeletionVector] = Field(None)
     baseRowId: Optional[conint(ge=0)] = Field(None)
     defaultRowCommitVersion: Optional[conint(ge=0)] = Field(None)
 
