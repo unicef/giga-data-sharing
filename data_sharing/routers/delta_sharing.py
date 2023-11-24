@@ -70,12 +70,14 @@ async def list_shares(
     pageToken: str = None,
     token=Depends(header_scheme),
 ):
+    query_params = dict(maxResults=maxResults, pageToken=pageToken)
+    parametrized_query = query_parametrize(query_params)
     return (
         await forward_sharing_request(
             request,
             response,
             token,
-            query_parametrize(dict(maxResults=maxResults, pageToken=pageToken)),
+            parametrized_query,
         )
     )[0]
 
@@ -92,12 +94,16 @@ async def get_share(
     pageToken: str = None,
     token=Depends(header_scheme),
 ):
-    return await forward_sharing_request(
-        request,
-        response,
-        token,
-        query_parametrize(dict(maxResults=maxResults, pageToken=pageToken)),
-    )
+    query_params = dict(maxResults=maxResults, pageToken=pageToken)
+    parametrized_query = query_parametrize(query_params)
+    return (
+        await forward_sharing_request(
+            request,
+            response,
+            token,
+            parametrized_query,
+        )
+    )[0]
 
 
 @router.get(
@@ -112,12 +118,14 @@ async def list_schemas(
     pageToken: str = None,
     token=Depends(header_scheme),
 ):
+    query_params = dict(maxResults=maxResults, pageToken=pageToken)
+    parametrized_query = query_parametrize(query_params)
     return (
         await forward_sharing_request(
             request,
             response,
             token,
-            query_parametrize(dict(maxResults=maxResults, pageToken=pageToken)),
+            parametrized_query,
         )
     )[0]
 
@@ -135,12 +143,14 @@ async def list_tables(
     pageToken: str = None,
     token=Depends(header_scheme),
 ):
+    query_params = dict(maxResults=maxResults, pageToken=pageToken)
+    parametrized_query = query_parametrize(query_params)
     return (
         await forward_sharing_request(
             request,
             response,
             token,
-            query_parametrize(dict(maxResults=maxResults, pageToken=pageToken)),
+            parametrized_query,
         )
     )[0]
 
