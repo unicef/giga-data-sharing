@@ -42,8 +42,10 @@ async def forward_sharing_request(
     )
     sharing_res = await sharing_client.send(sharing_req)
     if sharing_res.is_error:
+        json_content = sharing_res.json()
+        status_code = sharing_res.status_code
         return (
-            ORJSONResponse(sharing_res.json(), status_code=sharing_res.status_code),
+            ORJSONResponse(json_content, status_code=status_code),
             True,
         )
 
@@ -220,7 +222,9 @@ async def query_table_metadata(
 
     res_split = [s for s in sharing_res.text.split("\n") if s != ""]
     if len(res_split) == 1:
-        return ORJSONResponse(sharing_res.json(), status_code=sharing_res.status_code)
+        json_content = sharing_res.json()
+        status_code = sharing_res.status_code
+        return ORJSONResponse(json_content, status_code=status_code)
     else:
         protocol, metadata = res_split
         return {**orjson.loads(protocol), **orjson.loads(metadata)}
@@ -259,10 +263,11 @@ async def query_table_data(
         }
     else:
         protocol, metadata, *files = res_split
+        non_empty_files = [
+            orjson.loads(file).get("file") for file in files if len(file) > 0
+        ]
         return {
             **orjson.loads(protocol),
             **orjson.loads(metadata),
-            "files": [
-                orjson.loads(file).get("file") for file in files if len(file) > 0
-            ],
+            "files": non_empty_files,
         }
