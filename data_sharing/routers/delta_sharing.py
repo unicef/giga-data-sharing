@@ -9,7 +9,7 @@ from fastapi.responses import ORJSONResponse, Response
 from pydantic import BaseModel
 
 from data_sharing.permissions import header_scheme, is_authenticated
-from data_sharing.schemas import delta_sharing
+from data_sharing.schemas import delta_sharing, delta
 from data_sharing.settings import settings
 from data_sharing.utils.qs import query_parametrize
 
@@ -209,7 +209,9 @@ async def query_table_version(
 
 @router.get(
     "/shares/{share_name}/schemas/{schema_name}/tables/{table_name}/metadata",
-    response_model=delta_sharing.TableMetadataResponse,
+    response_model=Union[
+        delta_sharing.TableDataChangeResponse, delta.TableMetadataResponse
+    ],
 )
 async def query_table_metadata(
     share_name: str,
@@ -218,21 +220,33 @@ async def query_table_metadata(
     request: Request,
     response: Response,
     token=Depends(header_scheme),
+    delta_sharing_capabilities: str
+    | None = Header(None, alias="delta-sharing-capabilities"),
 ):
+    additional_headers = {}
+    if delta_sharing_capabilities is not None:
+        additional_headers["delta-sharing-capabilities"] = delta_sharing_capabilities
+
     sharing_res, error = await forward_sharing_request(
-        request, response, token, response_type="full"
+        request,
+        response,
+        token,
+        response_type="full",
+        additional_headers=additional_headers,
     )
     if error:
         return sharing_res
 
     res_split = [s for s in sharing_res.text.split("\n") if s != ""]
+    headers = sharing_res.headers
     if len(res_split) == 1:
         json_content = sharing_res.json()
         status_code = sharing_res.status_code
-        return ORJSONResponse(json_content, status_code=status_code)
+        return ORJSONResponse(json_content, status_code=status_code, headers=headers)
     else:
         protocol, metadata = res_split
-        return {**orjson.loads(protocol), **orjson.loads(metadata)}
+        merged_dict = {**orjson.loads(protocol), **orjson.loads(metadata)}
+        return JSONResponse(content=merged_dict, headers=headers)
 
 
 @router.post(

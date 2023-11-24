@@ -89,3 +89,8 @@ class FileWrapper(BaseModel):
     timestamp: Optional[conint(ge=0)] = Field(None)
     expirationTimestamp: Optional[conint(ge=0)] = Field(None)
     deltaSingleAction: Union[Add, Remove, CDC]
+
+
+class TableMetadataResponse(BaseModel):
+    protocol: Protocol
+    metaData: Metadata
