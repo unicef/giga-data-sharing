@@ -71,8 +71,8 @@ async def forward_sharing_request(
 async def list_shares(
     request: Request,
     response: Response,
-    maxResults: Annotated[int, Query(description=(max_results_description))] = None,
-    pageToken: Annotated[int, Query(description=(page_token_description))] = None,
+    maxResults: Annotated[int, Query(description=max_results_description)] = None,
+    pageToken: Annotated[int, Query(description=page_token_description)] = None,
     token=Depends(header_scheme),
 ):
     return (
@@ -93,8 +93,8 @@ async def list_schemas(
     share_name: Annotated[str, Path(description=share_name_description)],
     request: Request,
     response: Response,
-    maxResults: Annotated[int, Query(description=(max_results_description))] = None,
-    pageToken: Annotated[int, Query(description=(page_token_description))] = None,
+    maxResults: Annotated[int, Query(description=max_results_description)] = None,
+    pageToken: Annotated[int, Query(description=page_token_description)] = None,
     token=Depends(header_scheme),
 ):
     return (
