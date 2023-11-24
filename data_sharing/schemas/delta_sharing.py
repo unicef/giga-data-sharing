@@ -47,8 +47,16 @@ class Format(BaseModel):
 
 class Metadata(BaseModel):
     id: UUID4
-    name: str = Field(None)
-    description: str = Field(None)
+    name: Optional[str] = Field(None)
+    description: Optional[str] = Field(None)
+    format: Format
+    schemaString: str
+    partitionColumns: list[str]
+    configuration: Optional[Dict[str, str]] = None
+    version: Optional[conint(ge=1)] = Field(None)
+    size: Optional[conint(ge=0)] = Field(None)
+    numFile: Optional[conint(ge=0)] = Field(None)
+
     format: Format
     schemaString: str
     partitionColumns: list[str]
@@ -63,10 +71,11 @@ class File(BaseModel):
     url: AnyHttpUrl
     partitionValues: dict[str, str]
     size: conint(ge=0)
-    stats: str = Field(None)
-    version: conint(ge=1) = Field(None)
-    timestamp: conint(ge=0) = Field(None)
-    expirationTimestamp: conint(ge=0) = Field(None)
+    stats: Optional[str] = Field(None)
+    version: Optional[conint(ge=1)] = Field(None)
+    timestamp: Optional[conint(ge=0)] = Field(None)
+    expirationTimestamp: Optional[conint(ge=0)] = Field(None)
+
 
 
 class ProfileFile(BaseModel):
