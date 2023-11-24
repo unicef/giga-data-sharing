@@ -1,13 +1,18 @@
 from datetime import datetime
-from typing import Any, Literal
+from typing import Annotated, Any, Literal
 
 import httpx
 import orjson
-from fastapi import APIRouter, Depends, Security
+from fastapi import APIRouter, Depends, Path, Query, Security
 from fastapi.requests import Request
 from fastapi.responses import ORJSONResponse, Response
 from pydantic import BaseModel
 
+from data_sharing.annotations.delta_sharing import (
+    max_results_description,
+    page_token_description,
+    share_name_description,
+)
 from data_sharing.permissions import header_scheme, is_authenticated
 from data_sharing.schemas import delta_sharing
 from data_sharing.settings import settings
@@ -66,8 +71,8 @@ async def forward_sharing_request(
 async def list_shares(
     request: Request,
     response: Response,
-    maxResults: int = None,
-    pageToken: str = None,
+    maxResults: Annotated[int, Query(description=(max_results_description))] = None,
+    pageToken: Annotated[int, Query(description=(page_token_description))] = None,
     token=Depends(header_scheme),
 ):
     return (
@@ -85,11 +90,11 @@ async def list_shares(
     response_model=delta_sharing.Pagination[delta_sharing.Schema],
 )
 async def list_schemas(
-    share_name: str,
+    share_name: Annotated[str, Path(description=share_name_description)],
     request: Request,
     response: Response,
-    maxResults: int = None,
-    pageToken: str = None,
+    maxResults: Annotated[int, Query(description=(max_results_description))] = None,
+    pageToken: Annotated[int, Query(description=(page_token_description))] = None,
     token=Depends(header_scheme),
 ):
     return (
