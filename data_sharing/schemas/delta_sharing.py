@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Generic, Optional, TypeVar
+from typing import Dict, Generic, Optional, TypeVar
 
 from pydantic import UUID4, AnyHttpUrl, BaseModel, Field, conint
 
@@ -57,14 +57,6 @@ class Metadata(BaseModel):
     size: Optional[conint(ge=0)] = Field(None)
     numFile: Optional[conint(ge=0)] = Field(None)
 
-    format: Format
-    schemaString: str
-    partitionColumns: list[str]
-    configuration: dict[str, str]
-    version: conint(ge=1) = Field(None)
-    size: conint(ge=0) = Field(None)
-    numFile: conint(ge=0) = Field(None)
-
 
 class File(BaseModel):
     id: str
@@ -75,7 +67,6 @@ class File(BaseModel):
     version: Optional[conint(ge=1)] = Field(None)
     timestamp: Optional[conint(ge=0)] = Field(None)
     expirationTimestamp: Optional[conint(ge=0)] = Field(None)
-
 
 
 class ProfileFile(BaseModel):
