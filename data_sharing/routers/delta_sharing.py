@@ -158,15 +158,15 @@ async def list_tables(
 
 
 @router.get(
-    "/shares/{share_name}/all-tables",
+    "/shares/{share}/all-tables",
     response_model=delta_sharing.Pagination[delta_sharing.Table],
 )
 async def list_tables_in_share(
-    share_name: str,
+    share: str,
     request: Request,
     response: Response,
-    maxResults: int = None,
-    pageToken: str = None,
+    maxResults: Optional[int] = None,
+    pageToken: Optional[str] = None,
     token=Depends(header_scheme),
 ):
     sharing_res, error = await forward_sharing_request(
