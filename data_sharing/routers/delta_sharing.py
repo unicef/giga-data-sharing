@@ -68,20 +68,20 @@ async def forward_sharing_request(
 async def list_shares(
     request: Request,
     response: Response,
-    maxResults: int = None,
-    pageToken: str = None,
+    maxResults: Optional[int] = None,
+    pageToken: Optional[str] = None,
     token=Depends(header_scheme),
 ):
     query_params = dict(maxResults=maxResults, pageToken=pageToken)
     parametrized_query = query_parametrize(query_params)
-    return (
-        await forward_sharing_request(
-            request,
-            response,
-            token,
-            parametrized_query,
-        )
-    )[0]
+    sharing_res, error = await forward_sharing_request(
+        request,
+        response,
+        token,
+        parametrized_query,
+    )
+    headers = {"Content-Type": "application/json; charset=utf-8"}
+    return JSONResponse(content=sharing_res, headers=headers)
 
 
 @router.get(
