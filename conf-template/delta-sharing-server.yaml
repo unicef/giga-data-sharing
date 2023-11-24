@@ -7,15 +7,27 @@ shares:
     schemas:
       - name: "school-data"
         tables:
-          - name: "BEN"
-            # Azure Blob Storage. See https://github.com/delta-io/delta-sharing#azure-blob-storage for how to config the credentials
+          # Azure Blob Storage. See https://github.com/delta-io/delta-sharing#azure-blob-storage for how to config the credentials
+          - name: BEN
             location: "wasbs://{{.CONTAINER_NAME}}@{{.STORAGE_ACCOUNT_NAME}}.blob.core.windows.net/fake-gold/BEN-school_geolocation_coverage-master"
-            id: "093f2fe7-fdc8-4438-85dd-6da7610d0e74"
+            id: 093f2fe7-fdc8-4438-85dd-6da7610d0e74
             cdfEnabled: true
-          - name: "AIA"
+          - name: AIA
             location: "wasbs://{{.CONTAINER_NAME}}@{{.STORAGE_ACCOUNT_NAME}}.blob.core.windows.net/fake-gold/AIA-school_geolocation_coverage-master"
-            id: "7f80d243-9ef2-47df-83f6-7fbeafea9050"
+            id: 7f80d243-9ef2-47df-83f6-7fbeafea9050
             cdfEnabled: true
+          - cdfEnabled: true
+            id: 7598cace-3689-484c-9e9e-9c2bfe342a68
+            location: "wasbs://{{.CONTAINER_NAME}}@{{.STORAGE_ACCOUNT_NAME}}.blob.core.windows.net/fake-gold/ATG-school_geolocation_coverage-master"
+            name: ATG
+          - cdfEnabled: true
+            id: 9154aa89-347c-47f1-910c-36bd2956884b
+            location: "wasbs://{{.CONTAINER_NAME}}@{{.STORAGE_ACCOUNT_NAME}}.blob.core.windows.net/fake-gold/BIH-school_geolocation_coverage-master"
+            name: BIH
+          - cdfEnabled: true
+            id: 94ae81f6-da29-4d2b-912b-3d94e7982b57
+            location: "wasbs://{{.CONTAINER_NAME}}@{{.STORAGE_ACCOUNT_NAME}}.blob.core.windows.net/fake-gold/BLZ-school_geolocation_coverage-master"
+            name: BLZ
 
 # Set the host name that the server will use
 host: "0.0.0.0"
