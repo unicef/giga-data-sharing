@@ -116,8 +116,8 @@ async def list_schemas(
     share_name: str,
     request: Request,
     response: Response,
-    maxResults: int = None,
-    pageToken: str = None,
+    maxResults: Optional[int] = None,
+    pageToken: Optional[str] = None,
     token=Depends(header_scheme),
 ):
     query_params = dict(maxResults=maxResults, pageToken=pageToken)
