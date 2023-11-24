@@ -250,7 +250,7 @@ async def query_table_metadata(
 
 @router.post(
     "/shares/{share_name}/schemas/{schema_name}/tables/{table_name}/query",
-    response_model=delta_sharing.TableDataResponse,
+    response_model=Union[delta_sharing.TableDataResponse, delta.TableDataResponse],
 )
 async def query_table_data(
     share_name: str,
@@ -260,35 +260,47 @@ async def query_table_data(
     response: Response,
     body: delta_sharing.TableQueryRequest = None,
     token=Depends(header_scheme),
+    content_type: str | None = Header(None, alias="Content-Type"),
+    delta_sharing_capabilities: str
+    | None = Header(None, alias="delta-sharing-capabilities"),
 ):
+    additional_headers = {}
+    if delta_sharing_capabilities is not None:
+        additional_headers["delta-sharing-capabilities"] = delta_sharing_capabilities
+
+    if content_type is not None:
+        additional_headers["Content-Type"] = content_type
+
     sharing_res, error = await forward_sharing_request(
         request,
         response,
         token,
         body=body,
         response_type="full",
+        additional_headers=additional_headers,
     )
     if error:
         return sharing_res
 
     res_split = [s for s in sharing_res.text.split("\n") if s != ""]
+    headers = sharing_res.headers
+
     if len(res_split) == 2:
         protocol, metadata = res_split
-        return {
-            **orjson.loads(protocol),
-            **orjson.loads(metadata),
-            "files": [],
-        }
+        merged_dict = {**orjson.loads(protocol), **orjson.loads(metadata), "files": []}
+        return JSONResponse(content=merged_dict, headers=headers)
+
     else:
         protocol, metadata, *files = res_split
         non_empty_files = [
             orjson.loads(file).get("file") for file in files if len(file) > 0
         ]
-        return {
+        merged_dict = {
             **orjson.loads(protocol),
             **orjson.loads(metadata),
             "files": non_empty_files,
         }
+        return JSONResponse(content=merged_dict, headers=headers)
 
 
 @router.get(

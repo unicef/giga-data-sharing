@@ -95,5 +95,9 @@ class TableMetadataResponse(BaseModel):
     metaData: Metadata
 
 
+class TableDataResponse(TableMetadataResponse):
+    files: list[File]
+
+
 class TableDataChangeResponse(TableMetadataResponse):
     file: File

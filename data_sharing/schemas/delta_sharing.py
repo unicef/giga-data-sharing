@@ -33,7 +33,7 @@ class Table(BaseModel):
     shareId: UUID4 = Field(None)
 
 
-class ParquetProtocol(BaseModel):
+class Protocol(BaseModel):
     minReaderVersion: conint(ge=1)
 
 
@@ -41,7 +41,7 @@ class Format(BaseModel):
     provider: str
 
 
-class ParquetMetadata(BaseModel):
+class Metadata(BaseModel):
     id: UUID4
     name: Optional[str] = Field(None)
     description: Optional[str] = Field(None)
@@ -54,7 +54,7 @@ class ParquetMetadata(BaseModel):
     numFile: Optional[conint(ge=0)] = Field(None)
 
 
-class ParquetFile(BaseModel):
+class File(BaseModel):
     id: str
     url: AnyHttpUrl
     partitionValues: dict[str, str]
@@ -104,12 +104,12 @@ class ProfileFile(BaseModel):
 
 
 class TableMetadataResponse(BaseModel):
-    protocol: ParquetProtocol
-    metaData: ParquetMetadata
+    protocol: Protocol
+    metaData: Metadata
 
 
 class TableDataResponse(TableMetadataResponse):
-    files: list[ParquetFile]
+    files: list[File]
 
 
 class TableDataChangeResponse(TableMetadataResponse):
