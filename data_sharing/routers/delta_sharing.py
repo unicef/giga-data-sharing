@@ -1,11 +1,10 @@
 from datetime import datetime
-from typing import Any, Literal
-
+from typing import Any, Literal, Optional, Union
 import httpx
 import orjson
-from fastapi import APIRouter, Depends, Security
+from fastapi import APIRouter, Depends, Header, Security
 from fastapi.requests import Request
-from fastapi.responses import ORJSONResponse, Response
+from fastapi.responses import JSONResponse, ORJSONResponse, Response
 from pydantic import BaseModel
 
 from data_sharing.permissions import header_scheme, is_authenticated
@@ -290,3 +289,59 @@ async def query_table_data(
             **orjson.loads(metadata),
             "files": non_empty_files,
         }
+
+
+@router.get(
+    "/shares/{share_name}/schemas/{schema_name}/tables/{table_name}/changes",
+    response_model=Union[
+        delta_sharing.TableDataChangeResponse, delta.TableDataChangeResponse
+    ],
+)
+async def query_table_change_data_feed(
+    share_name: str,
+    schema_name: str,
+    table_name: str,
+    request: Request,
+    response: Response,
+    token=Depends(header_scheme),
+    delta_sharing_capabilities: str
+    | None = Header(None, alias="delta-sharing-capabilities"),
+    startingVersion: Optional[int] = None,
+    startingTimestamp: Optional[str] = None,
+    endingVersion: Optional[int] = None,
+    endingTimestamp: Optional[str] = None,
+    includeHistoricalMetadata: Optional[bool] = None,
+):
+    additional_headers = {}
+    if delta_sharing_capabilities is not None:
+        additional_headers["delta-sharing-capabilities"] = delta_sharing_capabilities
+
+    sharing_res, error = await forward_sharing_request(
+        request,
+        response,
+        token,
+        query_parametrize(
+            dict(
+                startingVersion=startingVersion,
+                startingTimestamp=startingTimestamp,
+                endingVersion=endingVersion,
+                endingTimestamp=endingTimestamp,
+                includeHistoricalMetadata=includeHistoricalMetadata,
+            ),
+        ),
+        response_type="full",
+        additional_headers=additional_headers,
+    )
+    if error:
+        return sharing_res
+
+    res_split = [s for s in sharing_res.text.split("\n") if s != ""]
+    headers = sharing_res.headers
+    if len(res_split) == 1:
+        json_content = sharing_res.json()
+        status_code = sharing_res.status_code
+        return ORJSONResponse(json_content, status_code=status_code, headers=headers)
+    else:
+        protocol, metadata = res_split
+        merged_dict = {**orjson.loads(protocol), **orjson.loads(metadata)}
+        return JSONResponse(content=merged_dict, headers=headers)

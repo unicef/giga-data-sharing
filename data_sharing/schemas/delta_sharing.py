@@ -65,6 +65,37 @@ class ParquetFile(BaseModel):
     expirationTimestamp: Optional[conint(ge=0)] = Field(None)
 
 
+class Add(BaseModel):
+    id: str
+    url: AnyHttpUrl
+    partitionValues: dict[str, str]
+    size: conint(ge=0)
+    timestamp: conint(ge=0) = Field(None)
+    version: conint(ge=1) = Field(None)
+    stats: Optional[str] = Field(None)
+    expirationTimestamp: Optional[conint(ge=0)] = Field(None)
+
+
+class CDF(BaseModel):
+    id: str
+    url: AnyHttpUrl
+    partitionValues: dict[str, str]
+    size: conint(ge=0)
+    timestamp: conint(ge=0) = Field(None)
+    version: conint(ge=1) = Field(None)
+    expirationTimestamp: Optional[conint(ge=0)] = Field(None)
+
+
+class Remove(BaseModel):
+    id: str
+    url: AnyHttpUrl
+    partitionValues: dict[str, str]
+    size: conint(ge=0)
+    timestamp: conint(ge=0) = Field(None)
+    version: conint(ge=1) = Field(None)
+    expirationTimestamp: Optional[conint(ge=0)] = Field(None)
+
+
 class ProfileFile(BaseModel):
     shareCredentialsVersion: int
     endpoint: str
@@ -79,6 +110,12 @@ class TableMetadataResponse(BaseModel):
 
 class TableDataResponse(TableMetadataResponse):
     files: list[ParquetFile]
+
+
+class TableDataChangeResponse(TableMetadataResponse):
+    add: Add
+    cdf: CDF
+    remove: Remove
 
 
 class TableQueryRequest(BaseModel):

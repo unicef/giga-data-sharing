@@ -1,7 +1,6 @@
-from datetime import datetime
-from typing import Dict, Generic, Optional, TypeVar, Union
+from typing import Dict, Optional, Union
 
-from pydantic import UUID4, AnyHttpUrl, BaseModel, Field, conint
+from pydantic import UUID4, BaseModel, Field, conint
 
 
 class Format(BaseModel):
@@ -82,7 +81,7 @@ class CDC(BaseModel):
     tags: Dict[str, str]
 
 
-class FileWrapper(BaseModel):
+class File(BaseModel):
     id: str
     deletionVectorFileId: Optional[str] = Field(None)
     version: Optional[conint(ge=1)] = Field(None)
@@ -94,3 +93,7 @@ class FileWrapper(BaseModel):
 class TableMetadataResponse(BaseModel):
     protocol: Protocol
     metaData: Metadata
+
+
+class TableDataChangeResponse(TableMetadataResponse):
+    file: File
