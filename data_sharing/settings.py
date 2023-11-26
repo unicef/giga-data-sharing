@@ -15,6 +15,14 @@ class Settings(BaseSettings):
     STORAGE_ACCESS_KEY: str
     DELTA_SHARING_HOST: str
     PYTHON_ENV: str = "production"
+    POSTGRESQL_USERNAME: str
+    POSTGRESQL_PASSWORD: str
+    POSTGRESQL_DATABASE: str
+    DB_HOST: str
+
+    @property
+    def DATABASE_URL(self) -> str:
+        return f"postgresql+psycopg2://{self.POSTGRESQL_USERNAME}:{self.POSTGRESQL_PASSWORD}@{self.DB_HOST}:5432/{self.POSTGRESQL_DATABASE}"
 
 
 @lru_cache

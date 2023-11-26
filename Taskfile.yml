@@ -130,3 +130,18 @@ tasks:
     desc: Generate Delta Sharing config
     cmds:
       - poetry run python -m scripts.generate_delta_config
+
+  makemigrations:
+    desc: Generate database migrations
+    cmds:
+      - task exec -- proxy alembic revision --autogenerate -m "{{.CLI_ARGS}}"
+
+  migrate:
+    desc: Run database migrations
+    cmds:
+      - task exec -- proxy alembic upgrade head
+
+  psql:
+    desc: Connect to database
+    cmds:
+      - task exec -- db psql -U {{.POSTGRESQL_USERNAME}} -d {{.POSTGRESQL_DATABASE}}
