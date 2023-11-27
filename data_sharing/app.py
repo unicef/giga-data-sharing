@@ -25,7 +25,7 @@ app.add_middleware(
 )
 
 
-@app.get("", tags=["core"])
+@app.get("/health", tags=["core"])
 async def health_check():
     return {"status": "ok"}
 

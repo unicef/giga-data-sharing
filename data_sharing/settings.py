@@ -10,6 +10,7 @@ class Settings(BaseSettings):
         extra = "ignore"
 
     BASE_DIR: Path = Path(__file__).parent.parent
+    SECRET_KEY: str
     CORS_ALLOWED_ORIGINS: list[str] = ["*"]
     DELTA_BEARER_TOKEN: str
     STORAGE_ACCESS_KEY: str
@@ -23,6 +24,10 @@ class Settings(BaseSettings):
     @property
     def DATABASE_URL(self) -> str:
         return f"postgresql+psycopg2://{self.POSTGRESQL_USERNAME}:{self.POSTGRESQL_PASSWORD}@{self.DB_HOST}:5432/{self.POSTGRESQL_DATABASE}"
+
+    @property
+    def ASYNC_DATABASE_URL(self) -> str:
+        return f"postgresql+asyncpg://{self.POSTGRESQL_USERNAME}:{self.POSTGRESQL_PASSWORD}@{self.DB_HOST}:5432/{self.POSTGRESQL_DATABASE}"
 
 
 @lru_cache

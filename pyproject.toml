@@ -18,9 +18,11 @@ fastapi-azure-auth = "^4.3.0"
 loguru = "^0.7.2"
 azure-storage-blob = "^12.18.3"
 orjson = "^3.9.10"
-sqlalchemy = "^2.0.23"
+sqlalchemy = {extras = ["asyncio"], version = "^2.0.23"}
 alembic = "^1.12.1"
 psycopg2-binary = "^2.9.9"
+passlib = {extras = ["argon2"], version = "^1.7.4"}
+asyncpg = "^0.29.0"
 
 [tool.poetry.group.dev.dependencies]
 black = "^23.10.0"

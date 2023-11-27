@@ -14,6 +14,9 @@ class ApiKey(BaseModel):
     is_revoked: bool = Field(description="Indicates if the key was manually revoked.")
     permissions: list[Country]
 
+    class Config:
+        from_attributes = True
+
 
 class CreateApiKeyRequest(BaseModel):
     validity: conint(ge=0) = Field(
@@ -27,3 +30,6 @@ class CreateApiKeyRequest(BaseModel):
             "List of countries, using the ISO-3166 alpha-3 code, to grant access to."
         )
     )
+
+    class Config:
+        from_attributes = True

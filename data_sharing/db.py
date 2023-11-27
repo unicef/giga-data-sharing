@@ -1,12 +1,15 @@
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine
 
 from data_sharing.settings import settings
 
-engine = create_engine(settings.DATABASE_URL)
+engine = create_async_engine(settings.ASYNC_DATABASE_URL)
 
-session = sessionmaker(bind=engine, autoflush=False, autocommit=False)
+session = async_sessionmaker(bind=engine, autoflush=False, autocommit=False)
 
 
-def get_session():
-    return session()
+async def get_db():
+    db = session()
+    try:
+        yield db
+    finally:
+        await db.close()
