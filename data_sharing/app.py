@@ -4,7 +4,7 @@ from fastapi.responses import ORJSONResponse
 
 from data_sharing.constants import __version__
 from data_sharing.permissions import header_scheme
-from data_sharing.routers import api_key, delta_sharing
+from data_sharing.routers import api_key, delta_sharing, role
 from data_sharing.schemas.delta_sharing import ProfileFile
 from data_sharing.settings import settings
 
@@ -50,4 +50,5 @@ async def profile_file(
 
 
 app.include_router(delta_sharing.router)
+app.include_router(role.router)
 app.include_router(api_key.router)

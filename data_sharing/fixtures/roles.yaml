@@ -1,0 +1,24 @@
+- id: ADMIN
+  model: Role
+  fields:
+    description: Administrator
+- id: AIA
+  model: Role
+  fields:
+    description: Anguilla
+- id: ATG
+  model: Role
+  fields:
+    description: Antigua and Barbuda
+- id: BEN
+  model: Role
+  fields:
+    description: Benin
+- id: BIH
+  model: Role
+  fields:
+    description: Bosnia and Herzegovina
+- id: BLZ
+  model: Role
+  fields:
+    description: Belize

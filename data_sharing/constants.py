@@ -11,6 +11,7 @@ class Constants(BaseSettings):
     API_KEY_LENGTH: conint(gt=0) = 64
     BYTES_LENGTH_COMPENSATION: conint(ge=0) = 16
     API_KEY_BYTES_LENGTH: conint(gt=0) = API_KEY_LENGTH - BYTES_LENGTH_COMPENSATION
+    API_KEY_HINT_LENGTH: conint(gt=0) = 6
     ARGON2_NUM_ITERATIONS: conint(gt=0) = 10
 
 

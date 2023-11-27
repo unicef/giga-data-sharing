@@ -1,5 +1,6 @@
 from functools import lru_cache
 from pathlib import Path
+from typing import Literal
 
 from pydantic_settings import BaseSettings
 
@@ -9,6 +10,7 @@ class Settings(BaseSettings):
         env_file = ".env"
         extra = "ignore"
 
+    PYTHON_ENV: Literal["development", "staging", "production"] = "production"
     BASE_DIR: Path = Path(__file__).parent.parent
     SECRET_KEY: str
     CORS_ALLOWED_ORIGINS: list[str] = ["*"]
@@ -20,6 +22,11 @@ class Settings(BaseSettings):
     POSTGRESQL_PASSWORD: str
     POSTGRESQL_DATABASE: str
     DB_HOST: str
+    APP_DOMAIN: str
+
+    @property
+    def IN_PRODUCTION(self) -> bool:
+        return self.PYTHON_ENV == "production"
 
     @property
     def DATABASE_URL(self) -> str:

@@ -145,3 +145,8 @@ tasks:
     desc: Connect to database
     cmds:
       - task exec -- db psql -U {{.POSTGRESQL_USERNAME}} -d {{.POSTGRESQL_DATABASE}}
+
+  load-fixtures:
+    desc: Install database fixtures
+    cmds:
+      - task exec -- proxy python -m scripts.load_fixtures {{.CLI_ARGS}}
