@@ -1,12 +1,18 @@
 from datetime import datetime
-from typing import Any, Literal, Optional, Union
+from typing import Annotated, Any, Literal, Optional, Union
+
 import httpx
 import orjson
-from fastapi import APIRouter, Depends, Header, Security
+from fastapi import APIRouter, Depends, Header, Path, Query, Security
 from fastapi.requests import Request
 from fastapi.responses import JSONResponse, ORJSONResponse, Response
 from pydantic import BaseModel
 
+from data_sharing.annotations.delta_sharing import (
+    max_results_description,
+    page_token_description,
+    share_name_description,
+)
 from data_sharing.permissions import header_scheme, is_authenticated
 from data_sharing.schemas import delta_sharing, delta
 from data_sharing.settings import settings
@@ -67,8 +73,8 @@ async def forward_sharing_request(
 async def list_shares(
     request: Request,
     response: Response,
-    maxResults: Optional[int] = None,
-    pageToken: Optional[str] = None,
+    maxResults: Annotated[int, Query(description=(max_results_description))] = None,
+    pageToken: Annotated[int, Query(description=(page_token_description))] = None,
     token=Depends(header_scheme),
 ):
     query_params = dict(maxResults=maxResults, pageToken=pageToken)
@@ -114,11 +120,11 @@ async def get_share(
     response_model=delta_sharing.Pagination[delta_sharing.Schema],
 )
 async def list_schemas(
-    share_name: str,
+    share_name: Annotated[str, Path(description=share_name_description)],
     request: Request,
     response: Response,
-    maxResults: Optional[int] = None,
-    pageToken: Optional[str] = None,
+    maxResults: Annotated[int, Query(description=max_results_description)] = None,
+    pageToken: Annotated[int, Query(description=page_token_description)] = None,
     token=Depends(header_scheme),
 ):
     query_params = dict(maxResults=maxResults, pageToken=pageToken)
@@ -219,8 +225,9 @@ async def query_table_metadata(
     request: Request,
     response: Response,
     token=Depends(header_scheme),
-    delta_sharing_capabilities: str
-    | None = Header(None, alias="delta-sharing-capabilities"),
+    delta_sharing_capabilities: str | None = Header(
+        None, alias="delta-sharing-capabilities"
+    ),
 ):
     additional_headers = {}
     if delta_sharing_capabilities is not None:
@@ -261,8 +268,9 @@ async def query_table_data(
     body: delta_sharing.TableQueryRequest = None,
     token=Depends(header_scheme),
     content_type: str | None = Header(None, alias="Content-Type"),
-    delta_sharing_capabilities: str
-    | None = Header(None, alias="delta-sharing-capabilities"),
+    delta_sharing_capabilities: str | None = Header(
+        None, alias="delta-sharing-capabilities"
+    ),
 ):
     additional_headers = {}
     if delta_sharing_capabilities is not None:
@@ -316,8 +324,9 @@ async def query_table_change_data_feed(
     request: Request,
     response: Response,
     token=Depends(header_scheme),
-    delta_sharing_capabilities: str
-    | None = Header(None, alias="delta-sharing-capabilities"),
+    delta_sharing_capabilities: str | None = Header(
+        None, alias="delta-sharing-capabilities"
+    ),
     startingVersion: Optional[int] = None,
     startingTimestamp: Optional[str] = None,
     endingVersion: Optional[int] = None,

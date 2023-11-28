@@ -19,8 +19,20 @@ tasks:
   setup:
     desc: Run initial setup
     cmds:
+      - task: setup-pre-commit
+      - task: setup-python
+
+  setup-pre-commit:
+    internal: true
+    desc: Install pre-commit hooks
+    cmds:
       - pip install -U pre-commit
-      - pre-commit install
+      - pre-commit install --install-hooks -t pre-commit -t commit-msg
+
+  setup-python:
+    internal: true
+    desc: Setup Python dependencies
+    cmds:
       - poetry env use 3.11
       - poetry install
 
