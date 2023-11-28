@@ -10,8 +10,10 @@ from .base import BaseModel
 apikey_role_association_table = sa.Table(
     "apikey_role_association_table",
     BaseModel.metadata,
-    sa.Column("api_key_id", sa.ForeignKey("api_keys.id"), nullable=False),
-    sa.Column("role_id", sa.ForeignKey("roles.id"), nullable=False),
+    sa.Column(
+        "api_key_id", sa.ForeignKey("api_keys.id", ondelete="CASCADE"), nullable=False
+    ),
+    sa.Column("role_id", sa.ForeignKey("roles.id", ondelete="CASCADE"), nullable=False),
 )
 
 
@@ -42,4 +44,5 @@ class ApiKey(BaseModel):
     roles: Mapped[set[Role]] = relationship(
         secondary=apikey_role_association_table,
         lazy="selectin",
+        cascade="all, delete",
     )

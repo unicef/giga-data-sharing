@@ -15,7 +15,6 @@ services:
     restart: unless-stopped
     init: true
     env_file: .env
-    platform: linux/amd64
     ports:
       - "8890:8890"
     volumes:

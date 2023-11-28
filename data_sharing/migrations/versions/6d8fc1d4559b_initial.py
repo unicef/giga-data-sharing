@@ -1,8 +1,8 @@
-"""initial migration
+"""initial
 
-Revision ID: eb349dd6105f
+Revision ID: 6d8fc1d4559b
 Revises:
-Create Date: 2023-11-27 14:03:31.389536
+Create Date: 2023-11-28 17:35:05.272075
 
 """
 
@@ -12,7 +12,7 @@ import sqlalchemy as sa
 from alembic import op
 
 # revision identifiers, used by Alembic.
-revision: str = "eb349dd6105f"
+revision: str = "6d8fc1d4559b"
 down_revision: Union[str, None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
@@ -53,14 +53,8 @@ def upgrade() -> None:
         "apikey_role_association_table",
         sa.Column("api_key_id", sa.Uuid(), nullable=False),
         sa.Column("role_id", sa.VARCHAR(length=5), nullable=False),
-        sa.ForeignKeyConstraint(
-            ["api_key_id"],
-            ["api_keys.id"],
-        ),
-        sa.ForeignKeyConstraint(
-            ["role_id"],
-            ["roles.id"],
-        ),
+        sa.ForeignKeyConstraint(["api_key_id"], ["api_keys.id"], ondelete="CASCADE"),
+        sa.ForeignKeyConstraint(["role_id"], ["roles.id"], ondelete="CASCADE"),
     )
     # ### end Alembic commands ###
 

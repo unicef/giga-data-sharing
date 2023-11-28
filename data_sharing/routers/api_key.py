@@ -40,7 +40,15 @@ async def view_api_key_details(
     return result
 
 
-@router.post("", response_model=ProfileFile)
+@router.post(
+    "",
+    response_model=ProfileFile,
+    response_description=(
+        "On successful key generation, the Delta Sharing Protocol Profile File is"
+        " returned, which contains the API key. Save this in a secure location as it"
+        " will not be shown again."
+    ),
+)
 async def generate_api_key(
     body: CreateApiKeyRequest, db: AsyncSession = Depends(get_async_db)
 ):
@@ -57,7 +65,7 @@ async def generate_api_key(
     api_key.roles.update(roles)
     db.add(api_key)
     await db.commit()
-    return dict(bearerToken=new_key, expirationTime=api_key.expiration)
+    return dict(id=api_key.id, bearerToken=new_key, expirationTime=api_key.expiration)
 
 
 @router.delete(
@@ -65,3 +73,4 @@ async def generate_api_key(
 )
 async def revoke_api_key(api_key_id: UUID4, db: AsyncSession = Depends(get_async_db)):
     await db.execute(delete(ApiKey).where(ApiKey.id == str(api_key_id)))
+    await db.commit()

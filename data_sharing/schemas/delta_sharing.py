@@ -139,6 +139,7 @@ class Error(BaseModel):
 
 
 class ProfileFile(BaseModel):
+    id: UUID4 = Field(description=ProfileFileDescriptions.id)
     shareCredentialsVersion: conint(ge=1) = Field(
         1, description=ProfileFileDescriptions.share_credentials_version
     )

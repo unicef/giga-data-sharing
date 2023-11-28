@@ -52,6 +52,10 @@ table_name_description = "The table name to query. It's case-insensitive."
 
 
 class ProfileFileDescriptions:
+    id = (
+        "The bearer token ID. This is a non-standard field in the Delta Sharing"
+        " Protocol."
+    )
     share_credentials_version = (
         "The file format version of the profile file. This version will be increased"
         " whenever non-forward-compatible changes are made to the profile format. When"
