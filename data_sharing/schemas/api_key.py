@@ -1,12 +1,4 @@
-from pydantic import (
-    UUID4,
-    AwareDatetime,
-    BaseModel,
-    Field,
-    conint,
-    constr,
-    field_serializer,
-)
+from pydantic import UUID4, AwareDatetime, BaseModel, Field, conint, constr
 
 from data_sharing.annotations.api_key import ApiKeyDescriptions
 
@@ -20,16 +12,11 @@ class SafeApiKey(BaseModel):
     key_id: UUID4 = Field(alias="id")
     created: AwareDatetime
     description: str = Field(None)
-    key: str = Field(description=ApiKeyDescriptions.key)
     expiration: AwareDatetime | None
     roles: list[Role]
 
     class Config:
         from_attributes = True
-
-    @field_serializer("key")
-    def serialize_key(self, key: str, _info):
-        return key.ljust(24, "*")
 
 
 class ApiKey(SafeApiKey):
@@ -37,20 +24,9 @@ class ApiKey(SafeApiKey):
 
 
 class CreateApiKeyRequest(BaseModel):
-    description: str = Field(
-        description="Describe what this API key will be used for or who will use it",
-    )
-    validity: conint(ge=0) = Field(
-        description=(
-            "Validity of the API key in days. Set to 0 for no expiration (not"
-            " recommended)"
-        )
-    )
-    roles: list[str] = Field(
-        description=(
-            "List of countries, using the ISO-3166 alpha-3 code, to grant access to"
-        )
-    )
+    description: str = Field(description=ApiKeyDescriptions.description)
+    validity: conint(ge=0) = Field(description=ApiKeyDescriptions.validity)
+    roles: list[str] = Field(description=ApiKeyDescriptions.roles)
 
     class Config:
         from_attributes = True

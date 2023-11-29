@@ -10,15 +10,16 @@ from data_sharing.internal.hashing import verify_key
 from data_sharing.models import ApiKey
 
 from .base import BasePermission
-from .scheme import header_scheme
 from .utils import extract_sharing_key_components
 
 
 class IsAuthenticated(BasePermission):
     async def __call__(
-        self, key=Depends(header_scheme), db: AsyncSession = Depends(get_async_db)
+        self,
+        key=Depends(extract_sharing_key_components),
+        db: AsyncSession = Depends(get_async_db),
     ):
-        key_id, secret = extract_sharing_key_components(key)
+        key_id, secret = key
         now = datetime.now().astimezone(ZoneInfo("UTC"))
         result = await db.scalar(select(ApiKey).where(ApiKey.id == key_id))
         if result is None:
@@ -39,11 +40,10 @@ class IsAuthenticated(BasePermission):
 class IsAdmin(BasePermission):
     async def __call__(
         self,
-        key=Depends(header_scheme),
+        key=Depends(extract_sharing_key_components),
         db: AsyncSession = Depends(get_async_db),
-        is_authenticated=Depends(IsAuthenticated.raises(False)),
     ):
-        key_id, secret = extract_sharing_key_components(key)
+        key_id, secret = key
         result = await db.scalar(select(ApiKey).where(ApiKey.id == key_id))
         if result is None:
             if self.raise_exceptions:

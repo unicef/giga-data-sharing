@@ -11,7 +11,7 @@ from data_sharing.constants import constants
 from data_sharing.db import get_async_db
 from data_sharing.internal.hashing import get_key_hash
 from data_sharing.models import ApiKey, Role
-from data_sharing.permissions import IsAdmin, IsAuthenticated, header_scheme
+from data_sharing.permissions import IsAdmin, IsAuthenticated, auth_scheme
 from data_sharing.permissions.utils import extract_sharing_key_components
 from data_sharing.schemas.api_key import CreateApiKeyRequest, SafeApiKey
 from data_sharing.schemas.delta_sharing import ProfileFile
@@ -23,35 +23,6 @@ router = APIRouter(
 )
 
 
-@router.get("/profile", response_model=ProfileFile)
-async def get_profile_file_for_current_user(
-    key=Depends(header_scheme), db: AsyncSession = Depends(get_async_db)
-):
-    key_id, key_secret = extract_sharing_key_components(key)
-    queryset = await db.scalar(select(ApiKey).where(ApiKey.id == str(key_id)))
-    if queryset is None:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
-    return ProfileFile(
-        bearerToken=f"{queryset.id}:{queryset.secret}",
-        expirationTime=queryset.expiration,
-    )
-
-
-@router.get(
-    "/profile/{api_key_id}",
-    response_model=ProfileFile,
-    dependencies=[Security(IsAdmin.raises(True))],
-)
-async def get_profile_file(api_key_id: UUID4, db: AsyncSession = Depends(get_async_db)):
-    queryset = await db.scalar(select(ApiKey).where(ApiKey.id == str(api_key_id)))
-    if queryset is None:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
-    return ProfileFile(
-        bearerToken=f"{queryset.id}:{queryset.secret}",
-        expirationTime=queryset.expiration,
-    )
-
-
 @router.get(
     "", response_model=list[SafeApiKey], dependencies=[Security(IsAdmin.raises(True))]
 )
@@ -59,17 +30,29 @@ async def list_api_keys(db: AsyncSession = Depends(get_async_db)):
     return await db.scalars(select(ApiKey).order_by(ApiKey.created.desc()))
 
 
-@router.get("/{api_key_id}", response_model=ProfileFile)
+@router.get("/me", response_model=SafeApiKey)
+async def view_api_key_details_for_current_user(
+    key=Depends(auth_scheme), db: AsyncSession = Depends(get_async_db)
+):
+    key_id, key_secret = extract_sharing_key_components(key)
+    queryset = await db.scalar(select(ApiKey).where(ApiKey.id == key_id))
+    if queryset is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
+    return queryset
+
+
+@router.get(
+    "/{api_key_id}",
+    response_model=SafeApiKey,
+    dependencies=[Security(IsAdmin.raises(True))],
+)
 async def view_api_key_details(
     api_key_id: UUID4, db: AsyncSession = Depends(get_async_db)
 ):
     queryset = await db.scalar(select(ApiKey).where(ApiKey.id == str(api_key_id)))
     if queryset is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
-    return ProfileFile(
-        bearerToken=f"{queryset.id}:{queryset.secret}",
-        expirationTime=queryset.expiration,
-    )
+    return queryset
 
 
 @router.post(

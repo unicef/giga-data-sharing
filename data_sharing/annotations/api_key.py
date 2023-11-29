@@ -1,5 +1,6 @@
 class ApiKeyDescriptions:
-    key = (
-        "The masked API key of arbitrary length showing only the first 6 characters as"
-        " a hint."
+    description = "Describe what this API key will be used for or who will use it"
+    validity = (
+        "Validity of the API key in days. Set to 0 for no expiration (not recommended)"
     )
+    roles = "List of countries, using the ISO-3166 alpha-3 code, to grant access to"

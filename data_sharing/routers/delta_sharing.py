@@ -3,15 +3,15 @@ from typing import Annotated, Any, Literal, Optional
 
 import httpx
 import orjson
-from fastapi import APIRouter, Depends, Header, Path, Query, Security
+from fastapi import APIRouter, Header, Path, Query, Security
 from fastapi.requests import Request
 from fastapi.responses import ORJSONResponse, Response
 from pydantic import BaseModel
 
 from data_sharing.annotations.delta_sharing import (
     delta_sharing_capabilities_header_description,
-    ending_version_description,
     ending_timestamp_description,
+    ending_version_description,
     include_historical_metadata_description,
     max_results_description,
     page_token_description,
@@ -21,7 +21,7 @@ from data_sharing.annotations.delta_sharing import (
     starting_version_description,
     table_name_description,
 )
-from data_sharing.permissions import IsAuthenticated, header_scheme
+from data_sharing.permissions import IsAuthenticated
 from data_sharing.schemas import delta, delta_sharing
 from data_sharing.settings import settings
 from data_sharing.utils.qs import query_parametrize
@@ -39,7 +39,6 @@ sharing_client = httpx.AsyncClient(
 async def forward_sharing_request(
     request: Request,
     response: Response,
-    token: str,
     query: str = "",
     body: BaseModel = None,
     response_type: Literal["json", "text", "full"] = "json",
@@ -50,7 +49,10 @@ async def forward_sharing_request(
     sharing_req = sharing_client.build_request(
         url=url,
         method=request.method,
-        headers={**additional_headers, "Authorization": f"Bearer {token}"},
+        headers={
+            **additional_headers,
+            "Authorization": f"Bearer {settings.DELTA_BEARER_TOKEN}",
+        },
         json=body.model_dump() if body else None,
     )
     sharing_res = await sharing_client.send(sharing_req)
@@ -83,16 +85,11 @@ async def list_shares(
     response: Response,
     maxResults: Annotated[int, Query(description=(max_results_description))] = None,
     pageToken: Annotated[int, Query(description=(page_token_description))] = None,
-    token=Depends(header_scheme),
 ):
     query_params = dict(maxResults=maxResults, pageToken=pageToken)
     parametrized_query = query_parametrize(query_params)
     sharing_res, error = await forward_sharing_request(
-        request,
-        response,
-        token,
-        parametrized_query,
-        response_type="full",
+        request, response, parametrized_query, response_type="full"
     )
     return sharing_res.json()
 
@@ -107,16 +104,12 @@ async def get_share(
     response: Response,
     maxResults: Annotated[int, Query(description=(max_results_description))] = None,
     pageToken: Annotated[int, Query(description=(page_token_description))] = None,
-    token=Depends(header_scheme),
 ):
     query_params = dict(maxResults=maxResults, pageToken=pageToken)
     parametrized_query = query_parametrize(query_params)
 
     sharing_res, error = await forward_sharing_request(
-        request,
-        response,
-        token,
-        parametrized_query,
+        request, response, parametrized_query
     )
     return sharing_res
 
@@ -131,16 +124,12 @@ async def list_schemas(
     response: Response,
     maxResults: Annotated[int, Query(description=max_results_description)] = None,
     pageToken: Annotated[int, Query(description=page_token_description)] = None,
-    token=Depends(header_scheme),
 ):
     query_params = dict(maxResults=maxResults, pageToken=pageToken)
     parametrized_query = query_parametrize(query_params)
 
     sharing_res, error = await forward_sharing_request(
-        request,
-        response,
-        token,
-        parametrized_query,
+        request, response, parametrized_query
     )
     return sharing_res
 
@@ -156,15 +145,11 @@ async def list_tables(
     response: Response,
     maxResults: Annotated[int, Query(description=max_results_description)] = None,
     pageToken: Annotated[int, Query(description=page_token_description)] = None,
-    token=Depends(header_scheme),
 ):
     query_params = dict(maxResults=maxResults, pageToken=pageToken)
     parametrized_query = query_parametrize(query_params)
     sharing_res, error = await forward_sharing_request(
-        request,
-        response,
-        token,
-        parametrized_query,
+        request, response, parametrized_query
     )
 
     return sharing_res
@@ -180,12 +165,10 @@ async def list_tables_in_share(
     response: Response,
     maxResults: Annotated[int, Query(description=max_results_description)] = None,
     pageToken: Annotated[int, Query(description=page_token_description)] = None,
-    token=Depends(header_scheme),
 ):
     sharing_res, error = await forward_sharing_request(
         request,
         response,
-        token,
         query_parametrize(dict(maxResults=maxResults, pageToken=pageToken)),
         response_type="full",
     )
@@ -204,12 +187,10 @@ async def query_table_version(
     startingTimestamp: Annotated[
         datetime, Query(description=starting_timestamp_description)
     ] = None,
-    token=Depends(header_scheme),
 ):
     sharing_res, error = await forward_sharing_request(
         request,
         response,
-        token,
         query_parametrize(dict(startingTimestamp=startingTimestamp)),
         response_type="full",
     )
@@ -230,7 +211,6 @@ async def query_table_metadata(
     table_name: Annotated[str, Path(description=table_name_description)],
     request: Request,
     response: Response,
-    token=Depends(header_scheme),
     delta_sharing_capabilities: Annotated[
         str | None,
         Header(
@@ -244,11 +224,7 @@ async def query_table_metadata(
         additional_headers["delta-sharing-capabilities"] = delta_sharing_capabilities
 
     sharing_res, error = await forward_sharing_request(
-        request,
-        response,
-        token,
-        response_type="full",
-        additional_headers=additional_headers,
+        request, response, response_type="full", additional_headers=additional_headers
     )
     if error:
         return sharing_res
@@ -277,7 +253,6 @@ async def query_table_data(
     request: Request,
     response: Response,
     body: delta_sharing.TableQueryRequest = None,
-    token=Depends(header_scheme),
     content_type: str | None = Header(None, alias="Content-Type"),
     delta_sharing_capabilities: Annotated[
         str | None,
@@ -297,7 +272,6 @@ async def query_table_data(
     sharing_res, error = await forward_sharing_request(
         request,
         response,
-        token,
         body=body,
         response_type="full",
         additional_headers=additional_headers,
@@ -341,7 +315,6 @@ async def query_table_change_data_feed(
     table_name: Annotated[str, Path(description=table_name_description)],
     request: Request,
     response: Response,
-    token=Depends(header_scheme),
     delta_sharing_capabilities: Annotated[
         str | None,
         Header(
@@ -372,7 +345,6 @@ async def query_table_change_data_feed(
     sharing_res, error = await forward_sharing_request(
         request,
         response,
-        token,
         query_parametrize(
             dict(
                 startingVersion=startingVersion,
