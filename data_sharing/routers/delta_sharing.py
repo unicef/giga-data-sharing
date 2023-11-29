@@ -360,12 +360,19 @@ async def query_table_change_data_feed(
         return sharing_res
 
     res_split = [s for s in sharing_res.text.split("\n") if s != ""]
-    headers = sharing_res.headers
+    response.headers["delta-table-version"] = sharing_res.headers.get(
+        "delta-table-version"
+    )
     if len(res_split) == 1:
         json_content = sharing_res.json()
         status_code = sharing_res.status_code
         return ORJSONResponse(json_content, status_code=status_code, headers=headers)
     else:
-        protocol, metadata = res_split
-        merged_dict = {**orjson.loads(protocol), **orjson.loads(metadata)}
-        return JSONResponse(content=merged_dict, headers=headers)
+        protocol, metadata, *remaining_items = res_split
+        change_data_feed = [orjson.loads(item) for item in remaining_items]
+        merged_dict = {
+            **orjson.loads(protocol),
+            **orjson.loads(metadata),
+            "files": change_data_feed,
+        }
+        return merged_dict

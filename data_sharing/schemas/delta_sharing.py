@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Dict, Generic, Optional, TypeVar
+from typing import Any, Dict, Generic, Optional, TypeVar
 
 from pydantic import UUID4, AnyHttpUrl, BaseModel, Field, conint
 
@@ -31,6 +31,10 @@ class Table(BaseModel):
     tableSchema: str = Field(alias="schema")
     share: str
     shareId: UUID4 = Field(None)
+
+
+class TableVersion(BaseModel):
+    deltaTableVersion: str = Field(alias="delta-table-version")
 
 
 class Protocol(BaseModel):
@@ -113,9 +117,7 @@ class TableDataResponse(TableMetadataResponse):
 
 
 class TableDataChangeResponse(TableMetadataResponse):
-    add: Add
-    cdf: CDF
-    remove: Remove
+    files: list[Any]
 
 
 class TableQueryRequest(BaseModel):
