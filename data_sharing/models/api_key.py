@@ -34,7 +34,9 @@ class ApiKey(BaseModel):
     )
     description: Mapped[str] = mapped_column()
     secret: Mapped[str] = mapped_column(nullable=False, index=True)
-    expiration: Mapped[datetime] = mapped_column(sa.DateTime(timezone=True), index=True)
+    expiration: Mapped[datetime | None] = mapped_column(
+        sa.DateTime(timezone=True), index=True, nullable=True
+    )
     roles: Mapped[set[Role]] = relationship(
         secondary=apikey_role_association_table,
         lazy="selectin",

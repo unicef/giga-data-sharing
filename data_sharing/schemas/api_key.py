@@ -21,7 +21,7 @@ class SafeApiKey(BaseModel):
     created: AwareDatetime
     description: str = Field(None)
     key: str = Field(description=ApiKeyDescriptions.key)
-    expiration: AwareDatetime
+    expiration: AwareDatetime | None
     roles: list[Role]
 
     class Config:
