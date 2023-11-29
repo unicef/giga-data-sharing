@@ -84,9 +84,9 @@ async def list_shares(
         response,
         token,
         parametrized_query,
+        response_type="full",
     )
-    headers = {"Content-Type": "application/json; charset=utf-8"}
-    return JSONResponse(content=sharing_res, headers=headers)
+    return sharing_res.json()
 
 
 @router.get(
@@ -110,9 +110,7 @@ async def get_share(
         token,
         parametrized_query,
     )
-
-    headers = {"Content-Type": "application/json; charset=utf-8"}
-    return JSONResponse(content=sharing_res, headers=headers)
+    return sharing_res
 
 
 @router.get(
@@ -136,8 +134,7 @@ async def list_schemas(
         token,
         parametrized_query,
     )
-    headers = {"Content-Type": "application/json; charset=utf-8"}
-    return JSONResponse(content=sharing_res, headers=headers)
+    return sharing_res
 
 
 @router.get(
@@ -161,8 +158,8 @@ async def list_tables(
         token,
         parametrized_query,
     )
-    headers = {"Content-Type": "application/json; charset=utf-8"}
-    return JSONResponse(content=sharing_res, headers=headers)
+
+    return sharing_res
 
 
 @router.get(
@@ -184,8 +181,7 @@ async def list_tables_in_share(
         query_parametrize(dict(maxResults=maxResults, pageToken=pageToken)),
         response_type="full",
     )
-    headers = {"Content-Type": "application/json; charset=utf-8"}
-    sharing_res_json = JSONResponse(content=sharing_res.json(), headers=headers)
+    sharing_res_json = sharing_res.json()
     return sharing_res if error else sharing_res_json
 
 
@@ -208,14 +204,17 @@ async def query_table_version(
         query_parametrize(dict(startingTimestamp=startingTimestamp)),
         response_type="full",
     )
+    response.headers["delta-table-version"] = sharing_res.headers.get(
+        "delta-table-version"
+    )
 
-    return sharing_res if error else Response(headers=sharing_res.headers, content=None)
+    return None
 
 
 @router.get(
     "/shares/{share_name}/schemas/{schema_name}/tables/{table_name}/metadata",
     response_model=Union[
-        delta_sharing.TableDataChangeResponse, delta.TableMetadataResponse
+        delta_sharing.TableMetadataResponse, delta.TableMetadataResponse
     ],
 )
 async def query_table_metadata(
@@ -244,15 +243,16 @@ async def query_table_metadata(
         return sharing_res
 
     res_split = [s for s in sharing_res.text.split("\n") if s != ""]
-    headers = sharing_res.headers
+
+    response.headers["delta-table-version"] = sharing_res.headers.get(
+        "delta-table-version"
+    )
+
     if len(res_split) == 1:
-        json_content = sharing_res.json()
-        status_code = sharing_res.status_code
-        return ORJSONResponse(json_content, status_code=status_code, headers=headers)
+        return ORJSONResponse(sharing_res.json(), status_code=sharing_res.status_code)
     else:
         protocol, metadata = res_split
-        merged_dict = {**orjson.loads(protocol), **orjson.loads(metadata)}
-        return JSONResponse(content=merged_dict, headers=headers)
+        return {**orjson.loads(protocol), **orjson.loads(metadata)}
 
 
 @router.post(
@@ -291,24 +291,24 @@ async def query_table_data(
         return sharing_res
 
     res_split = [s for s in sharing_res.text.split("\n") if s != ""]
-    headers = sharing_res.headers
-
+    response.headers["delta-table-version"] = sharing_res.headers.get(
+        "delta-table-version"
+    )
     if len(res_split) == 2:
         protocol, metadata = res_split
-        merged_dict = {**orjson.loads(protocol), **orjson.loads(metadata), "files": []}
-        return JSONResponse(content=merged_dict, headers=headers)
+        return {**orjson.loads(protocol), **orjson.loads(metadata), "files": []}
 
     else:
         protocol, metadata, *files = res_split
         non_empty_files = [
             orjson.loads(file).get("file") for file in files if len(file) > 0
         ]
-        merged_dict = {
+
+        return {
             **orjson.loads(protocol),
             **orjson.loads(metadata),
             "files": non_empty_files,
         }
-        return JSONResponse(content=merged_dict, headers=headers)
 
 
 @router.get(
