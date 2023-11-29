@@ -1,5 +1,5 @@
 authorization:
-  bearerToken: '{{.DELTA_BEARER_TOKEN}}'
+  bearerToken: "{{.DELTA_BEARER_TOKEN}}"
 deltaTableCacheSize: 10
 endpoint: /sharing
 evaluateJsonPredicateHints: true

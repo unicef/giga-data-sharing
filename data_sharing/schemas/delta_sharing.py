@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Generic, TypeVar
+from typing import Any, Dict, Generic, Optional, TypeVar
 
 from pydantic import UUID4, AnyHttpUrl, BaseModel, Field, conint
 
@@ -13,7 +13,11 @@ class Pagination(BaseModel, Generic[T]):
 
 class Share(BaseModel):
     name: str
-    id: UUID4 = Field(None)
+    id: Optional[UUID4] = Field(None)
+
+
+class ShareData(BaseModel):
+    share: Share
 
 
 class Schema(BaseModel):
@@ -43,15 +47,15 @@ class Format(BaseModel):
 
 class Metadata(BaseModel):
     id: UUID4
-    name: str = Field(None)
-    description: str = Field(None)
+    name: Optional[str] = Field(None)
+    description: Optional[str] = Field(None)
     format: Format
     schemaString: str
     partitionColumns: list[str]
-    configuration: dict[str, str]
-    version: conint(ge=1) = Field(None)
-    size: conint(ge=0) = Field(None)
-    numFile: conint(ge=0) = Field(None)
+    configuration: Optional[Dict[str, str]] = None
+    version: Optional[conint(ge=1)] = Field(None)
+    size: Optional[conint(ge=0)] = Field(None)
+    numFile: Optional[conint(ge=0)] = Field(None)
 
 
 class File(BaseModel):
@@ -59,10 +63,48 @@ class File(BaseModel):
     url: AnyHttpUrl
     partitionValues: dict[str, str]
     size: conint(ge=0)
-    stats: str = Field(None)
-    version: conint(ge=1) = Field(None)
+    stats: Optional[str] = Field(None)
+    version: Optional[conint(ge=1)] = Field(None)
+    timestamp: Optional[conint(ge=0)] = Field(None)
+    expirationTimestamp: Optional[conint(ge=0)] = Field(None)
+
+
+class Add(BaseModel):
+    id: str
+    url: AnyHttpUrl
+    partitionValues: dict[str, str]
+    size: conint(ge=0)
     timestamp: conint(ge=0) = Field(None)
-    expirationTimestamp: conint(ge=0) = Field(None)
+    version: conint(ge=1) = Field(None)
+    stats: Optional[str] = Field(None)
+    expirationTimestamp: Optional[conint(ge=0)] = Field(None)
+
+
+class CDF(BaseModel):
+    id: str
+    url: AnyHttpUrl
+    partitionValues: dict[str, str]
+    size: conint(ge=0)
+    timestamp: conint(ge=0) = Field(None)
+    version: conint(ge=1) = Field(None)
+    expirationTimestamp: Optional[conint(ge=0)] = Field(None)
+
+
+class Remove(BaseModel):
+    id: str
+    url: AnyHttpUrl
+    partitionValues: dict[str, str]
+    size: conint(ge=0)
+    timestamp: conint(ge=0) = Field(None)
+    version: conint(ge=1) = Field(None)
+    expirationTimestamp: Optional[conint(ge=0)] = Field(None)
+
+
+class ProfileFile(BaseModel):
+    shareCredentialsVersion: int
+    endpoint: str
+    bearerToken: str
+    expirationTimestamp: datetime
 
 
 class TableMetadataResponse(BaseModel):
@@ -72,6 +114,10 @@ class TableMetadataResponse(BaseModel):
 
 class TableDataResponse(TableMetadataResponse):
     files: list[File]
+
+
+class TableDataChangeResponse(TableMetadataResponse):
+    files: list[Dict[str, Add | Remove | CDF]]
 
 
 class TableQueryRequest(BaseModel):

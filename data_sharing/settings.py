@@ -14,6 +14,7 @@ class Settings(BaseSettings):
     DELTA_BEARER_TOKEN: str
     STORAGE_ACCESS_KEY: str
     DELTA_SHARING_HOST: str
+    PYTHON_ENV: str = "production"
 
 
 @lru_cache
