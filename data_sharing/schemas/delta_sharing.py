@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Any, Dict, Generic, Optional, TypeVar
+from typing import Dict, Generic, Optional, TypeVar
 
 from pydantic import UUID4, AnyHttpUrl, BaseModel, Field, conint
 
@@ -103,13 +103,6 @@ class Remove(BaseModel):
     expirationTimestamp: Optional[conint(ge=0)] = Field(None)
 
 
-class ProfileFile(BaseModel):
-    shareCredentialsVersion: int
-    endpoint: str
-    bearerToken: str
-    expirationTimestamp: datetime
-
-
 class TableMetadataResponse(BaseModel):
     protocol: Protocol
     metaData: Metadata
@@ -139,7 +132,6 @@ class Error(BaseModel):
 
 
 class ProfileFile(BaseModel):
-    id: UUID4 = Field(description=ProfileFileDescriptions.id)
     shareCredentialsVersion: conint(ge=1) = Field(
         1, description=ProfileFileDescriptions.share_credentials_version
     )
@@ -147,6 +139,6 @@ class ProfileFile(BaseModel):
         f"https://{settings.APP_DOMAIN}", description=ProfileFileDescriptions.endpoint
     )
     bearerToken: str = Field(description=ProfileFileDescriptions.bearer_token)
-    expirationTime: datetime = Field(
-        None, description=ProfileFileDescriptions.expiration_time
+    expirationTime: datetime | None = Field(
+        description=ProfileFileDescriptions.expiration_time
     )

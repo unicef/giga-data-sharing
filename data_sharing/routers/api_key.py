@@ -11,7 +11,8 @@ from data_sharing.constants import constants
 from data_sharing.db import get_async_db
 from data_sharing.internal.hashing import get_key_hash
 from data_sharing.models import ApiKey, Role
-from data_sharing.permissions import IsAuthenticated
+from data_sharing.permissions import IsAdmin, IsAuthenticated, header_scheme
+from data_sharing.permissions.utils import extract_sharing_key_components
 from data_sharing.schemas.api_key import CreateApiKeyRequest, SafeApiKey
 from data_sharing.schemas.delta_sharing import ProfileFile
 
@@ -22,21 +23,53 @@ router = APIRouter(
 )
 
 
-@router.get("", response_model=list[SafeApiKey])
+@router.get("/profile", response_model=ProfileFile)
+async def get_profile_file_for_current_user(
+    key=Depends(header_scheme), db: AsyncSession = Depends(get_async_db)
+):
+    key_id, key_secret = extract_sharing_key_components(key)
+    queryset = await db.scalar(select(ApiKey).where(ApiKey.id == str(key_id)))
+    if queryset is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
+    return ProfileFile(
+        bearerToken=f"{queryset.id}:{queryset.secret}",
+        expirationTime=queryset.expiration,
+    )
+
+
+@router.get(
+    "/profile/{api_key_id}",
+    response_model=ProfileFile,
+    dependencies=[Security(IsAdmin.raises(True))],
+)
+async def get_profile_file(api_key_id: UUID4, db: AsyncSession = Depends(get_async_db)):
+    queryset = await db.scalar(select(ApiKey).where(ApiKey.id == str(api_key_id)))
+    if queryset is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
+    return ProfileFile(
+        bearerToken=f"{queryset.id}:{queryset.secret}",
+        expirationTime=queryset.expiration,
+    )
+
+
+@router.get(
+    "", response_model=list[SafeApiKey], dependencies=[Security(IsAdmin.raises(True))]
+)
 async def list_api_keys(db: AsyncSession = Depends(get_async_db)):
-    queryset = await db.execute(select(ApiKey).order_by(ApiKey.created.desc()))
-    results = queryset.all()
-    return [r for (r,) in results]
+    return await db.scalars(select(ApiKey).order_by(ApiKey.created.desc()))
 
 
-@router.get("/{api_key_id}", response_model=SafeApiKey)
+@router.get("/{api_key_id}", response_model=ProfileFile)
 async def view_api_key_details(
     api_key_id: UUID4, db: AsyncSession = Depends(get_async_db)
 ):
-    queryset = await db.execute(select(ApiKey).where(ApiKey.id == str(api_key_id)))
-    if (result := queryset.first()) is None:
+    queryset = await db.scalar(select(ApiKey).where(ApiKey.id == str(api_key_id)))
+    if queryset is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
-    return result[0]
+    return ProfileFile(
+        bearerToken=f"{queryset.id}:{queryset.secret}",
+        expirationTime=queryset.expiration,
+    )
 
 
 @router.post(
@@ -47,6 +80,7 @@ async def view_api_key_details(
         " returned, which contains the API key. Save this in a secure location as it"
         " will not be shown again."
     ),
+    dependencies=[Security(IsAdmin.raises(True))],
 )
 async def generate_api_key(
     body: CreateApiKeyRequest, db: AsyncSession = Depends(get_async_db)
@@ -58,16 +92,20 @@ async def generate_api_key(
         secret=get_key_hash(new_key),
         expiration=now + timedelta(days=body.validity) if body.validity > 0 else None,
     )
-    roles_queryset = await db.execute(select(Role).where(Role.id.in_(body.roles)))
-    roles = [r for (r,) in roles_queryset.all()]
+    roles = await db.scalars(select(Role).where(Role.id.in_(body.roles)))
     api_key.roles.update(roles)
     db.add(api_key)
     await db.commit()
-    return dict(id=api_key.id, bearerToken=new_key, expirationTime=api_key.expiration)
+    return dict(
+        bearerToken=f"{api_key.id}:{new_key}", expirationTime=api_key.expiration
+    )
 
 
 @router.delete(
-    "/{api_key_id}", status_code=status.HTTP_204_NO_CONTENT, response_model=None
+    "/{api_key_id}",
+    status_code=status.HTTP_204_NO_CONTENT,
+    response_model=None,
+    dependencies=[Security(IsAdmin.raises(True))],
 )
 async def revoke_api_key(api_key_id: UUID4, db: AsyncSession = Depends(get_async_db)):
     await db.execute(delete(ApiKey).where(ApiKey.id == str(api_key_id)))

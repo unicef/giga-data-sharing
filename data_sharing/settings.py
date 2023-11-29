@@ -17,7 +17,6 @@ class Settings(BaseSettings):
     DELTA_BEARER_TOKEN: str
     STORAGE_ACCESS_KEY: str
     DELTA_SHARING_HOST: str
-    PYTHON_ENV: str = "production"
     POSTGRESQL_USERNAME: str
     POSTGRESQL_PASSWORD: str
     POSTGRESQL_DATABASE: str
