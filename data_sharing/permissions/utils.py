@@ -2,7 +2,12 @@ from typing import Annotated
 
 from fastapi import Depends, HTTPException
 from fastapi.security import HTTPAuthorizationCredentials
+from sqlalchemy import select
+from sqlalchemy.ext.asyncio import AsyncSession
 from starlette import status
+
+from data_sharing.db import get_async_db
+from data_sharing.models import ApiKey
 
 from .scheme import auth_scheme
 
@@ -18,3 +23,12 @@ def extract_sharing_key_components(
         )
 
     return split[0], split[1]
+
+
+async def get_current_user(
+    key=Depends(extract_sharing_key_components),
+    db: AsyncSession = Depends(get_async_db),
+) -> ApiKey:
+    id_, secret = key
+    result = await db.scalar(select(ApiKey).where(ApiKey.id == id_))
+    return result

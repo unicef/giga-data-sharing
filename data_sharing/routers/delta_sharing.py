@@ -3,7 +3,7 @@ from typing import Annotated, Any, Literal, Optional
 
 import httpx
 import orjson
-from fastapi import APIRouter, Header, Path, Query, Security
+from fastapi import APIRouter, Depends, Header, Path, Query, Security
 from fastapi.requests import Request
 from fastapi.responses import ORJSONResponse, Response
 from pydantic import BaseModel
@@ -21,7 +21,10 @@ from data_sharing.annotations.delta_sharing import (
     starting_version_description,
     table_name_description,
 )
+from data_sharing.models import ApiKey
 from data_sharing.permissions import IsAuthenticated
+from data_sharing.permissions.permissions import HasTablePermissions
+from data_sharing.permissions.utils import get_current_user
 from data_sharing.schemas import delta, delta_sharing
 from data_sharing.settings import settings
 from data_sharing.utils.qs import query_parametrize
@@ -145,12 +148,21 @@ async def list_tables(
     response: Response,
     maxResults: Annotated[int, Query(description=max_results_description)] = None,
     pageToken: Annotated[int, Query(description=page_token_description)] = None,
+    current_user: ApiKey = Depends(get_current_user),
 ):
     query_params = dict(maxResults=maxResults, pageToken=pageToken)
     parametrized_query = query_parametrize(query_params)
     sharing_res, error = await forward_sharing_request(
         request, response, parametrized_query
     )
+    if error:
+        return sharing_res
+
+    role_codes = [r.id for r in current_user.roles]
+    if "ADMIN" not in role_codes:
+        sharing_res["items"] = list(
+            filter(lambda s: s["name"] in role_codes, sharing_res["items"])
+        )
 
     return sharing_res
 
@@ -165,6 +177,7 @@ async def list_tables_in_share(
     response: Response,
     maxResults: Annotated[int, Query(description=max_results_description)] = None,
     pageToken: Annotated[int, Query(description=page_token_description)] = None,
+    current_user: ApiKey = Depends(get_current_user),
 ):
     sharing_res, error = await forward_sharing_request(
         request,
@@ -172,11 +185,21 @@ async def list_tables_in_share(
         query_parametrize(dict(maxResults=maxResults, pageToken=pageToken)),
         response_type="full",
     )
-    return sharing_res if error else sharing_res.json()
+    if error:
+        return sharing_res
+
+    sharing_json = sharing_res.json()
+    role_codes = [r.id for r in current_user.roles]
+    if "ADMIN" not in role_codes:
+        sharing_json["items"] = list(
+            filter(lambda s: s["name"] in role_codes, sharing_json["items"])
+        )
+    return sharing_json
 
 
 @router.get(
     "/shares/{share_name}/schemas/{schema_name}/tables/{table_name}/version",
+    dependencies=[Depends(HasTablePermissions.raises(True))],
 )
 async def query_table_version(
     share_name: Annotated[str, Path(description=share_name_description)],
@@ -204,6 +227,7 @@ async def query_table_version(
 @router.get(
     "/shares/{share_name}/schemas/{schema_name}/tables/{table_name}/metadata",
     response_model=delta_sharing.TableMetadataResponse | delta.TableMetadataResponse,
+    dependencies=[Depends(HasTablePermissions.raises(True))],
 )
 async def query_table_metadata(
     share_name: Annotated[str, Path(description=share_name_description)],
@@ -245,6 +269,7 @@ async def query_table_metadata(
 @router.post(
     "/shares/{share_name}/schemas/{schema_name}/tables/{table_name}/query",
     response_model=delta_sharing.TableDataResponse | delta.TableDataResponse,
+    dependencies=[Depends(HasTablePermissions.raises(True))],
 )
 async def query_table_data(
     share_name: Annotated[str, Path(description=share_name_description)],
@@ -308,6 +333,7 @@ async def query_table_data(
     "/shares/{share_name}/schemas/{schema_name}/tables/{table_name}/changes",
     response_model=delta_sharing.TableDataChangeResponse
     | delta.TableDataChangeResponse,
+    dependencies=[Depends(HasTablePermissions.raises(True))],
 )
 async def query_table_change_data_feed(
     share_name: Annotated[str, Path(description=share_name_description)],

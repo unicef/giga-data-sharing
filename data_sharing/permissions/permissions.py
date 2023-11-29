@@ -1,7 +1,7 @@
 from datetime import datetime
 from zoneinfo import ZoneInfo
 
-from fastapi import Depends, HTTPException, status
+from fastapi import Depends, HTTPException, Path, status
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -10,7 +10,7 @@ from data_sharing.internal.hashing import verify_key
 from data_sharing.models import ApiKey
 
 from .base import BasePermission
-from .utils import extract_sharing_key_components
+from .utils import extract_sharing_key_components, get_current_user
 
 
 class IsAuthenticated(BasePermission):
@@ -57,3 +57,15 @@ class IsAdmin(BasePermission):
             return False
 
         return True
+
+
+class HasTablePermissions(BasePermission):
+    def __call__(
+        self, table_name: str = Path(), current_user: ApiKey = Depends(get_current_user)
+    ):
+        role_codes = [r.id for r in current_user.roles]
+        if "ADMIN" in role_codes:
+            return True
+
+        if table_name not in role_codes:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
