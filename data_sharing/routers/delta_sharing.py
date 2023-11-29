@@ -1,11 +1,11 @@
 from datetime import datetime
-from typing import Annotated, Any, Literal, Optional, Union
+from typing import Annotated, Any, Literal, Optional
 
 import httpx
 import orjson
 from fastapi import APIRouter, Depends, Header, Path, Query, Security
 from fastapi.requests import Request
-from fastapi.responses import JSONResponse, ORJSONResponse, Response
+from fastapi.responses import ORJSONResponse, Response
 from pydantic import BaseModel
 
 from data_sharing.annotations.delta_sharing import (
@@ -212,9 +212,7 @@ async def query_table_version(
 
 @router.get(
     "/shares/{share_name}/schemas/{schema_name}/tables/{table_name}/metadata",
-    response_model=Union[
-        delta_sharing.TableMetadataResponse, delta.TableMetadataResponse
-    ],
+    response_model=delta_sharing.TableMetadataResponse | delta.TableMetadataResponse,
 )
 async def query_table_metadata(
     share_name: str,
@@ -256,7 +254,7 @@ async def query_table_metadata(
 
 @router.post(
     "/shares/{share_name}/schemas/{schema_name}/tables/{table_name}/query",
-    response_model=Union[delta_sharing.TableDataResponse, delta.TableDataResponse],
+    response_model=delta_sharing.TableDataResponse | delta.TableDataResponse,
 )
 async def query_table_data(
     share_name: str,
@@ -316,9 +314,8 @@ async def query_table_data(
 
 @router.get(
     "/shares/{share_name}/schemas/{schema_name}/tables/{table_name}/changes",
-    response_model=Union[
-        delta_sharing.TableDataChangeResponse, delta.TableDataChangeResponse
-    ],
+    response_model=delta_sharing.TableDataChangeResponse
+    | delta.TableDataChangeResponse,
 )
 async def query_table_change_data_feed(
     share_name: str,
