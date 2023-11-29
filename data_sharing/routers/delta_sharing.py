@@ -163,11 +163,11 @@ async def list_tables(
 
 
 @router.get(
-    "/shares/{share}/all-tables",
+    "/shares/{share_name}/all-tables",
     response_model=delta_sharing.Pagination[delta_sharing.Table],
 )
 async def list_tables_in_share(
-    share: str,
+    share_name: str,
     request: Request,
     response: Response,
     maxResults: Optional[int] = None,
@@ -181,8 +181,7 @@ async def list_tables_in_share(
         query_parametrize(dict(maxResults=maxResults, pageToken=pageToken)),
         response_type="full",
     )
-    sharing_res_json = sharing_res.json()
-    return sharing_res if error else sharing_res_json
+    return sharing_res if error else sharing_res.json()
 
 
 @router.get(
@@ -296,7 +295,11 @@ async def query_table_data(
     )
     if len(res_split) == 2:
         protocol, metadata = res_split
-        return {**orjson.loads(protocol), **orjson.loads(metadata), "files": []}
+        return {
+            **orjson.loads(protocol),
+            **orjson.loads(metadata),
+            "files": [],
+        }
 
     else:
         protocol, metadata, *files = res_split
