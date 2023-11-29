@@ -23,6 +23,7 @@ alembic = "^1.12.1"
 psycopg2-binary = "^2.9.9"
 passlib = {extras = ["argon2"], version = "^1.7.4"}
 asyncpg = "^0.29.0"
+country-converter = "^1.1.1"
 
 [tool.poetry.group.dev.dependencies]
 black = "^23.10.0"

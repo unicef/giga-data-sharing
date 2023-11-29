@@ -1,8 +1,8 @@
 """initial
 
-Revision ID: 6d8fc1d4559b
+Revision ID: e840d0eda296
 Revises:
-Create Date: 2023-11-28 17:35:05.272075
+Create Date: 2023-11-29 07:06:54.050335
 
 """
 
@@ -12,7 +12,7 @@ import sqlalchemy as sa
 from alembic import op
 
 # revision identifiers, used by Alembic.
-revision: str = "6d8fc1d4559b"
+revision: str = "e840d0eda296"
 down_revision: Union[str, None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
@@ -30,18 +30,15 @@ def upgrade() -> None:
             nullable=False,
         ),
         sa.Column("description", sa.String(), nullable=False),
-        sa.Column("key", sa.VARCHAR(length=6), nullable=False),
-        sa.Column("hashed_key", sa.String(), nullable=False),
+        sa.Column("secret", sa.String(), nullable=False),
         sa.Column("expiration", sa.DateTime(timezone=True), nullable=False),
         sa.PrimaryKeyConstraint("id"),
     )
     op.create_index(
         op.f("ix_api_keys_expiration"), "api_keys", ["expiration"], unique=False
     )
-    op.create_index(
-        op.f("ix_api_keys_hashed_key"), "api_keys", ["hashed_key"], unique=False
-    )
     op.create_index(op.f("ix_api_keys_id"), "api_keys", ["id"], unique=False)
+    op.create_index(op.f("ix_api_keys_secret"), "api_keys", ["secret"], unique=False)
     op.create_table(
         "roles",
         sa.Column("id", sa.VARCHAR(length=5), nullable=False),
@@ -64,8 +61,8 @@ def downgrade() -> None:
     op.drop_table("apikey_role_association_table")
     op.drop_index(op.f("ix_roles_id"), table_name="roles")
     op.drop_table("roles")
+    op.drop_index(op.f("ix_api_keys_secret"), table_name="api_keys")
     op.drop_index(op.f("ix_api_keys_id"), table_name="api_keys")
-    op.drop_index(op.f("ix_api_keys_hashed_key"), table_name="api_keys")
     op.drop_index(op.f("ix_api_keys_expiration"), table_name="api_keys")
     op.drop_table("api_keys")
     # ### end Alembic commands ###

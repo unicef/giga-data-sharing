@@ -4,13 +4,13 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from data_sharing.db import get_async_db
 from data_sharing.models import Role
-from data_sharing.permissions import is_authenticated
+from data_sharing.permissions import IsAuthenticated
 from data_sharing.schemas.api_key import Role as RoleSchema
 
 router = APIRouter(
     prefix="/roles",
     tags=["roles"],
-    dependencies=[Security(is_authenticated)],
+    dependencies=[Security(IsAuthenticated.raises(True))],
 )
 
 

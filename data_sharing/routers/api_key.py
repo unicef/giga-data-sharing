@@ -11,14 +11,14 @@ from data_sharing.constants import constants
 from data_sharing.db import get_async_db
 from data_sharing.internal.hashing import get_key_hash
 from data_sharing.models import ApiKey, Role
-from data_sharing.permissions import is_authenticated
+from data_sharing.permissions import IsAuthenticated
 from data_sharing.schemas.api_key import CreateApiKeyRequest, SafeApiKey
 from data_sharing.schemas.delta_sharing import ProfileFile
 
 router = APIRouter(
     prefix="/api-keys",
     tags=["api_key"],
-    dependencies=[Security(is_authenticated)],
+    dependencies=[Security(IsAuthenticated.raises(True))],
 )
 
 
@@ -34,10 +34,9 @@ async def view_api_key_details(
     api_key_id: UUID4, db: AsyncSession = Depends(get_async_db)
 ):
     queryset = await db.execute(select(ApiKey).where(ApiKey.id == str(api_key_id)))
-    (result,) = queryset.first()
-    if result is None:
+    if (result := queryset.first()) is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
-    return result
+    return result[0]
 
 
 @router.post(
@@ -56,8 +55,7 @@ async def generate_api_key(
     now = datetime.now().astimezone(ZoneInfo("UTC"))
     api_key = ApiKey(
         description=body.description,
-        key=new_key[: constants.API_KEY_HINT_LENGTH],
-        hashed_key=get_key_hash(new_key),
+        secret=get_key_hash(new_key),
         expiration=now + timedelta(days=body.validity) if body.validity > 0 else None,
     )
     roles_queryset = await db.execute(select(Role).where(Role.id.in_(body.roles)))

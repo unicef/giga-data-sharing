@@ -17,7 +17,7 @@ class Role(BaseModel):
 
 
 class SafeApiKey(BaseModel):
-    id: UUID4
+    key_id: UUID4 = Field(alias="id")
     created: AwareDatetime
     description: str = Field(None)
     key: str = Field(description=ApiKeyDescriptions.key)
@@ -33,7 +33,7 @@ class SafeApiKey(BaseModel):
 
 
 class ApiKey(SafeApiKey):
-    hashed_key: str
+    key_secret: str = Field(alias="secret")
 
 
 class CreateApiKeyRequest(BaseModel):

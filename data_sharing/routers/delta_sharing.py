@@ -21,14 +21,14 @@ from data_sharing.annotations.delta_sharing import (
     starting_version_description,
     table_name_description,
 )
-from data_sharing.permissions import header_scheme, is_authenticated
-from data_sharing.schemas import delta_sharing, delta
+from data_sharing.permissions import IsAuthenticated, header_scheme
+from data_sharing.schemas import delta, delta_sharing
 from data_sharing.settings import settings
 from data_sharing.utils.qs import query_parametrize
 
 router = APIRouter(
     tags=["delta_sharing"],
-    dependencies=[Security(is_authenticated)],
+    dependencies=[Security(IsAuthenticated.raises(True))],
 )
 
 sharing_client = httpx.AsyncClient(

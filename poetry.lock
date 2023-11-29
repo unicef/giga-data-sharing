@@ -599,6 +599,25 @@ files = [
 ]
 
 [[package]]
+name = "country-converter"
+version = "1.1.1"
+description = "The country converter (coco) - a Python package for converting country names between different classifications schemes"
+optional = false
+python-versions = ">=3.7"
+files = [
+    {file = "country_converter-1.1.1-py3-none-any.whl", hash = "sha256:54f6918ab1114a19e1b91b1f9b7578345d5875cad24473168c06a22b932ea81a"},
+    {file = "country_converter-1.1.1.tar.gz", hash = "sha256:9fc1a43699efdd0eed91164e96280d320d0034bd6028502b23c9261ff12ec900"},
+]
+
+[package.dependencies]
+pandas = ">=1.0"
+
+[package.extras]
+dev = ["country-converter[lint,test]"]
+lint = ["black (>=22.3.0)", "isort (>=5.5.2)"]
+test = ["coveralls", "pytest (>=5.4.0)", "pytest-black", "pytest-cov (>=2.7.0)", "pytest-datadir", "pytest-mypy"]
+
+[[package]]
 name = "cryptography"
 version = "41.0.5"
 description = "cryptography is a package which provides cryptographic recipes and primitives to Python developers."
@@ -2786,4 +2805,4 @@ multidict = ">=4.0"
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "1b0fe076681bae267b02ad6ec13478a5445121ec577984a7a12cbcc11eaf63c6"
+content-hash = "44ed37646ec5d978061a633e08eb317a7036433bde75b7037427f126e1c2ca2e"
