@@ -366,7 +366,7 @@ async def query_table_change_data_feed(
     if len(res_split) == 1:
         json_content = sharing_res.json()
         status_code = sharing_res.status_code
-        return ORJSONResponse(json_content, status_code=status_code, headers=headers)
+        return ORJSONResponse(json_content, status_code=status_code)
     else:
         protocol, metadata, *remaining_items = res_split
         change_data_feed = [orjson.loads(item) for item in remaining_items]
