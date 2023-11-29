@@ -9,9 +9,17 @@ from fastapi.responses import ORJSONResponse, Response
 from pydantic import BaseModel
 
 from data_sharing.annotations.delta_sharing import (
+    delta_sharing_capabilities_header_description,
+    ending_version_description,
+    ending_timestamp_description,
+    include_historical_metadata_description,
     max_results_description,
     page_token_description,
+    schema_name_description,
     share_name_description,
+    starting_timestamp_description,
+    starting_version_description,
+    table_name_description,
 )
 from data_sharing.permissions import header_scheme, is_authenticated
 from data_sharing.schemas import delta_sharing, delta
@@ -94,11 +102,11 @@ async def list_shares(
     response_model=delta_sharing.ShareData,
 )
 async def get_share(
-    share_name: str,
+    share_name: Annotated[str, Path(description=share_name_description)],
     request: Request,
     response: Response,
-    maxResults: int = None,
-    pageToken: str = None,
+    maxResults: Annotated[int, Query(description=(max_results_description))] = None,
+    pageToken: Annotated[int, Query(description=(page_token_description))] = None,
     token=Depends(header_scheme),
 ):
     query_params = dict(maxResults=maxResults, pageToken=pageToken)
@@ -142,8 +150,8 @@ async def list_schemas(
     response_model=delta_sharing.Pagination[delta_sharing.Table],
 )
 async def list_tables(
-    share_name: str,
-    schema_name: str,
+    share_name: Annotated[str, Path(description=share_name_description)],
+    schema_name: Annotated[str, Path(description=schema_name_description)],
     request: Request,
     response: Response,
     maxResults: Optional[int] = None,
@@ -167,7 +175,7 @@ async def list_tables(
     response_model=delta_sharing.Pagination[delta_sharing.Table],
 )
 async def list_tables_in_share(
-    share_name: str,
+    share_name: Annotated[str, Path(description=share_name_description)],
     request: Request,
     response: Response,
     maxResults: Optional[int] = None,
@@ -188,12 +196,14 @@ async def list_tables_in_share(
     "/shares/{share_name}/schemas/{schema_name}/tables/{table_name}/version",
 )
 async def query_table_version(
-    share_name: str,
-    schema_name: str,
-    table_name: str,
+    share_name: Annotated[str, Path(description=share_name_description)],
+    schema_name: Annotated[str, Path(description=schema_name_description)],
+    table_name: Annotated[str, Path(description=table_name_description)],
     request: Request,
     response: Response,
-    startingTimestamp: datetime = None,
+    startingTimestamp: Annotated[
+        datetime, Query(description=starting_timestamp_description)
+    ] = None,
     token=Depends(header_scheme),
 ):
     sharing_res, error = await forward_sharing_request(
@@ -215,15 +225,19 @@ async def query_table_version(
     response_model=delta_sharing.TableMetadataResponse | delta.TableMetadataResponse,
 )
 async def query_table_metadata(
-    share_name: str,
-    schema_name: str,
-    table_name: str,
+    share_name: Annotated[str, Path(description=share_name_description)],
+    schema_name: Annotated[str, Path(description=schema_name_description)],
+    table_name: Annotated[str, Path(description=table_name_description)],
     request: Request,
     response: Response,
     token=Depends(header_scheme),
-    delta_sharing_capabilities: str | None = Header(
-        None, alias="delta-sharing-capabilities"
-    ),
+    delta_sharing_capabilities: Annotated[
+        str | None,
+        Header(
+            alias="delta-sharing-capabilities",
+            description=delta_sharing_capabilities_header_description,
+        ),
+    ] = None,
 ):
     additional_headers = {}
     if delta_sharing_capabilities is not None:
@@ -257,17 +271,21 @@ async def query_table_metadata(
     response_model=delta_sharing.TableDataResponse | delta.TableDataResponse,
 )
 async def query_table_data(
-    share_name: str,
-    schema_name: str,
-    table_name: str,
+    share_name: Annotated[str, Path(description=share_name_description)],
+    schema_name: Annotated[str, Path(description=schema_name_description)],
+    table_name: Annotated[str, Path(description=table_name_description)],
     request: Request,
     response: Response,
     body: delta_sharing.TableQueryRequest = None,
     token=Depends(header_scheme),
     content_type: str | None = Header(None, alias="Content-Type"),
-    delta_sharing_capabilities: str | None = Header(
-        None, alias="delta-sharing-capabilities"
-    ),
+    delta_sharing_capabilities: Annotated[
+        str | None,
+        Header(
+            alias="delta-sharing-capabilities",
+            description=delta_sharing_capabilities_header_description,
+        ),
+    ] = None,
 ):
     additional_headers = {}
     if delta_sharing_capabilities is not None:
@@ -318,20 +336,34 @@ async def query_table_data(
     | delta.TableDataChangeResponse,
 )
 async def query_table_change_data_feed(
-    share_name: str,
-    schema_name: str,
-    table_name: str,
+    share_name: Annotated[str, Path(description=share_name_description)],
+    schema_name: Annotated[str, Path(description=schema_name_description)],
+    table_name: Annotated[str, Path(description=table_name_description)],
     request: Request,
     response: Response,
     token=Depends(header_scheme),
-    delta_sharing_capabilities: str | None = Header(
-        None, alias="delta-sharing-capabilities"
-    ),
-    startingVersion: Optional[int] = None,
-    startingTimestamp: Optional[str] = None,
-    endingVersion: Optional[int] = None,
-    endingTimestamp: Optional[str] = None,
-    includeHistoricalMetadata: Optional[bool] = None,
+    delta_sharing_capabilities: Annotated[
+        str | None,
+        Header(
+            alias="delta-sharing-capabilities",
+            description=delta_sharing_capabilities_header_description,
+        ),
+    ] = None,
+    startingVersion: Annotated[
+        Optional[int], Query(description=starting_version_description)
+    ] = None,
+    startingTimestamp: Annotated[
+        Optional[str], Query(description=starting_timestamp_description)
+    ] = None,
+    endingVersion: Annotated[
+        Optional[int], Query(description=ending_version_description)
+    ] = None,
+    endingTimestamp: Annotated[
+        Optional[str], Query(description=ending_timestamp_description)
+    ] = None,
+    includeHistoricalMetadata: Annotated[
+        Optional[bool], Query(description=include_historical_metadata_description)
+    ] = None,
 ):
     additional_headers = {}
     if delta_sharing_capabilities is not None:
