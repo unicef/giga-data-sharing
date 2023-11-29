@@ -117,7 +117,7 @@ class TableDataResponse(TableMetadataResponse):
 
 
 class TableDataChangeResponse(TableMetadataResponse):
-    files: list[Any]
+    files: list[Dict[str, Add | Remove | CDF]]
 
 
 class TableQueryRequest(BaseModel):
