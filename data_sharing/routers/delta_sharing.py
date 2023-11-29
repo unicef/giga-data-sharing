@@ -154,8 +154,8 @@ async def list_tables(
     schema_name: Annotated[str, Path(description=schema_name_description)],
     request: Request,
     response: Response,
-    maxResults: Optional[int] = None,
-    pageToken: Optional[str] = None,
+    maxResults: Annotated[int, Query(description=max_results_description)] = None,
+    pageToken: Annotated[int, Query(description=page_token_description)] = None,
     token=Depends(header_scheme),
 ):
     query_params = dict(maxResults=maxResults, pageToken=pageToken)
@@ -178,8 +178,8 @@ async def list_tables_in_share(
     share_name: Annotated[str, Path(description=share_name_description)],
     request: Request,
     response: Response,
-    maxResults: Optional[int] = None,
-    pageToken: Optional[str] = None,
+    maxResults: Annotated[int, Query(description=max_results_description)] = None,
+    pageToken: Annotated[int, Query(description=page_token_description)] = None,
     token=Depends(header_scheme),
 ):
     sharing_res, error = await forward_sharing_request(
