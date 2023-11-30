@@ -22,8 +22,7 @@ from data_sharing.annotations.delta_sharing import (
     table_name_description,
 )
 from data_sharing.models import ApiKey
-from data_sharing.permissions import IsAuthenticated
-from data_sharing.permissions.permissions import HasTablePermissions
+from data_sharing.permissions import HasTablePermissions, IsAuthenticated
 from data_sharing.permissions.utils import get_current_user
 from data_sharing.schemas import delta, delta_sharing
 from data_sharing.settings import settings
