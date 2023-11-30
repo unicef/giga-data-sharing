@@ -3,6 +3,9 @@ networks:
     name: giga-dataops
     external: true
 
+volumes:
+  db-data:
+
 services:
   delta:
     build:
@@ -12,7 +15,6 @@ services:
     restart: unless-stopped
     init: true
     env_file: .env
-    platform: linux/amd64
     ports:
       - "8890:8890"
     volumes:
@@ -30,3 +32,11 @@ services:
       - "5000:5000"
     volumes:
       - ./:/app
+
+  db:
+    image: bitnami/postgresql:16
+    restart: unless-stopped
+    init: true
+    env_file: .env
+    volumes:
+      - db-data:/bitnami/postgresql

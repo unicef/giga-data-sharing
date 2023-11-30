@@ -49,3 +49,20 @@ starting_timestamp_description = (
 starting_version_description = "The starting version of the query, inclusive."
 
 table_name_description = "The table name to query. It's case-insensitive."
+
+
+class ProfileFileDescriptions:
+    share_credentials_version = (
+        "The file format version of the profile file. This version will be increased"
+        " whenever non-forward-compatible changes are made to the profile format. When"
+        " a client is running an unsupported profile file format version, it should"
+        " show an error message instructing the user to upgrade to a newer version of"
+        " their client."
+    )
+    endpoint = "The url of the sharing server."
+    bearer_token = "The bearer token to access the server."
+    expiration_time = (
+        "The expiration time of the bearer token in [ISO"
+        " 8601](https://www.w3.org/TR/NOTE-datetime) format. This field is optional and"
+        " if it is not provided, the bearer token can be seen as never expire."
+    )

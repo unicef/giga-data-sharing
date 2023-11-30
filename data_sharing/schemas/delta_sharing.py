@@ -1,7 +1,10 @@
 from datetime import datetime
-from typing import Any, Dict, Generic, Optional, TypeVar
+from typing import Dict, Generic, Optional, TypeVar
 
 from pydantic import UUID4, AnyHttpUrl, BaseModel, Field, conint
+
+from data_sharing.annotations.delta_sharing import ProfileFileDescriptions
+from data_sharing.settings import settings
 
 T = TypeVar("T")
 
@@ -100,13 +103,6 @@ class Remove(BaseModel):
     expirationTimestamp: Optional[conint(ge=0)] = Field(None)
 
 
-class ProfileFile(BaseModel):
-    shareCredentialsVersion: int
-    endpoint: str
-    bearerToken: str
-    expirationTimestamp: datetime
-
-
 class TableMetadataResponse(BaseModel):
     protocol: Protocol
     metaData: Metadata
@@ -133,3 +129,16 @@ class TableQueryRequest(BaseModel):
 class Error(BaseModel):
     errorCode: str = Field("")
     message: str = Field("")
+
+
+class ProfileFile(BaseModel):
+    shareCredentialsVersion: conint(ge=1) = Field(
+        1, description=ProfileFileDescriptions.share_credentials_version
+    )
+    endpoint: AnyHttpUrl = Field(
+        f"https://{settings.APP_DOMAIN}", description=ProfileFileDescriptions.endpoint
+    )
+    bearerToken: str = Field(description=ProfileFileDescriptions.bearer_token)
+    expirationTime: datetime | None = Field(
+        description=ProfileFileDescriptions.expiration_time
+    )

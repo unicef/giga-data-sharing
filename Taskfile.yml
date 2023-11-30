@@ -108,6 +108,7 @@ tasks:
     cmds:
       - kubectl apply -f k8s/configmap.yaml
       - kubectl apply -f k8s/secrets.yaml
+      - helm dependency update helm/data-sharing-proxy
       - >
         helm upgrade --install data-sharing-delta ./helm/data-sharing-delta
         --set image.repository={{.DATA_SHARING_DELTA_IMAGE_REPOSITORY}}
@@ -116,6 +117,7 @@ tasks:
         helm upgrade --install data-sharing-proxy ./helm/data-sharing-proxy
         --set image.repository={{.DATA_SHARING_PROXY_IMAGE_REPOSITORY}}
         --set image.tag={{.SHORT_SHA}}
+        --set service.type=LoadBalancer
 
   helm-down:
     desc: Uninstall Helm chart
@@ -129,4 +131,24 @@ tasks:
   generate-delta-config:
     desc: Generate Delta Sharing config
     cmds:
-      - poetry run python -m scripts.generate_delta_config
+      - task exec -- proxy python -m scripts.generate_delta_config
+
+  makemigrations:
+    desc: Generate database migrations
+    cmds:
+      - task exec -- proxy alembic revision --autogenerate -m "{{.CLI_ARGS}}"
+
+  migrate:
+    desc: Run database migrations
+    cmds:
+      - task exec -- proxy alembic upgrade head
+
+  psql:
+    desc: Connect to database
+    cmds:
+      - task exec -- db psql -U {{.POSTGRESQL_USERNAME}} -d {{.POSTGRESQL_DATABASE}}
+
+  load-fixtures:
+    desc: Install database fixtures
+    cmds:
+      - task exec -- proxy python -m scripts.load_fixtures {{.CLI_ARGS}}

@@ -18,6 +18,11 @@ variables:
   storageAccessKey: $(STORAGE_ACCESS_KEY)
   storageAccountName: $(STORAGE_ACCOUNT_NAME)
   storageContainerName: $(STORAGE_CONTAINER_NAME)
+  postgresqlPassword: $(POSTGRESQL_PASSWORD)
+  adminApiKey: $(ADMIN_API_KEY)
+  adminApiSecret: $(ADMIN_API_SECRET)
+  secretKey: $(APPLICATION_SECRET_KEY)
+  appDomain: $(APP_DOMAIN)
   system.debug: true
 
 stages:
@@ -32,7 +37,7 @@ stages:
             deploy:
               steps:
                 - checkout: self
-                  
+
                 - task: Docker@2
                   displayName: Login to container Registry
                   inputs:
@@ -83,11 +88,18 @@ stages:
                         labels:
                           app: giga-data-sharing
                       stringData:
-                        DELTA_BEARER_TOKEN: $(deltaBearerToken)
-                        SAS_TOKEN: $(sasToken)
-                        STORAGE_ACCESS_KEY: $(storageAccessKey)
-                        STORAGE_ACCOUNT_NAME: $(storageAccountName)
-                        CONTAINER_NAME: $(storageContainerName)
+                        DELTA_BEARER_TOKEN: "$(deltaBearerToken)"
+                        AZURE_SAS_TOKEN: "$(sasToken)"
+                        STORAGE_ACCESS_KEY: "$(storageAccessKey)"
+                        STORAGE_ACCOUNT_NAME: "$(storageAccountName)"
+                        CONTAINER_NAME: "$(storageContainerName)"
+                        POSTGRESQL_USERNAME: "giga-data-sharing"
+                        POSTGRESQL_PASSWORD: "$(postgresqlPassword)"
+                        POSTGRESQL_DATABASE: "giga-data-sharing"
+                        ADMIN_API_KEY: $(adminApiKey)
+                        ADMIN_API_SECRET: $(adminApiSecret)
+                        APPLICATION_SECRET_KEY: $(secretKey)
+                        APP_DOMAIN: $(appDomain)
 
                 - task: HelmDeploy@0
                   displayName: Helm deploy Data Sharing Delta

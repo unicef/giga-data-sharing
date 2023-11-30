@@ -56,6 +56,51 @@ spec:
               port: http
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
+      initContainers:
+        - name: init-wait-db
+          image: bitnami/postgresql:16.1.0-debian-11-r13
+          command:
+            - /bin/sh
+            - -c
+            - >
+              until pg_isready
+              --host data-sharing-proxy-postgresql
+              --port 5432
+              --dbname giga-data-sharing
+              --username giga-data-sharing;
+              do echo waiting for database;
+              sleep 2;
+              done;
+        - name: init-migrate-db
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          command:
+            - /bin/bash
+            - -c
+            - alembic upgrade head
+          envFrom:
+            {{- range .Values.envSecrets }}
+            - secretRef:
+              {{- toYaml . | nindent 16 }}
+            {{- end }}
+            {{- range .Values.envConfigMaps }}
+            - configMapRef:
+              {{- toYaml . | nindent 16 }}
+            {{- end }}
+        - name: init-load-fixtures
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          command:
+            - /bin/bash
+            - -c
+            - python -m scripts.load_fixtures roles api_keys
+          envFrom:
+            {{- range .Values.envSecrets }}
+            - secretRef:
+              {{- toYaml . | nindent 16 }}
+            {{- end }}
+            {{- range .Values.envConfigMaps }}
+            - configMapRef:
+              {{- toYaml . | nindent 16 }}
+            {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
