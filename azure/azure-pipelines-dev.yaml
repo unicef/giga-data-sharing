@@ -29,7 +29,6 @@ variables:
 stages:
   - stage: BuildAndPushProxy
     displayName: Build and push Data Sharing Proxy image
-    dependsOn: [ Login ]
     jobs:
       - deployment: Deploy
         displayName: Build and push Data Sharing Proxy image
@@ -58,7 +57,7 @@ stages:
 
   - stage: BuildAndPushDeltaSharing
     displayName: Build and push Delta Sharing server image
-    dependsOn: [ Login ]
+    dependsOn: [ ]
     jobs:
       - deployment: Deploy
         displayName: Build and push Data Sharing Proxy image
@@ -74,7 +73,7 @@ stages:
                   inputs:
                     command: login
                     containerRegistry: $(ACR_SERVICE_CONNECTION)
-                    
+
                 - task: Docker@2
                   displayName: Build and push Data Sharing Delta image to container registry
                   inputs:
@@ -87,7 +86,7 @@ stages:
 
   - stage: CreateConfig
     displayName: Create/update K8s configuration resources
-    dependsOn: [ Login ]
+    dependsOn: [ ]
     jobs:
       - deployment: Deploy
         displayName: Create/update K8s configuration resources
