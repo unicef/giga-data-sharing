@@ -27,11 +27,11 @@ variables:
   system.debug: true
 
 stages:
-  - stage: Deploy
-    displayName: Deploy Data Sharing
+  - stage: Login
+    displayName: Login to container registry and checkout source code
     jobs:
       - deployment: Deploy
-        displayName: Data Sharing Deployment
+        displayName: Login to container registry
         environment: $(kubernetesEnvironment)
         strategy:
           runOnce:
@@ -45,6 +45,17 @@ stages:
                     command: login
                     containerRegistry: $(ACR_SERVICE_CONNECTION)
 
+  - stage: Build and push proxy
+    displayName: Build and push Data Sharing Proxy image
+    dependsOn: [ Login ]
+    jobs:
+      - deployment: Deploy
+        displayName: Build and push Data Sharing Proxy image
+        environment: $(kubernetesEnvironment)
+        strategy:
+          runOnce:
+            deploy:
+              steps:
                 - task: Docker@2
                   displayName: Build and push Data Sharing proxy image to container registry
                   inputs:
@@ -55,6 +66,17 @@ stages:
                     tags: |
                       $(Build.SourceVersion)
 
+  - stage: Build and push Delta Sharing
+    displayName: Build and push Delta Sharing server image
+    dependsOn: [ Login ]
+    jobs:
+      - deployment: Deploy
+        displayName: Build and push Data Sharing Proxy image
+        environment: $(kubernetesEnvironment)
+        strategy:
+          runOnce:
+            deploy:
+              steps:
                 - task: Docker@2
                   displayName: Build and push Data Sharing Delta image to container registry
                   inputs:
@@ -65,6 +87,17 @@ stages:
                     tags: |
                       $(Build.SourceVersion)
 
+  - stage: Create config
+    displayName: Create/update K8s configuration resources
+    dependsOn: [ Login ]
+    jobs:
+      - deployment: Deploy
+        displayName: Create/update K8s configuration resources
+        environment: $(kubernetesEnvironment)
+        strategy:
+          runOnce:
+            deploy:
+              steps:
                 - task: Kubernetes@1
                   displayName: Create configmap
                   inputs:
@@ -103,6 +136,20 @@ stages:
                         SECRET_KEY: "$(secretKey)"
                         APP_DOMAIN: "$(appDomain)"
 
+  - stage: Deploy
+    displayName: Deploy Data Sharing
+    dependsOn:
+      - Build and push proxy
+      - Build and push Delta Sharing
+      - Create config
+    jobs:
+      - deployment: Deploy
+        displayName: Deploy Data Sharing
+        environment: $(kubernetesEnvironment)
+        strategy:
+          runOnce:
+            deploy:
+              steps:
                 - task: HelmDeploy@0
                   displayName: Helm deploy Data Sharing Delta
                   inputs:
@@ -127,6 +174,17 @@ stages:
                       --set image.repository="$(containerRegistryName).azurecr.io/giga-data-sharing-proxy"
                       --set image.tag="$(Build.SourceVersion)"
 
+
+  - stage: Create ingress
+    displayName: Create/update K8s ingress resource
+    jobs:
+      - deployment: Deploy
+        displayName: Create/update K8s ingress resource
+        environment: $(kubernetesEnvironment)
+        strategy:
+          runOnce:
+            deploy:
+              steps:
                 - task: Kubernetes@1
                   displayName: Create ingress
                   inputs:
