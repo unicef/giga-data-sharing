@@ -95,6 +95,8 @@ stages:
           runOnce:
             deploy:
               steps:
+                - checkout: self
+
                 - task: Kubernetes@1
                   displayName: Create configmap
                   inputs:
@@ -147,6 +149,8 @@ stages:
           runOnce:
             deploy:
               steps:
+                - checkout: self
+
                 - task: HelmDeploy@0
                   displayName: Helm deploy Data Sharing Delta
                   inputs:
@@ -182,6 +186,8 @@ stages:
           runOnce:
             deploy:
               steps:
+                - checkout: self
+                  
                 - task: Kubernetes@1
                   displayName: Create ingress
                   inputs:
