@@ -45,7 +45,7 @@ stages:
                     command: login
                     containerRegistry: $(ACR_SERVICE_CONNECTION)
 
-  - stage: Build and push proxy
+  - stage: BuildAndPushProxy
     displayName: Build and push Data Sharing Proxy image
     dependsOn: [ Login ]
     jobs:
@@ -66,7 +66,7 @@ stages:
                     tags: |
                       $(Build.SourceVersion)
 
-  - stage: Build and push Delta Sharing
+  - stage: BuildAndPushDeltaSharing
     displayName: Build and push Delta Sharing server image
     dependsOn: [ Login ]
     jobs:
@@ -87,7 +87,7 @@ stages:
                     tags: |
                       $(Build.SourceVersion)
 
-  - stage: Create config
+  - stage: CreateConfig
     displayName: Create/update K8s configuration resources
     dependsOn: [ Login ]
     jobs:
@@ -139,9 +139,9 @@ stages:
   - stage: Deploy
     displayName: Deploy Data Sharing
     dependsOn:
-      - Build and push proxy
-      - Build and push Delta Sharing
-      - Create config
+      - BuildAndPushProxy
+      - BuildAndPushDeltaSharing
+      - CreateConfig
     jobs:
       - deployment: Deploy
         displayName: Deploy Data Sharing
@@ -175,7 +175,7 @@ stages:
                       --set image.tag="$(Build.SourceVersion)"
 
 
-  - stage: Create ingress
+  - stage: CreateIngress
     displayName: Create/update K8s ingress resource
     jobs:
       - deployment: Deploy
