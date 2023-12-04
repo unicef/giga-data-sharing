@@ -16,7 +16,7 @@ def main():
         dict(
             id=country["id"],
             name=country["name"],
-            location=f"wasbs://{{{{.CONTAINER_NAME}}}}@{{{{.STORAGE_ACCOUNT_NAME}}}}.blob.core.windows.net/fake-gold/{country['name']}",
+            location=f"wasbs://{{{{.CONTAINER_NAME}}}}@{{{{.STORAGE_ACCOUNT_NAME}}}}.blob.core.windows.net/{{{{.CONTAINER_PATH}}}}/{country['name']}",
             historyShared=True,
         )
         for country in countries

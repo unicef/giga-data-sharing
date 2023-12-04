@@ -1,5 +1,5 @@
 authorization:
-  bearerToken: "{{.DELTA_BEARER_TOKEN}}"
+  bearerToken: '{{.DELTA_BEARER_TOKEN}}'
 deltaTableCacheSize: 10
 endpoint: /sharing
 evaluateJsonPredicateHints: true
@@ -12,170 +12,170 @@ queryTablePageSizeLimit: 10000
 queryTablePageTokenTtlMs: 259200000
 refreshTokenTtlMs: 3600000
 shares:
-  - id: 4bfa74c2-f1af-44e8-bc42-205d4d92dd15
-    name: gold
-    schemas:
-      - name: school-data
-        tables:
-          - historyShared: true
-            id: a126c5bc-1543-4dc2-89d4-cf2acb20ef19
-            location: wasbs://{{.CONTAINER_NAME}}@{{.STORAGE_ACCOUNT_NAME}}.blob.core.windows.net/fake-gold/AIA
-            name: AIA
-          - historyShared: true
-            id: 777bf659-4fe7-4d6b-b01b-d7d8584b490d
-            location: wasbs://{{.CONTAINER_NAME}}@{{.STORAGE_ACCOUNT_NAME}}.blob.core.windows.net/fake-gold/ATG
-            name: ATG
-          - historyShared: true
-            id: 54330460-1632-4530-bfab-292ce9289788
-            location: wasbs://{{.CONTAINER_NAME}}@{{.STORAGE_ACCOUNT_NAME}}.blob.core.windows.net/fake-gold/BEN
-            name: BEN
-          - historyShared: true
-            id: 35e8a3bf-e3d2-493a-ac76-20dc658695e9
-            location: wasbs://{{.CONTAINER_NAME}}@{{.STORAGE_ACCOUNT_NAME}}.blob.core.windows.net/fake-gold/BIH
-            name: BIH
-          - historyShared: true
-            id: d0cdd3ca-9e57-47e3-8838-9d21db584782
-            location: wasbs://{{.CONTAINER_NAME}}@{{.STORAGE_ACCOUNT_NAME}}.blob.core.windows.net/fake-gold/BLZ
-            name: BLZ
-          - historyShared: true
-            id: 6f92a3bf-36dd-4cad-8858-1fa38849605b
-            location: wasbs://{{.CONTAINER_NAME}}@{{.STORAGE_ACCOUNT_NAME}}.blob.core.windows.net/fake-gold/BRA
-            name: BRA
-          - historyShared: true
-            id: ceda2a69-f20a-4b2c-9581-f2c774384997
-            location: wasbs://{{.CONTAINER_NAME}}@{{.STORAGE_ACCOUNT_NAME}}.blob.core.windows.net/fake-gold/BRB
-            name: BRB
-          - historyShared: true
-            id: 2c594563-2c11-49cd-8f7b-c2efecca94eb
-            location: wasbs://{{.CONTAINER_NAME}}@{{.STORAGE_ACCOUNT_NAME}}.blob.core.windows.net/fake-gold/BWA
-            name: BWA
-          - historyShared: true
-            id: 3632154b-a2f0-496f-9211-2346375a3095
-            location: wasbs://{{.CONTAINER_NAME}}@{{.STORAGE_ACCOUNT_NAME}}.blob.core.windows.net/fake-gold/CDF
-            name: CDF
-          - historyShared: true
-            id: 5286bf32-050d-4508-a23b-77efcedc139c
-            location: wasbs://{{.CONTAINER_NAME}}@{{.STORAGE_ACCOUNT_NAME}}.blob.core.windows.net/fake-gold/CRI
-            name: CRI
-          - historyShared: true
-            id: ef5c7feb-6cbc-4a3e-a3c0-983d9998321d
-            location: wasbs://{{.CONTAINER_NAME}}@{{.STORAGE_ACCOUNT_NAME}}.blob.core.windows.net/fake-gold/DMA
-            name: DMA
-          - historyShared: true
-            id: 43bcb90c-e850-46cd-bde5-ae0aef3da875
-            location: wasbs://{{.CONTAINER_NAME}}@{{.STORAGE_ACCOUNT_NAME}}.blob.core.windows.net/fake-gold/GHA
-            name: GHA
-          - historyShared: true
-            id: 267f991a-8a53-4ce0-9135-e5e349766c80
-            location: wasbs://{{.CONTAINER_NAME}}@{{.STORAGE_ACCOUNT_NAME}}.blob.core.windows.net/fake-gold/GIN
-            name: GIN
-          - historyShared: true
-            id: 9aadf199-a1a7-4e72-b509-7665b8286375
-            location: wasbs://{{.CONTAINER_NAME}}@{{.STORAGE_ACCOUNT_NAME}}.blob.core.windows.net/fake-gold/GRD
-            name: GRD
-          - historyShared: true
-            id: 6da71e09-aa86-4209-a2f4-69f2c8c3cb95
-            location: wasbs://{{.CONTAINER_NAME}}@{{.STORAGE_ACCOUNT_NAME}}.blob.core.windows.net/fake-gold/HND
-            name: HND
-          - historyShared: true
-            id: ea50a1b5-ba3c-43d3-bd25-c95ef0067b5d
-            location: wasbs://{{.CONTAINER_NAME}}@{{.STORAGE_ACCOUNT_NAME}}.blob.core.windows.net/fake-gold/HUN
-            name: HUN
-          - historyShared: true
-            id: d8378f2e-fbdb-4dc8-b8ec-d4b8a9752d12
-            location: wasbs://{{.CONTAINER_NAME}}@{{.STORAGE_ACCOUNT_NAME}}.blob.core.windows.net/fake-gold/KAZ
-            name: KAZ
-          - historyShared: true
-            id: e2d72471-61dc-4e81-8124-bd16c4b97d2b
-            location: wasbs://{{.CONTAINER_NAME}}@{{.STORAGE_ACCOUNT_NAME}}.blob.core.windows.net/fake-gold/KEN
-            name: KEN
-          - historyShared: true
-            id: 46ba4527-8cf0-454d-8c95-6e4ef4f33390
-            location: wasbs://{{.CONTAINER_NAME}}@{{.STORAGE_ACCOUNT_NAME}}.blob.core.windows.net/fake-gold/KIR
-            name: KIR
-          - historyShared: true
-            id: 6c8b0911-2150-4d24-bd1c-60a144a59b70
-            location: wasbs://{{.CONTAINER_NAME}}@{{.STORAGE_ACCOUNT_NAME}}.blob.core.windows.net/fake-gold/KNA
-            name: KNA
-          - historyShared: true
-            id: b3315d9d-c2df-4671-a004-268cd7fc2dd7
-            location: wasbs://{{.CONTAINER_NAME}}@{{.STORAGE_ACCOUNT_NAME}}.blob.core.windows.net/fake-gold/LCA
-            name: LCA
-          - historyShared: true
-            id: dbad4c39-bba1-4289-8483-70a6f43ced50
-            location: wasbs://{{.CONTAINER_NAME}}@{{.STORAGE_ACCOUNT_NAME}}.blob.core.windows.net/fake-gold/MNG
-            name: MNG
-          - historyShared: true
-            id: 687171c1-af80-425a-a3f9-b2bb3d8b8263
-            location: wasbs://{{.CONTAINER_NAME}}@{{.STORAGE_ACCOUNT_NAME}}.blob.core.windows.net/fake-gold/MSR
-            name: MSR
-          - historyShared: true
-            id: fbd00857-5914-44b4-800f-21511737e271
-            location: wasbs://{{.CONTAINER_NAME}}@{{.STORAGE_ACCOUNT_NAME}}.blob.core.windows.net/fake-gold/MWI
-            name: MWI
-          - historyShared: true
-            id: 313af191-6c4b-45cb-b88d-c67a96aa0a55
-            location: wasbs://{{.CONTAINER_NAME}}@{{.STORAGE_ACCOUNT_NAME}}.blob.core.windows.net/fake-gold/NAM
-            name: NAM
-          - historyShared: true
-            id: a351d214-dcd3-4890-803b-e838854bd520
-            location: wasbs://{{.CONTAINER_NAME}}@{{.STORAGE_ACCOUNT_NAME}}.blob.core.windows.net/fake-gold/NER
-            name: NER
-          - historyShared: true
-            id: 3b120b9c-ed01-4d98-840e-a2c3fbf9f6a4
-            location: wasbs://{{.CONTAINER_NAME}}@{{.STORAGE_ACCOUNT_NAME}}.blob.core.windows.net/fake-gold/NGA
-            name: NGA
-          - historyShared: true
-            id: f0952737-84ed-433f-aba7-7caa9e4ee8af
-            location: wasbs://{{.CONTAINER_NAME}}@{{.STORAGE_ACCOUNT_NAME}}.blob.core.windows.net/fake-gold/PAN
-            name: PAN
-          - historyShared: true
-            id: 2357d6d7-b9d0-435a-95c9-2dfa564fe71d
-            location: wasbs://{{.CONTAINER_NAME}}@{{.STORAGE_ACCOUNT_NAME}}.blob.core.windows.net/fake-gold/RWA
-            name: RWA
-          - historyShared: true
-            id: f47f6b41-77e0-4d42-be57-8917c089053f
-            location: wasbs://{{.CONTAINER_NAME}}@{{.STORAGE_ACCOUNT_NAME}}.blob.core.windows.net/fake-gold/SLE
-            name: SLE
-          - historyShared: true
-            id: 0fc32900-0e59-46e4-9f7a-b156be010091
-            location: wasbs://{{.CONTAINER_NAME}}@{{.STORAGE_ACCOUNT_NAME}}.blob.core.windows.net/fake-gold/SLV
-            name: SLV
-          - historyShared: true
-            id: c9504376-fcf7-491c-95c5-3f0eee457b27
-            location: wasbs://{{.CONTAINER_NAME}}@{{.STORAGE_ACCOUNT_NAME}}.blob.core.windows.net/fake-gold/SSD
-            name: SSD
-          - historyShared: true
-            id: 9d120955-2d58-4d93-b55a-4a472bd3e6fa
-            location: wasbs://{{.CONTAINER_NAME}}@{{.STORAGE_ACCOUNT_NAME}}.blob.core.windows.net/fake-gold/THA
-            name: THA
-          - historyShared: true
-            id: 64ff2ef5-a76a-4288-8408-f69bf84373ef
-            location: wasbs://{{.CONTAINER_NAME}}@{{.STORAGE_ACCOUNT_NAME}}.blob.core.windows.net/fake-gold/TTO
-            name: TTO
-          - historyShared: true
-            id: bc1b9963-dcb4-4321-9fc9-9a4c3475b241
-            location: wasbs://{{.CONTAINER_NAME}}@{{.STORAGE_ACCOUNT_NAME}}.blob.core.windows.net/fake-gold/UKR
-            name: UKR
-          - historyShared: true
-            id: e52b5b55-16f2-4881-8992-54b22691a4d4
-            location: wasbs://{{.CONTAINER_NAME}}@{{.STORAGE_ACCOUNT_NAME}}.blob.core.windows.net/fake-gold/UZB
-            name: UZB
-          - historyShared: true
-            id: 13c91f07-d450-4838-ba2f-eb2d602d338a
-            location: wasbs://{{.CONTAINER_NAME}}@{{.STORAGE_ACCOUNT_NAME}}.blob.core.windows.net/fake-gold/VCT
-            name: VCT
-          - historyShared: true
-            id: 81ed8593-36ca-4ae4-8596-e7fd58dd0981
-            location: wasbs://{{.CONTAINER_NAME}}@{{.STORAGE_ACCOUNT_NAME}}.blob.core.windows.net/fake-gold/VGB
-            name: VGB
-          - historyShared: true
-            id: 1d668ded-c276-4592-805e-8fc2604ef477
-            location: wasbs://{{.CONTAINER_NAME}}@{{.STORAGE_ACCOUNT_NAME}}.blob.core.windows.net/fake-gold/ZAF
-            name: ZAF
-          - historyShared: true
-            id: e17f6743-ff4f-4770-91f7-d4b424024dab
-            location: wasbs://{{.CONTAINER_NAME}}@{{.STORAGE_ACCOUNT_NAME}}.blob.core.windows.net/fake-gold/ZWE
-            name: ZWE
+- id: 4bfa74c2-f1af-44e8-bc42-205d4d92dd15
+  name: gold
+  schemas:
+  - name: school-data
+    tables:
+    - historyShared: true
+      id: a126c5bc-1543-4dc2-89d4-cf2acb20ef19
+      location: wasbs://{{.CONTAINER_NAME}}@{{.STORAGE_ACCOUNT_NAME}}.blob.core.windows.net/{{.CONTAINER_PATH}}/AIA
+      name: AIA
+    - historyShared: true
+      id: 777bf659-4fe7-4d6b-b01b-d7d8584b490d
+      location: wasbs://{{.CONTAINER_NAME}}@{{.STORAGE_ACCOUNT_NAME}}.blob.core.windows.net/{{.CONTAINER_PATH}}/ATG
+      name: ATG
+    - historyShared: true
+      id: 54330460-1632-4530-bfab-292ce9289788
+      location: wasbs://{{.CONTAINER_NAME}}@{{.STORAGE_ACCOUNT_NAME}}.blob.core.windows.net/{{.CONTAINER_PATH}}/BEN
+      name: BEN
+    - historyShared: true
+      id: 35e8a3bf-e3d2-493a-ac76-20dc658695e9
+      location: wasbs://{{.CONTAINER_NAME}}@{{.STORAGE_ACCOUNT_NAME}}.blob.core.windows.net/{{.CONTAINER_PATH}}/BIH
+      name: BIH
+    - historyShared: true
+      id: d0cdd3ca-9e57-47e3-8838-9d21db584782
+      location: wasbs://{{.CONTAINER_NAME}}@{{.STORAGE_ACCOUNT_NAME}}.blob.core.windows.net/{{.CONTAINER_PATH}}/BLZ
+      name: BLZ
+    - historyShared: true
+      id: 6f92a3bf-36dd-4cad-8858-1fa38849605b
+      location: wasbs://{{.CONTAINER_NAME}}@{{.STORAGE_ACCOUNT_NAME}}.blob.core.windows.net/{{.CONTAINER_PATH}}/BRA
+      name: BRA
+    - historyShared: true
+      id: ceda2a69-f20a-4b2c-9581-f2c774384997
+      location: wasbs://{{.CONTAINER_NAME}}@{{.STORAGE_ACCOUNT_NAME}}.blob.core.windows.net/{{.CONTAINER_PATH}}/BRB
+      name: BRB
+    - historyShared: true
+      id: 2c594563-2c11-49cd-8f7b-c2efecca94eb
+      location: wasbs://{{.CONTAINER_NAME}}@{{.STORAGE_ACCOUNT_NAME}}.blob.core.windows.net/{{.CONTAINER_PATH}}/BWA
+      name: BWA
+    - historyShared: true
+      id: 3632154b-a2f0-496f-9211-2346375a3095
+      location: wasbs://{{.CONTAINER_NAME}}@{{.STORAGE_ACCOUNT_NAME}}.blob.core.windows.net/{{.CONTAINER_PATH}}/CDF
+      name: CDF
+    - historyShared: true
+      id: 5286bf32-050d-4508-a23b-77efcedc139c
+      location: wasbs://{{.CONTAINER_NAME}}@{{.STORAGE_ACCOUNT_NAME}}.blob.core.windows.net/{{.CONTAINER_PATH}}/CRI
+      name: CRI
+    - historyShared: true
+      id: ef5c7feb-6cbc-4a3e-a3c0-983d9998321d
+      location: wasbs://{{.CONTAINER_NAME}}@{{.STORAGE_ACCOUNT_NAME}}.blob.core.windows.net/{{.CONTAINER_PATH}}/DMA
+      name: DMA
+    - historyShared: true
+      id: 43bcb90c-e850-46cd-bde5-ae0aef3da875
+      location: wasbs://{{.CONTAINER_NAME}}@{{.STORAGE_ACCOUNT_NAME}}.blob.core.windows.net/{{.CONTAINER_PATH}}/GHA
+      name: GHA
+    - historyShared: true
+      id: 267f991a-8a53-4ce0-9135-e5e349766c80
+      location: wasbs://{{.CONTAINER_NAME}}@{{.STORAGE_ACCOUNT_NAME}}.blob.core.windows.net/{{.CONTAINER_PATH}}/GIN
+      name: GIN
+    - historyShared: true
+      id: 9aadf199-a1a7-4e72-b509-7665b8286375
+      location: wasbs://{{.CONTAINER_NAME}}@{{.STORAGE_ACCOUNT_NAME}}.blob.core.windows.net/{{.CONTAINER_PATH}}/GRD
+      name: GRD
+    - historyShared: true
+      id: 6da71e09-aa86-4209-a2f4-69f2c8c3cb95
+      location: wasbs://{{.CONTAINER_NAME}}@{{.STORAGE_ACCOUNT_NAME}}.blob.core.windows.net/{{.CONTAINER_PATH}}/HND
+      name: HND
+    - historyShared: true
+      id: ea50a1b5-ba3c-43d3-bd25-c95ef0067b5d
+      location: wasbs://{{.CONTAINER_NAME}}@{{.STORAGE_ACCOUNT_NAME}}.blob.core.windows.net/{{.CONTAINER_PATH}}/HUN
+      name: HUN
+    - historyShared: true
+      id: d8378f2e-fbdb-4dc8-b8ec-d4b8a9752d12
+      location: wasbs://{{.CONTAINER_NAME}}@{{.STORAGE_ACCOUNT_NAME}}.blob.core.windows.net/{{.CONTAINER_PATH}}/KAZ
+      name: KAZ
+    - historyShared: true
+      id: e2d72471-61dc-4e81-8124-bd16c4b97d2b
+      location: wasbs://{{.CONTAINER_NAME}}@{{.STORAGE_ACCOUNT_NAME}}.blob.core.windows.net/{{.CONTAINER_PATH}}/KEN
+      name: KEN
+    - historyShared: true
+      id: 46ba4527-8cf0-454d-8c95-6e4ef4f33390
+      location: wasbs://{{.CONTAINER_NAME}}@{{.STORAGE_ACCOUNT_NAME}}.blob.core.windows.net/{{.CONTAINER_PATH}}/KIR
+      name: KIR
+    - historyShared: true
+      id: 6c8b0911-2150-4d24-bd1c-60a144a59b70
+      location: wasbs://{{.CONTAINER_NAME}}@{{.STORAGE_ACCOUNT_NAME}}.blob.core.windows.net/{{.CONTAINER_PATH}}/KNA
+      name: KNA
+    - historyShared: true
+      id: b3315d9d-c2df-4671-a004-268cd7fc2dd7
+      location: wasbs://{{.CONTAINER_NAME}}@{{.STORAGE_ACCOUNT_NAME}}.blob.core.windows.net/{{.CONTAINER_PATH}}/LCA
+      name: LCA
+    - historyShared: true
+      id: dbad4c39-bba1-4289-8483-70a6f43ced50
+      location: wasbs://{{.CONTAINER_NAME}}@{{.STORAGE_ACCOUNT_NAME}}.blob.core.windows.net/{{.CONTAINER_PATH}}/MNG
+      name: MNG
+    - historyShared: true
+      id: 687171c1-af80-425a-a3f9-b2bb3d8b8263
+      location: wasbs://{{.CONTAINER_NAME}}@{{.STORAGE_ACCOUNT_NAME}}.blob.core.windows.net/{{.CONTAINER_PATH}}/MSR
+      name: MSR
+    - historyShared: true
+      id: fbd00857-5914-44b4-800f-21511737e271
+      location: wasbs://{{.CONTAINER_NAME}}@{{.STORAGE_ACCOUNT_NAME}}.blob.core.windows.net/{{.CONTAINER_PATH}}/MWI
+      name: MWI
+    - historyShared: true
+      id: 313af191-6c4b-45cb-b88d-c67a96aa0a55
+      location: wasbs://{{.CONTAINER_NAME}}@{{.STORAGE_ACCOUNT_NAME}}.blob.core.windows.net/{{.CONTAINER_PATH}}/NAM
+      name: NAM
+    - historyShared: true
+      id: a351d214-dcd3-4890-803b-e838854bd520
+      location: wasbs://{{.CONTAINER_NAME}}@{{.STORAGE_ACCOUNT_NAME}}.blob.core.windows.net/{{.CONTAINER_PATH}}/NER
+      name: NER
+    - historyShared: true
+      id: 3b120b9c-ed01-4d98-840e-a2c3fbf9f6a4
+      location: wasbs://{{.CONTAINER_NAME}}@{{.STORAGE_ACCOUNT_NAME}}.blob.core.windows.net/{{.CONTAINER_PATH}}/NGA
+      name: NGA
+    - historyShared: true
+      id: f0952737-84ed-433f-aba7-7caa9e4ee8af
+      location: wasbs://{{.CONTAINER_NAME}}@{{.STORAGE_ACCOUNT_NAME}}.blob.core.windows.net/{{.CONTAINER_PATH}}/PAN
+      name: PAN
+    - historyShared: true
+      id: 2357d6d7-b9d0-435a-95c9-2dfa564fe71d
+      location: wasbs://{{.CONTAINER_NAME}}@{{.STORAGE_ACCOUNT_NAME}}.blob.core.windows.net/{{.CONTAINER_PATH}}/RWA
+      name: RWA
+    - historyShared: true
+      id: f47f6b41-77e0-4d42-be57-8917c089053f
+      location: wasbs://{{.CONTAINER_NAME}}@{{.STORAGE_ACCOUNT_NAME}}.blob.core.windows.net/{{.CONTAINER_PATH}}/SLE
+      name: SLE
+    - historyShared: true
+      id: 0fc32900-0e59-46e4-9f7a-b156be010091
+      location: wasbs://{{.CONTAINER_NAME}}@{{.STORAGE_ACCOUNT_NAME}}.blob.core.windows.net/{{.CONTAINER_PATH}}/SLV
+      name: SLV
+    - historyShared: true
+      id: c9504376-fcf7-491c-95c5-3f0eee457b27
+      location: wasbs://{{.CONTAINER_NAME}}@{{.STORAGE_ACCOUNT_NAME}}.blob.core.windows.net/{{.CONTAINER_PATH}}/SSD
+      name: SSD
+    - historyShared: true
+      id: 9d120955-2d58-4d93-b55a-4a472bd3e6fa
+      location: wasbs://{{.CONTAINER_NAME}}@{{.STORAGE_ACCOUNT_NAME}}.blob.core.windows.net/{{.CONTAINER_PATH}}/THA
+      name: THA
+    - historyShared: true
+      id: 64ff2ef5-a76a-4288-8408-f69bf84373ef
+      location: wasbs://{{.CONTAINER_NAME}}@{{.STORAGE_ACCOUNT_NAME}}.blob.core.windows.net/{{.CONTAINER_PATH}}/TTO
+      name: TTO
+    - historyShared: true
+      id: bc1b9963-dcb4-4321-9fc9-9a4c3475b241
+      location: wasbs://{{.CONTAINER_NAME}}@{{.STORAGE_ACCOUNT_NAME}}.blob.core.windows.net/{{.CONTAINER_PATH}}/UKR
+      name: UKR
+    - historyShared: true
+      id: e52b5b55-16f2-4881-8992-54b22691a4d4
+      location: wasbs://{{.CONTAINER_NAME}}@{{.STORAGE_ACCOUNT_NAME}}.blob.core.windows.net/{{.CONTAINER_PATH}}/UZB
+      name: UZB
+    - historyShared: true
+      id: 13c91f07-d450-4838-ba2f-eb2d602d338a
+      location: wasbs://{{.CONTAINER_NAME}}@{{.STORAGE_ACCOUNT_NAME}}.blob.core.windows.net/{{.CONTAINER_PATH}}/VCT
+      name: VCT
+    - historyShared: true
+      id: 81ed8593-36ca-4ae4-8596-e7fd58dd0981
+      location: wasbs://{{.CONTAINER_NAME}}@{{.STORAGE_ACCOUNT_NAME}}.blob.core.windows.net/{{.CONTAINER_PATH}}/VGB
+      name: VGB
+    - historyShared: true
+      id: 1d668ded-c276-4592-805e-8fc2604ef477
+      location: wasbs://{{.CONTAINER_NAME}}@{{.STORAGE_ACCOUNT_NAME}}.blob.core.windows.net/{{.CONTAINER_PATH}}/ZAF
+      name: ZAF
+    - historyShared: true
+      id: e17f6743-ff4f-4770-91f7-d4b424024dab
+      location: wasbs://{{.CONTAINER_NAME}}@{{.STORAGE_ACCOUNT_NAME}}.blob.core.windows.net/{{.CONTAINER_PATH}}/ZWE
+      name: ZWE
 stalenessAcceptable: false
 version: 1

@@ -18,6 +18,7 @@ variables:
   storageAccessKey: $(STORAGE_ACCESS_KEY)
   storageAccountName: $(STORAGE_ACCOUNT_NAME)
   storageContainerName: $(STORAGE_CONTAINER_NAME)
+  storageContainerPath: $(STORAGE_CONTAINER_PATH)
   postgresqlPassword: $(POSTGRESQL_PASSWORD)
   adminApiKey: $(ADMIN_API_KEY)
   adminApiSecret: $(ADMIN_API_SECRET)
@@ -93,6 +94,7 @@ stages:
                         STORAGE_ACCESS_KEY: "$(storageAccessKey)"
                         STORAGE_ACCOUNT_NAME: "$(storageAccountName)"
                         CONTAINER_NAME: "$(storageContainerName)"
+                        CONTAINER_PATH: "$(storageContainerPath)"
                         POSTGRESQL_USERNAME: "giga-data-sharing"
                         POSTGRESQL_PASSWORD: "$(postgresqlPassword)"
                         POSTGRESQL_DATABASE: "giga-data-sharing"
