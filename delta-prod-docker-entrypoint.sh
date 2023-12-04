@@ -7,6 +7,7 @@ sed -e "s|{{.STORAGE_ACCESS_KEY}}|$STORAGE_ACCESS_KEY|" \
 sed -e "s!{{.DELTA_BEARER_TOKEN}}!$DELTA_BEARER_TOKEN!" \
     -e "s|{{.STORAGE_ACCOUNT_NAME}}|$STORAGE_ACCOUNT_NAME|" \
     -e "s|{{.CONTAINER_NAME}}|$CONTAINER_NAME|" \
+    -e "s|{{.CONTAINER_PATH}}|$CONTAINER_PATH|" \
     -i conf/delta-sharing-server.yaml
 
 ./bin/delta-sharing-server -- --config ./conf/delta-sharing-server.yaml
