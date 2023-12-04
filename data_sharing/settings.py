@@ -2,6 +2,7 @@ from functools import lru_cache
 from pathlib import Path
 from typing import Literal
 
+from pydantic import UUID4
 from pydantic_settings import BaseSettings
 
 
@@ -22,6 +23,7 @@ class Settings(BaseSettings):
     POSTGRESQL_DATABASE: str
     DB_HOST: str
     APP_DOMAIN: str
+    ADMIN_API_KEY: UUID4
 
     @property
     def IN_PRODUCTION(self) -> bool:

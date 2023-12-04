@@ -15,6 +15,7 @@ from data_sharing.permissions import IsAdmin, IsAuthenticated, auth_scheme
 from data_sharing.permissions.utils import extract_sharing_key_components
 from data_sharing.schemas.api_key import CreateApiKeyRequest, SafeApiKey
 from data_sharing.schemas.delta_sharing import ProfileFile
+from data_sharing.settings import settings
 
 router = APIRouter(
     prefix="/api-keys",
@@ -91,5 +92,11 @@ async def generate_api_key(
     dependencies=[Security(IsAdmin.raises(True))],
 )
 async def revoke_api_key(api_key_id: UUID4, db: AsyncSession = Depends(get_async_db)):
+    if api_key_id == settings.ADMIN_API_KEY:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Cannot delete the admin token",
+        )
+
     await db.execute(delete(ApiKey).where(ApiKey.id == str(api_key_id)))
     await db.commit()
