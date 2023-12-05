@@ -125,6 +125,14 @@ class TableQueryRequest(BaseModel):
     startingVersion: conint(ge=1) = Field(None)
     endingVersion: conint(ge=1) = Field(None)
 
+    model_config = {
+        "json_schema_extra": {
+            "examples": [
+                {},
+            ]
+        }
+    }
+
 
 class Error(BaseModel):
     errorCode: str = Field("")
