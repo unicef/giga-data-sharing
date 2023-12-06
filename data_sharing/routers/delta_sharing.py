@@ -27,6 +27,7 @@ from data_sharing.permissions.utils import get_current_user
 from data_sharing.schemas import delta, delta_sharing
 from data_sharing.schemas.delta_sharing import TableVersion
 from data_sharing.settings import settings
+from data_sharing.utils.header import parse_capabilities_header
 from data_sharing.utils.qs import query_parametrize
 
 router = APIRouter(
@@ -35,7 +36,7 @@ router = APIRouter(
 )
 
 sharing_client = httpx.AsyncClient(
-    base_url=f"http://{settings.DELTA_SHARING_HOST}", timeout=30
+    base_url=f"http://{settings.DELTA_SHARING_HOST}", timeout=300
 )
 
 
@@ -402,4 +403,9 @@ async def query_table_change_data_feed(
             **orjson.loads(metadata),
             "files": change_data_feed,
         }
-        return merged_dict
+        if (
+            parse_capabilities_header(delta_sharing_capabilities).get("responseFormat")
+            == "delta"
+        ):
+            return delta.TableDataChangeResponse(**merged_dict)
+        return delta_sharing.TableDataChangeResponse(**merged_dict)
