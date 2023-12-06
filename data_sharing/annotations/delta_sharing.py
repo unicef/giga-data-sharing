@@ -1,18 +1,20 @@
 delta_sharing_capabilities_header_description = (
     "Indicates the format to expect. Two Values are supported:"
-    " `responseFormat:parquet` Represents the format of the delta sharing protocol"
+    " `responseFormat=parquet` Represents the format of the delta sharing protocol"
     " that has been used in delta-sharing-spark 1.0 and less, and is also the default"
-    " format if `responseFormat` is missing from the header. `responseFormat:delta` "
+    " format if `responseFormat` is missing from the header. `responseFormat=delta` "
     " format can be used to read a shared delta table with minReaderVersion > 1, which"
     " contains readerFeatures such as Deletion Vector or Column Mapping."
-    "`readerfeatures` is only useful when responseformat=delta"
+    "`readerfeatures` is only useful when `responseformat=delta`"
 )
 
 ending_version_description = "The ending version of the query, inclusive."
 
 ending_timestamp_description = (
-    "The ending timestamp of the query, a string in the Timestamp Format, which will be"
-    " converted to a version created less than or equal to this timestamp."
+    "The ending timestamp of the query, a string in the [Timestamp"
+    " Format](https://github.com/delta-io/delta-sharing/blob/main/PROTOCOL.md#timestamp-format),"
+    " which will be converted to a version created less than or equal to this"
+    " timestamp."
 )
 
 include_historical_metadata_description = (
@@ -42,13 +44,16 @@ schema_name_description = "The schema name to query. It's case-insensitive."
 share_name_description = "The share name to query. It's case-insensitive."
 
 starting_timestamp_description = (
-    "The starting timestamp of the query, a string in the Timestamp Format, which will"
-    " be converted to a version created greater or equal to this timestamp."
+    "The starting timestamp of the query, a string in the [Timestamp"
+    " Format](https://github.com/delta-io/delta-sharing/blob/main/PROTOCOL.md#timestamp-format),"
+    " which will be converted to a version created greater or equal to this timestamp."
 )
 
 starting_version_description = "The starting version of the query, inclusive."
 
 table_name_description = "The table name to query. It's case-insensitive."
+
+table_version_description = "A value which represents the current table version."
 
 
 class ProfileFileDescriptions:

@@ -14,7 +14,6 @@ variables:
   kubernetesEnvironment: $(KUBERNETES_ENVIRONMENT)
   kubernetesNamespace: $(KUBERNETES_NAMESPACE)
   deltaBearerToken: $(DELTA_BEARER_TOKEN)
-  sasToken: $(SAS_TOKEN)
   storageAccessKey: $(STORAGE_ACCESS_KEY)
   storageAccountName: $(STORAGE_ACCOUNT_NAME)
   storageContainerName: $(STORAGE_CONTAINER_NAME)
@@ -122,7 +121,6 @@ stages:
                           app: giga-data-sharing
                       stringData:
                         DELTA_BEARER_TOKEN: "$(deltaBearerToken)"
-                        AZURE_SAS_TOKEN: "$(sasToken)"
                         STORAGE_ACCESS_KEY: "$(storageAccessKey)"
                         STORAGE_ACCOUNT_NAME: "$(storageAccountName)"
                         CONTAINER_NAME: "$(storageContainerName)"

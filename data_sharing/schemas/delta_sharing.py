@@ -1,9 +1,12 @@
 from datetime import datetime
-from typing import Dict, Generic, Optional, TypeVar
+from typing import Generic, Literal, TypeVar
 
 from pydantic import UUID4, AnyHttpUrl, BaseModel, Field, conint
 
-from data_sharing.annotations.delta_sharing import ProfileFileDescriptions
+from data_sharing.annotations.delta_sharing import (
+    ProfileFileDescriptions,
+    table_version_description,
+)
 from data_sharing.settings import settings
 
 T = TypeVar("T")
@@ -16,7 +19,7 @@ class Pagination(BaseModel, Generic[T]):
 
 class Share(BaseModel):
     name: str
-    id: Optional[UUID4] = Field(None)
+    id: UUID4 | None = Field(None)
 
 
 class ShareData(BaseModel):
@@ -37,7 +40,9 @@ class Table(BaseModel):
 
 
 class TableVersion(BaseModel):
-    deltaTableVersion: str = Field(alias="delta-table-version")
+    deltaTableVersion: conint(ge=0) = Field(
+        alias="delta-table-version", description=table_version_description
+    )
 
 
 class Protocol(BaseModel):
@@ -50,15 +55,15 @@ class Format(BaseModel):
 
 class Metadata(BaseModel):
     id: UUID4
-    name: Optional[str] = Field(None)
-    description: Optional[str] = Field(None)
+    name: str | None = Field(None)
+    description: str | None = Field(None)
     format: Format
     schemaString: str
     partitionColumns: list[str]
-    configuration: Optional[Dict[str, str]] = None
-    version: Optional[conint(ge=1)] = Field(None)
-    size: Optional[conint(ge=0)] = Field(None)
-    numFile: Optional[conint(ge=0)] = Field(None)
+    configuration: dict[str, str] = Field(None)
+    version: conint(ge=0) | None = Field(None)
+    size: conint(ge=0) | None = Field(None)
+    numFile: conint(ge=0) | None = Field(None)
 
 
 class File(BaseModel):
@@ -66,21 +71,10 @@ class File(BaseModel):
     url: AnyHttpUrl
     partitionValues: dict[str, str]
     size: conint(ge=0)
-    stats: Optional[str] = Field(None)
-    version: Optional[conint(ge=1)] = Field(None)
-    timestamp: Optional[conint(ge=0)] = Field(None)
-    expirationTimestamp: Optional[conint(ge=0)] = Field(None)
-
-
-class Add(BaseModel):
-    id: str
-    url: AnyHttpUrl
-    partitionValues: dict[str, str]
-    size: conint(ge=0)
-    timestamp: conint(ge=0) = Field(None)
-    version: conint(ge=1) = Field(None)
-    stats: Optional[str] = Field(None)
-    expirationTimestamp: Optional[conint(ge=0)] = Field(None)
+    stats: str | None = Field(None)
+    version: conint(ge=0) = Field(None)
+    timestamp: conint(ge=0) | None = Field(None)
+    expirationTimestamp: conint(ge=0) | None = Field(None)
 
 
 class CDF(BaseModel):
@@ -89,18 +83,16 @@ class CDF(BaseModel):
     partitionValues: dict[str, str]
     size: conint(ge=0)
     timestamp: conint(ge=0) = Field(None)
-    version: conint(ge=1) = Field(None)
-    expirationTimestamp: Optional[conint(ge=0)] = Field(None)
+    version: conint(ge=0) = Field(None)
+    expirationTimestamp: conint(ge=0) | None = Field(None)
 
 
-class Remove(BaseModel):
-    id: str
-    url: AnyHttpUrl
-    partitionValues: dict[str, str]
-    size: conint(ge=0)
-    timestamp: conint(ge=0) = Field(None)
-    version: conint(ge=1) = Field(None)
-    expirationTimestamp: Optional[conint(ge=0)] = Field(None)
+class Remove(CDF):
+    pass
+
+
+class Add(CDF):
+    stats: str | None = Field(None)
 
 
 class TableMetadataResponse(BaseModel):
@@ -113,30 +105,27 @@ class TableDataResponse(TableMetadataResponse):
 
 
 class TableDataChangeResponse(TableMetadataResponse):
-    files: list[Dict[str, Add | Remove | CDF]]
+    files: list[
+        dict[Literal["add"], Add]
+        | dict[Literal["remove"], Remove]
+        | dict[Literal["cdf"], CDF]
+    ]
 
 
 class TableQueryRequest(BaseModel):
     predicateHints: list[str] = Field(None)
     jsonPredicateHints: str = Field(None)
-    limitHint: int = Field(None)
-    version: conint(ge=1) = Field(None)
+    limitHint: conint(ge=0) = Field(None)
+    version: conint(ge=0) = Field(None)
     timestamp: datetime = Field(None)
-    startingVersion: conint(ge=1) = Field(None)
-    endingVersion: conint(ge=1) = Field(None)
+    startingVersion: conint(ge=0) = Field(None)
+    endingVersion: conint(ge=0) = Field(None)
 
     model_config = {
         "json_schema_extra": {
-            "examples": [
-                {},
-            ]
+            "examples": [{}],
         }
     }
-
-
-class Error(BaseModel):
-    errorCode: str = Field("")
-    message: str = Field("")
 
 
 class ProfileFile(BaseModel):

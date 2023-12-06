@@ -25,6 +25,7 @@ from data_sharing.models import ApiKey
 from data_sharing.permissions import HasTablePermissions, IsAuthenticated
 from data_sharing.permissions.utils import get_current_user
 from data_sharing.schemas import delta, delta_sharing
+from data_sharing.schemas.delta_sharing import TableVersion
 from data_sharing.settings import settings
 from data_sharing.utils.qs import query_parametrize
 
@@ -85,12 +86,12 @@ async def forward_sharing_request(
 async def list_shares(
     request: Request,
     response: Response,
-    maxResults: Annotated[int, Query(description=(max_results_description))] = None,
-    pageToken: Annotated[int, Query(description=(page_token_description))] = None,
+    maxResults: Annotated[int, Query(description=max_results_description)] = None,
+    pageToken: Annotated[int, Query(description=page_token_description)] = None,
 ):
     query_params = dict(maxResults=maxResults, pageToken=pageToken)
     parametrized_query = query_parametrize(query_params)
-    sharing_res, error = await forward_sharing_request(
+    sharing_res, _ = await forward_sharing_request(
         request, response, parametrized_query, response_type="full"
     )
     return sharing_res.json()
@@ -104,13 +105,13 @@ async def get_share(
     share_name: Annotated[str, Path(description=share_name_description)],
     request: Request,
     response: Response,
-    maxResults: Annotated[int, Query(description=(max_results_description))] = None,
-    pageToken: Annotated[int, Query(description=(page_token_description))] = None,
+    maxResults: Annotated[int, Query(description=max_results_description)] = None,
+    pageToken: Annotated[int, Query(description=page_token_description)] = None,
 ):
     query_params = dict(maxResults=maxResults, pageToken=pageToken)
     parametrized_query = query_parametrize(query_params)
 
-    sharing_res, error = await forward_sharing_request(
+    sharing_res, _ = await forward_sharing_request(
         request, response, parametrized_query
     )
     return sharing_res
@@ -130,7 +131,7 @@ async def list_schemas(
     query_params = dict(maxResults=maxResults, pageToken=pageToken)
     parametrized_query = query_parametrize(query_params)
 
-    sharing_res, error = await forward_sharing_request(
+    sharing_res, _ = await forward_sharing_request(
         request, response, parametrized_query
     )
     return sharing_res
@@ -199,6 +200,7 @@ async def list_tables_in_share(
 @router.get(
     "/shares/{share_name}/schemas/{schema_name}/tables/{table_name}/version",
     dependencies=[Depends(HasTablePermissions.raises(True))],
+    response_model=TableVersion,
 )
 async def query_table_version(
     share_name: Annotated[str, Path(description=share_name_description)],
@@ -210,7 +212,7 @@ async def query_table_version(
         datetime, Query(description=starting_timestamp_description)
     ] = None,
 ):
-    sharing_res, error = await forward_sharing_request(
+    sharing_res, _ = await forward_sharing_request(
         request,
         response,
         query_parametrize(dict(startingTimestamp=startingTimestamp)),
@@ -219,8 +221,7 @@ async def query_table_version(
     response.headers["delta-table-version"] = sharing_res.headers.get(
         "delta-table-version"
     )
-
-    return None
+    return sharing_res.headers
 
 
 @router.get(
@@ -349,7 +350,7 @@ async def query_table_change_data_feed(
     ] = None,
     startingVersion: Annotated[
         Optional[int], Query(description=starting_version_description)
-    ] = None,
+    ] = 0,
     startingTimestamp: Annotated[
         Optional[str], Query(description=starting_timestamp_description)
     ] = None,
