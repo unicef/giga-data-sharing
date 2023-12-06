@@ -77,6 +77,13 @@ async def generate_api_key(
         expiration=now + timedelta(days=body.validity) if body.validity > 0 else None,
     )
     roles = await db.scalars(select(Role).where(Role.id.in_(body.roles)))
+    role_ids = {role.id for role in roles.all()}
+    if len(diff := set(body.roles).difference(role_ids)) > 0:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Invalid role(s): {', '.join([f'`{d}`' for d in diff])}",
+        )
+
     api_key.roles.update(roles)
     db.add(api_key)
     await db.commit()
