@@ -24,8 +24,10 @@ from data_sharing.annotations.delta_sharing import (
 from data_sharing.models import ApiKey
 from data_sharing.permissions import HasTablePermissions, IsAuthenticated
 from data_sharing.permissions.utils import get_current_user
-from data_sharing.schemas import delta, delta_sharing
+from data_sharing.schemas import delta, delta_sharing, parquet
+from data_sharing.schemas.delta_sharing import TableVersion
 from data_sharing.settings import settings
+from data_sharing.utils.header import parse_capabilities_header
 from data_sharing.utils.qs import query_parametrize
 
 router = APIRouter(
@@ -34,7 +36,7 @@ router = APIRouter(
 )
 
 sharing_client = httpx.AsyncClient(
-    base_url=f"http://{settings.DELTA_SHARING_HOST}", timeout=30
+    base_url=f"http://{settings.DELTA_SHARING_HOST}", timeout=300
 )
 
 
@@ -85,12 +87,12 @@ async def forward_sharing_request(
 async def list_shares(
     request: Request,
     response: Response,
-    maxResults: Annotated[int, Query(description=(max_results_description))] = None,
-    pageToken: Annotated[int, Query(description=(page_token_description))] = None,
+    maxResults: Annotated[int, Query(description=max_results_description)] = None,
+    pageToken: Annotated[int, Query(description=page_token_description)] = None,
 ):
     query_params = dict(maxResults=maxResults, pageToken=pageToken)
     parametrized_query = query_parametrize(query_params)
-    sharing_res, error = await forward_sharing_request(
+    sharing_res, _ = await forward_sharing_request(
         request, response, parametrized_query, response_type="full"
     )
     return sharing_res.json()
@@ -104,13 +106,13 @@ async def get_share(
     share_name: Annotated[str, Path(description=share_name_description)],
     request: Request,
     response: Response,
-    maxResults: Annotated[int, Query(description=(max_results_description))] = None,
-    pageToken: Annotated[int, Query(description=(page_token_description))] = None,
+    maxResults: Annotated[int, Query(description=max_results_description)] = None,
+    pageToken: Annotated[int, Query(description=page_token_description)] = None,
 ):
     query_params = dict(maxResults=maxResults, pageToken=pageToken)
     parametrized_query = query_parametrize(query_params)
 
-    sharing_res, error = await forward_sharing_request(
+    sharing_res, _ = await forward_sharing_request(
         request, response, parametrized_query
     )
     return sharing_res
@@ -130,7 +132,7 @@ async def list_schemas(
     query_params = dict(maxResults=maxResults, pageToken=pageToken)
     parametrized_query = query_parametrize(query_params)
 
-    sharing_res, error = await forward_sharing_request(
+    sharing_res, _ = await forward_sharing_request(
         request, response, parametrized_query
     )
     return sharing_res
@@ -199,6 +201,7 @@ async def list_tables_in_share(
 @router.get(
     "/shares/{share_name}/schemas/{schema_name}/tables/{table_name}/version",
     dependencies=[Depends(HasTablePermissions.raises(True))],
+    response_model=TableVersion,
 )
 async def query_table_version(
     share_name: Annotated[str, Path(description=share_name_description)],
@@ -210,7 +213,7 @@ async def query_table_version(
         datetime, Query(description=starting_timestamp_description)
     ] = None,
 ):
-    sharing_res, error = await forward_sharing_request(
+    sharing_res, _ = await forward_sharing_request(
         request,
         response,
         query_parametrize(dict(startingTimestamp=startingTimestamp)),
@@ -219,13 +222,12 @@ async def query_table_version(
     response.headers["delta-table-version"] = sharing_res.headers.get(
         "delta-table-version"
     )
-
-    return None
+    return sharing_res.headers
 
 
 @router.get(
     "/shares/{share_name}/schemas/{schema_name}/tables/{table_name}/metadata",
-    response_model=delta_sharing.TableMetadataResponse | delta.TableMetadataResponse,
+    response_model=parquet.TableMetadataResponse | delta.TableMetadataResponse,
     dependencies=[Depends(HasTablePermissions.raises(True))],
 )
 async def query_table_metadata(
@@ -262,12 +264,18 @@ async def query_table_metadata(
         return ORJSONResponse(sharing_res.json(), status_code=sharing_res.status_code)
     else:
         protocol, metadata = res_split
-        return {**orjson.loads(protocol), **orjson.loads(metadata)}
+        output_dict = {**orjson.loads(protocol), **orjson.loads(metadata)}
+        if (
+            parse_capabilities_header(delta_sharing_capabilities).get("responseFormat")
+            == "delta"
+        ):
+            return delta.TableMetadataResponse(**output_dict)
+        return parquet.TableMetadataResponse(**output_dict)
 
 
 @router.post(
     "/shares/{share_name}/schemas/{schema_name}/tables/{table_name}/query",
-    response_model=delta_sharing.TableDataResponse | delta.TableDataResponse,
+    response_model=parquet.TableDataResponse | delta.TableDataResponse,
     dependencies=[Depends(HasTablePermissions.raises(True))],
 )
 async def query_table_data(
@@ -320,18 +328,23 @@ async def query_table_data(
         non_empty_files = [
             orjson.loads(file).get("file") for file in files if len(file) > 0
         ]
-
-        return {
+        output_dict = {
             **orjson.loads(protocol),
             **orjson.loads(metadata),
             "files": non_empty_files,
         }
 
+        if (
+            parse_capabilities_header(delta_sharing_capabilities).get("responseFormat")
+            == "delta"
+        ):
+            return delta.TableDataResponse(**output_dict)
+        return parquet.TableDataResponse(**output_dict)
+
 
 @router.get(
     "/shares/{share_name}/schemas/{schema_name}/tables/{table_name}/changes",
-    response_model=delta_sharing.TableDataChangeResponse
-    | delta.TableDataChangeResponse,
+    response_model=parquet.TableDataChangeResponse | delta.TableDataChangeResponse,
     dependencies=[Depends(HasTablePermissions.raises(True))],
 )
 async def query_table_change_data_feed(
@@ -349,7 +362,7 @@ async def query_table_change_data_feed(
     ] = None,
     startingVersion: Annotated[
         Optional[int], Query(description=starting_version_description)
-    ] = None,
+    ] = 0,
     startingTimestamp: Annotated[
         Optional[str], Query(description=starting_timestamp_description)
     ] = None,
@@ -401,4 +414,9 @@ async def query_table_change_data_feed(
             **orjson.loads(metadata),
             "files": change_data_feed,
         }
-        return merged_dict
+        if (
+            parse_capabilities_header(delta_sharing_capabilities).get("responseFormat")
+            == "delta"
+        ):
+            return delta.TableDataChangeResponse(**merged_dict)
+        return parquet.TableDataChangeResponse(**merged_dict)

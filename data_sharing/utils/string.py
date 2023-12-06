@@ -1,4 +1,4 @@
-def check_header(header, key_value_pair):
+def check_header(header: str, key_value_pair: str) -> bool:
     """
     Check if a specific key-value pair exists in a header string.
 
