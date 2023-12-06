@@ -24,7 +24,7 @@ from data_sharing.annotations.delta_sharing import (
 from data_sharing.models import ApiKey
 from data_sharing.permissions import HasTablePermissions, IsAuthenticated
 from data_sharing.permissions.utils import get_current_user
-from data_sharing.schemas import delta, delta_sharing
+from data_sharing.schemas import delta, delta_sharing, parquet
 from data_sharing.schemas.delta_sharing import TableVersion
 from data_sharing.settings import settings
 from data_sharing.utils.header import parse_capabilities_header
@@ -227,7 +227,7 @@ async def query_table_version(
 
 @router.get(
     "/shares/{share_name}/schemas/{schema_name}/tables/{table_name}/metadata",
-    response_model=delta_sharing.TableMetadataResponse | delta.TableMetadataResponse,
+    response_model=parquet.TableMetadataResponse | delta.TableMetadataResponse,
     dependencies=[Depends(HasTablePermissions.raises(True))],
 )
 async def query_table_metadata(
@@ -264,12 +264,18 @@ async def query_table_metadata(
         return ORJSONResponse(sharing_res.json(), status_code=sharing_res.status_code)
     else:
         protocol, metadata = res_split
-        return {**orjson.loads(protocol), **orjson.loads(metadata)}
+        output_dict = {**orjson.loads(protocol), **orjson.loads(metadata)}
+        if (
+            parse_capabilities_header(delta_sharing_capabilities).get("responseFormat")
+            == "delta"
+        ):
+            return delta.TableMetadataResponse(**output_dict)
+        return parquet.TableMetadataResponse(**output_dict)
 
 
 @router.post(
     "/shares/{share_name}/schemas/{schema_name}/tables/{table_name}/query",
-    response_model=delta_sharing.TableDataResponse | delta.TableDataResponse,
+    response_model=parquet.TableDataResponse | delta.TableDataResponse,
     dependencies=[Depends(HasTablePermissions.raises(True))],
 )
 async def query_table_data(
@@ -322,18 +328,23 @@ async def query_table_data(
         non_empty_files = [
             orjson.loads(file).get("file") for file in files if len(file) > 0
         ]
-
-        return {
+        output_dict = {
             **orjson.loads(protocol),
             **orjson.loads(metadata),
             "files": non_empty_files,
         }
 
+        if (
+            parse_capabilities_header(delta_sharing_capabilities).get("responseFormat")
+            == "delta"
+        ):
+            return delta.TableDataResponse(**output_dict)
+        return parquet.TableDataResponse(**output_dict)
+
 
 @router.get(
     "/shares/{share_name}/schemas/{schema_name}/tables/{table_name}/changes",
-    response_model=delta_sharing.TableDataChangeResponse
-    | delta.TableDataChangeResponse,
+    response_model=parquet.TableDataChangeResponse | delta.TableDataChangeResponse,
     dependencies=[Depends(HasTablePermissions.raises(True))],
 )
 async def query_table_change_data_feed(
@@ -408,4 +419,4 @@ async def query_table_change_data_feed(
             == "delta"
         ):
             return delta.TableDataChangeResponse(**merged_dict)
-        return delta_sharing.TableDataChangeResponse(**merged_dict)
+        return parquet.TableDataChangeResponse(**merged_dict)

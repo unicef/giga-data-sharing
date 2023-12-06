@@ -1,4 +1,4 @@
-from typing import Literal, Optional
+from typing import Optional
 
 from pydantic import UUID4, BaseModel, Field, conint
 
@@ -59,6 +59,10 @@ class Add(BaseModel):
     clusteringProvider: Optional[str] = Field(None)
 
 
+class AddWrapper(BaseModel):
+    add: Add
+
+
 class Remove(BaseModel):
     path: str
     deletionTimestamp: Optional[conint(ge=0)] = Field(None)
@@ -73,6 +77,10 @@ class Remove(BaseModel):
     defaultRowCommitVersion: Optional[conint(ge=0)] = Field(None)
 
 
+class RemoveWrapper(BaseModel):
+    remove: Remove
+
+
 class CDC(BaseModel):
     path: str
     partitionValues: dict[str, str]
@@ -81,17 +89,17 @@ class CDC(BaseModel):
     tags: dict[str, str]
 
 
+class CDCWrapper(BaseModel):
+    cdc: CDC
+
+
 class File(BaseModel):
     id: str
     deletionVectorFileId: Optional[str] = Field(None)
     version: Optional[conint(ge=0)] = Field(None)
     timestamp: Optional[conint(ge=0)] = Field(None)
     expirationTimestamp: Optional[conint(ge=0)] = Field(None)
-    deltaSingleAction: (
-        dict[Literal["add"], Add]
-        | dict[Literal["remove"], Remove]
-        | dict[Literal["cdc"], CDC]
-    )
+    deltaSingleAction: AddWrapper | RemoveWrapper | CDCWrapper
 
 
 class FileWrapper(BaseModel):
