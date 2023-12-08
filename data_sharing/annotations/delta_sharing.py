@@ -55,6 +55,10 @@ table_name_description = "The table name to query. It's case-insensitive."
 
 table_version_description = "A value which represents the current table version."
 
+parse_schema_description = "Parse the metadata `schemaString` as valid JSON."
+
+parse_stats_description = "Parse the file `stats` as valid JSON."
+
 
 class ProfileFileDescriptions:
     share_credentials_version = (

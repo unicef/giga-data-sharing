@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Any, Optional
 
 from pydantic import UUID4, BaseModel, Field, conint
 
@@ -24,7 +24,8 @@ class Metadata(BaseModel):
     name: Optional[str] = Field(None)
     description: Optional[str] = Field(None)
     format: Format
-    schemaString: str
+    schemaString: str = Field(None)
+    schema_: dict[str, Any] = Field(None, alias="schema")
     partitionColumns: list[str]
     createdTime: Optional[conint(ge=0)] = Field(None)
     configuration: dict[str, str]
@@ -51,7 +52,7 @@ class Add(BaseModel):
     size: conint(ge=0)
     modificationTime: conint(ge=0)
     dataChange: bool
-    stats: Optional[str] = Field(None)
+    stats: str | dict[str, Any] = Field(None)
     tags: Optional[dict[str, str]] = Field(None)
     deletionVector: Optional[DeletionVector] = Field(None)
     baseRowId: Optional[conint(ge=0)] = Field(None)

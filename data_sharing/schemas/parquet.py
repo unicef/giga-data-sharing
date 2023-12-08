@@ -1,3 +1,5 @@
+from typing import Any
+
 from pydantic import UUID4, AnyHttpUrl, BaseModel, Field, conint
 
 
@@ -14,7 +16,8 @@ class Metadata(BaseModel):
     name: str | None = Field(None)
     description: str | None = Field(None)
     format: Format
-    schemaString: str
+    schemaString: str = Field(None)
+    schema_: dict[str, Any] = Field(None, alias="schema")
     partitionColumns: list[str]
     configuration: dict[str, str] = Field(None)
     version: conint(ge=0) | None = Field(None)
@@ -27,7 +30,7 @@ class File(BaseModel):
     url: AnyHttpUrl
     partitionValues: dict[str, str]
     size: conint(ge=0)
-    stats: str | None = Field(None)
+    stats: str | dict[str, Any] = Field(None)
     version: conint(ge=0) = Field(None)
     timestamp: conint(ge=0) | None = Field(None)
     expirationTimestamp: conint(ge=0) | None = Field(None)

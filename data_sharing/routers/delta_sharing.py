@@ -15,6 +15,8 @@ from data_sharing.annotations.delta_sharing import (
     include_historical_metadata_description,
     max_results_description,
     page_token_description,
+    parse_schema_description,
+    parse_stats_description,
     schema_name_description,
     share_name_description,
     starting_timestamp_description,
@@ -243,6 +245,9 @@ async def query_table_metadata(
             description=delta_sharing_capabilities_header_description,
         ),
     ] = None,
+    parse_schema: Annotated[
+        bool, Query(alias="parseSchema", description=parse_schema_description)
+    ] = False,
 ):
     additional_headers = {}
     if delta_sharing_capabilities is not None:
@@ -269,8 +274,19 @@ async def query_table_metadata(
             parse_capabilities_header(delta_sharing_capabilities).get("responseFormat")
             == "delta"
         ):
-            return delta.TableMetadataResponse(**output_dict)
-        return parquet.TableMetadataResponse(**output_dict)
+            output = delta.TableMetadataResponse(**output_dict)
+            if parse_schema:
+                output.metaData.deltaMetadata.schema_ = orjson.loads(
+                    output.metaData.deltaMetadata.schemaString
+                )
+                output.metaData.deltaMetadata.schemaString = None
+            return output
+
+        output = parquet.TableMetadataResponse(**output_dict)
+        if parse_schema:
+            output.metaData.schema_ = orjson.loads(output.metaData.schemaString)
+            output.metaData.schemaString = None
+        return output
 
 
 @router.post(
@@ -293,6 +309,12 @@ async def query_table_data(
             description=delta_sharing_capabilities_header_description,
         ),
     ] = None,
+    parse_schema: Annotated[
+        bool, Query(alias="parseSchema", description=parse_schema_description)
+    ] = False,
+    parse_stats: Annotated[
+        bool, Query(alias="parseStats", description=parse_stats_description)
+    ] = False,
 ):
     additional_headers = {}
     if delta_sharing_capabilities is not None:
@@ -338,8 +360,25 @@ async def query_table_data(
             parse_capabilities_header(delta_sharing_capabilities).get("responseFormat")
             == "delta"
         ):
-            return delta.TableDataResponse(**output_dict)
-        return parquet.TableDataResponse(**output_dict)
+            output = delta.TableDataResponse(**output_dict)
+            if parse_schema:
+                output.metaData.deltaMetadata.schema_ = orjson.loads(
+                    output.metaData.deltaMetadata.schemaString
+                )
+                output.metaData.deltaMetadata.schemaString = None
+            if parse_stats:
+                for file in output.files:
+                    file.stats = orjson.loads(file.stats)
+            return output
+
+        output = parquet.TableDataResponse(**output_dict)
+        if parse_schema:
+            output.metaData.schema_ = orjson.loads(output.metaData.schemaString)
+            output.metaData.schemaString = None
+        if parse_stats:
+            for file in output.files:
+                file.stats = orjson.loads(file.stats)
+        return output
 
 
 @router.get(
@@ -375,6 +414,9 @@ async def query_table_change_data_feed(
     includeHistoricalMetadata: Annotated[
         Optional[bool], Query(description=include_historical_metadata_description)
     ] = None,
+    parse_schema: Annotated[
+        bool, Query(alias="parseSchema", description=parse_schema_description)
+    ] = False,
 ):
     additional_headers = {}
     if delta_sharing_capabilities is not None:
@@ -418,5 +460,16 @@ async def query_table_change_data_feed(
             parse_capabilities_header(delta_sharing_capabilities).get("responseFormat")
             == "delta"
         ):
-            return delta.TableDataChangeResponse(**merged_dict)
-        return parquet.TableDataChangeResponse(**merged_dict)
+            merged = delta.TableDataChangeResponse(**merged_dict)
+            if parse_schema:
+                merged.metaData.deltaMetadata.schema_ = orjson.loads(
+                    merged.metaData.deltaMetadata.schemaString
+                )
+                merged.metaData.deltaMetadata.schemaString = None
+            return merged
+
+        merged = parquet.TableDataChangeResponse(**merged_dict)
+        if parse_schema:
+            merged.metaData.schema_ = orjson.loads(merged.metaData.schemaString)
+            merged.metaData.schemaString = None
+        return merged
