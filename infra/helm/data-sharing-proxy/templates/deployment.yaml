@@ -66,7 +66,6 @@ spec:
               until pg_isready
               --host data-sharing-proxy-postgresql
               --port 5432
-              --dbname giga-data-sharing
               --username giga-data-sharing;
               do echo waiting for database;
               sleep 2;

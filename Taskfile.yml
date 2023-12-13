@@ -107,27 +107,33 @@ tasks:
     desc: Install/upgrade Helm chart
     dir: infra
     cmds:
-      - kubectl apply -f k8s/configmap.yaml
-      - kubectl apply -f k8s/secrets.yaml
+      - kubectl apply -f k8s/namespace.yaml
+      - kubectl apply -f k8s/configmap.yaml --namespace giga-data-sharing
+      - kubectl apply -f k8s/secrets.yaml --namespace giga-data-sharing
       - helm dependency update helm/data-sharing-proxy
       - >
         helm upgrade --install data-sharing-delta ./helm/data-sharing-delta
+        --namespace giga-data-sharing
         --set image.repository={{.DATA_SHARING_DELTA_IMAGE_REPOSITORY}}
         --set image.tag={{.SHORT_SHA}}
       - >
         helm upgrade --install data-sharing-proxy ./helm/data-sharing-proxy
+        --namespace giga-data-sharing
         --set image.repository={{.DATA_SHARING_PROXY_IMAGE_REPOSITORY}}
         --set image.tag={{.SHORT_SHA}}
         --set service.type=LoadBalancer
 
   helm-down:
     desc: Uninstall Helm chart
-    dir: infra/helm
     cmds:
-      - helm uninstall data-sharing-proxy
-      - helm uninstall data-sharing-delta
-      - kubectl delete all --all
-      - kubectl delete pvc --all
+      - helm uninstall data-sharing-proxy --namespace giga-data-sharing
+      - helm uninstall data-sharing-delta --namespace giga-data-sharing
+
+  helm-clean:
+    desc: Clean K8s resources
+    dir: infra
+    cmds:
+      - kubectl delete -f k8s/namespace.yaml
 
   generate-delta-config:
     desc: Generate Delta Sharing config
