@@ -9,129 +9,33 @@ pool:
   vmImage: ubuntu-latest
 
 variables:
-  containerRegistryName: $(ACR_NAME)
-  containerRegistryServiceConnection: $(ACR_SERVICE_CONNECTION)
-  kubernetesEnvironment: $(KUBERNETES_ENVIRONMENT)
-  kubernetesNamespace: $(KUBERNETES_NAMESPACE)
-  deltaBearerToken: $(DELTA_BEARER_TOKEN)
-  storageAccessKey: $(STORAGE_ACCESS_KEY)
-  storageAccountName: $(STORAGE_ACCOUNT_NAME)
-  storageContainerName: $(STORAGE_CONTAINER_NAME)
-  storageContainerPath: $(STORAGE_CONTAINER_PATH)
-  postgresqlPassword: $(POSTGRESQL_PASSWORD)
-  adminApiKey: $(ADMIN_API_KEY)
-  adminApiSecret: $(ADMIN_API_SECRET)
-  secretKey: $(APPLICATION_SECRET_KEY)
-  appDomain: $(APP_DOMAIN)
-  system.debug: true
+  - template: templates/variables.yaml
 
 stages:
   - stage: BuildAndPushProxy
     displayName: Build and push Data Sharing Proxy image
     jobs:
-      - deployment: Deploy
-        displayName: Build and push Data Sharing Proxy image
-        environment: $(kubernetesEnvironment)
-        strategy:
-          runOnce:
-            deploy:
-              steps:
-                - checkout: self
-
-                - task: Docker@2
-                  displayName: Login to container Registry
-                  inputs:
-                    command: login
-                    containerRegistry: $(ACR_SERVICE_CONNECTION)
-
-                - task: Docker@2
-                  displayName: Build and push Data Sharing proxy image to container registry
-                  inputs:
-                    command: buildAndPush
-                    repository: giga-data-sharing-proxy
-                    dockerfile: $(Build.SourcesDirectory)/proxy.prod.Dockerfile
-                    containerRegistry: $(ACR_SERVICE_CONNECTION)
-                    tags: |
-                      $(Build.SourceVersion)
+      - template: templates/build-and-push.yaml
+        parameters:
+          displayName: Data Sharing proxy
+          repository: giga-data-sharing-proxy
+          dockerfile: $(Build.SourcesDirectory)/proxy.prod.Dockerfile
 
   - stage: BuildAndPushDeltaSharing
     displayName: Build and push Delta Sharing server image
     dependsOn: [ ]
     jobs:
-      - deployment: Deploy
-        displayName: Build and push Data Sharing Proxy image
-        environment: $(kubernetesEnvironment)
-        strategy:
-          runOnce:
-            deploy:
-              steps:
-                - checkout: self
-
-                - task: Docker@2
-                  displayName: Login to container Registry
-                  inputs:
-                    command: login
-                    containerRegistry: $(ACR_SERVICE_CONNECTION)
-
-                - task: Docker@2
-                  displayName: Build and push Data Sharing Delta image to container registry
-                  inputs:
-                    command: buildAndPush
-                    repository: giga-data-sharing-delta
-                    dockerfile: $(Build.SourcesDirectory)/delta.prod.Dockerfile
-                    containerRegistry: $(ACR_SERVICE_CONNECTION)
-                    tags: |
-                      $(Build.SourceVersion)
+      - template: templates/build-and-push.yaml
+        parameters:
+          displayName: Delta Sharing server
+          repository: giga-data-sharing-delta
+          dockerfile: $(Build.SourcesDirectory)/delta.prod.Dockerfile
 
   - stage: CreateConfig
     displayName: Create/update K8s configuration resources
     dependsOn: [ ]
     jobs:
-      - deployment: Deploy
-        displayName: Create/update K8s configuration resources
-        environment: $(kubernetesEnvironment)
-        strategy:
-          runOnce:
-            deploy:
-              steps:
-                - checkout: self
-
-                - task: Kubernetes@1
-                  displayName: Create configmap
-                  inputs:
-                    namespace: $(kubernetesNamespace)
-                    configurationType: configuration
-                    command: apply
-                    useConfigurationFile: true
-                    configuration: $(Build.SourcesDirectory)/infra/k8s/configmap.yaml
-
-                - task: Kubernetes@1
-                  displayName: Create secret
-                  inputs:
-                    namespace: $(kubernetesNamespace)
-                    configurationType: inline
-                    command: apply
-                    useConfigurationFile: true
-                    inline: |
-                      apiVersion: v1
-                      kind: Secret
-                      metadata:
-                        name: giga-data-sharing
-                        labels:
-                          app: giga-data-sharing
-                      stringData:
-                        DELTA_BEARER_TOKEN: "$(deltaBearerToken)"
-                        STORAGE_ACCESS_KEY: "$(storageAccessKey)"
-                        STORAGE_ACCOUNT_NAME: "$(storageAccountName)"
-                        CONTAINER_NAME: "$(storageContainerName)"
-                        CONTAINER_PATH: "$(storageContainerPath)"
-                        POSTGRESQL_USERNAME: "giga-data-sharing"
-                        POSTGRESQL_PASSWORD: "$(postgresqlPassword)"
-                        POSTGRESQL_DATABASE: "giga-data-sharing"
-                        ADMIN_API_KEY: "$(adminApiKey)"
-                        ADMIN_API_SECRET: "$(adminApiSecret)"
-                        SECRET_KEY: "$(secretKey)"
-                        APP_DOMAIN: "$(appDomain)"
+      - template: templates/create-config.yaml
 
   - stage: Deploy
     displayName: Deploy Data Sharing
@@ -140,57 +44,4 @@ stages:
       - BuildAndPushDeltaSharing
       - CreateConfig
     jobs:
-      - deployment: Deploy
-        displayName: Deploy Data Sharing
-        environment: $(kubernetesEnvironment)
-        strategy:
-          runOnce:
-            deploy:
-              steps:
-                - checkout: self
-
-                - task: HelmDeploy@0
-                  displayName: Helm deploy Data Sharing Delta
-                  inputs:
-                    command: upgrade
-                    chartType: FilePath
-                    chartPath: infra/helm/data-sharing-delta
-                    releaseName: data-sharing-delta
-                    namespace: $(kubernetesNamespace)
-                    arguments: >
-                      --set image.repository="$(containerRegistryName).azurecr.io/giga-data-sharing-delta"
-                      --set image.tag="$(Build.SourceVersion)"
-
-                - task: HelmDeploy@0
-                  displayName: Helm deploy Data Sharing proxy
-                  inputs:
-                    command: upgrade
-                    chartType: FilePath
-                    chartPath: infra/helm/data-sharing-proxy
-                    releaseName: data-sharing-proxy
-                    namespace: $(kubernetesNamespace)
-                    arguments: >
-                      --set image.repository="$(containerRegistryName).azurecr.io/giga-data-sharing-proxy"
-                      --set image.tag="$(Build.SourceVersion)"
-
-
-  - stage: CreateIngress
-    displayName: Create/update K8s ingress resource
-    jobs:
-      - deployment: Deploy
-        displayName: Create/update K8s ingress resource
-        environment: $(kubernetesEnvironment)
-        strategy:
-          runOnce:
-            deploy:
-              steps:
-                - checkout: self
-
-                - task: Kubernetes@1
-                  displayName: Create ingress
-                  inputs:
-                    namespace: $(kubernetesNamespace)
-                    configurationType: configuration
-                    command: apply
-                    useConfigurationFile: true
-                    configuration: $(Build.SourcesDirectory)/infra/k8s/ingress-staging.yaml
+      - template: templates/helm-deploy.yaml

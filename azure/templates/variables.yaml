@@ -1,0 +1,16 @@
+variables:
+  containerRegistryName: $(ACR_NAME)
+  containerRegistryServiceConnection: $(ACR_SERVICE_CONNECTION)
+  kubernetesEnvironment: $(KUBERNETES_ENVIRONMENT)
+  kubernetesNamespace: $(KUBERNETES_NAMESPACE)
+  adminApiKey: $(ADMIN_API_KEY)
+  adminApiSecret: $(ADMIN_API_SECRET)
+  appDomain: $(APP_DOMAIN)
+  secretKey: $(APPLICATION_SECRET_KEY)
+  deltaBearerToken: $(DELTA_BEARER_TOKEN)
+  postgresqlPassword: $(POSTGRESQL_PASSWORD)
+  storageAccessKey: $(STORAGE_ACCESS_KEY)
+  storageAccountName: $(STORAGE_ACCOUNT_NAME)
+  storageContainerName: $(STORAGE_CONTAINER_NAME)
+  storageContainerPath: $(STORAGE_CONTAINER_PATH)
+  system.debug: true
