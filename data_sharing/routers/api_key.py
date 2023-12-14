@@ -76,8 +76,9 @@ async def generate_api_key(
         secret=get_key_hash(new_key),
         expiration=now + timedelta(days=body.validity) if body.validity > 0 else None,
     )
-    roles = await db.scalars(select(Role).where(Role.id.in_(body.roles)))
-    role_ids = {role.id for role in roles.all()}
+    roles = await db.execute(select(Role).where(Role.id.in_(body.roles)))
+    roles = roles.scalars().all()
+    role_ids = {role.id for role in roles}
     if len(diff := set(body.roles).difference(role_ids)) > 0:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,

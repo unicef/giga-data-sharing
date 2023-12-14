@@ -35,10 +35,6 @@
   id: BWA
   model: Role
 - fields:
-    description: cdf_test
-  id: CDF
-  model: Role
-- fields:
     description: Costa Rica
   id: CRI
   model: Role
@@ -161,4 +157,8 @@
 - fields:
     description: Zimbabwe
   id: ZWE
+  model: Role
+- fields:
+    description: CDF Demo
+  id: ZCDF
   model: Role

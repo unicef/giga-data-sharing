@@ -40,5 +40,5 @@ class ApiKey(BaseModel):
     roles: Mapped[set[Role]] = relationship(
         secondary=apikey_role_association_table,
         lazy="selectin",
-        cascade="all, delete",
+        cascade="all,delete",
     )
