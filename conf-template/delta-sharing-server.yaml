@@ -50,10 +50,6 @@ shares:
       location: wasbs://{{.CONTAINER_NAME}}@{{.STORAGE_ACCOUNT_NAME}}.blob.core.windows.net/{{.CONTAINER_PATH}}/BWA
       name: BWA
     - historyShared: true
-      id: 3632154b-a2f0-496f-9211-2346375a3095
-      location: wasbs://{{.CONTAINER_NAME}}@{{.STORAGE_ACCOUNT_NAME}}.blob.core.windows.net/{{.CONTAINER_PATH}}/CDF
-      name: CDF
-    - historyShared: true
       id: 5286bf32-050d-4508-a23b-77efcedc139c
       location: wasbs://{{.CONTAINER_NAME}}@{{.STORAGE_ACCOUNT_NAME}}.blob.core.windows.net/{{.CONTAINER_PATH}}/CRI
       name: CRI
@@ -177,5 +173,9 @@ shares:
       id: e17f6743-ff4f-4770-91f7-d4b424024dab
       location: wasbs://{{.CONTAINER_NAME}}@{{.STORAGE_ACCOUNT_NAME}}.blob.core.windows.net/{{.CONTAINER_PATH}}/ZWE
       name: ZWE
+    - historyShared: true
+      id: 6bbd32bc-6d3d-4533-a086-47894840e82e
+      location: wasbs://{{.CONTAINER_NAME}}@{{.STORAGE_ACCOUNT_NAME}}.blob.core.windows.net/{{.CONTAINER_PATH}}/ZCDF
+      name: ZCDF
 stalenessAcceptable: false
 version: 1
