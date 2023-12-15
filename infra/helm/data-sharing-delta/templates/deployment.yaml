@@ -13,6 +13,7 @@ metadata:
   name: {{ include "data-sharing-delta.fullname" . }}
   labels:
     {{- include "data-sharing-delta.labels" . | nindent 4 }}
+    giga-data-sharing/deployment-timestamp: {{ now | quote }}
 spec:
   {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
