@@ -177,7 +177,7 @@ shares:
       id: 6bbd32bc-6d3d-4533-a086-47894840e82e
       location: wasbs://{{.CONTAINER_NAME}}@{{.STORAGE_ACCOUNT_NAME}}.blob.core.windows.net/{{.CONTAINER_PATH}}/school-reference/ZCDF
       name: ZCDF
-  - name: school-data
+  - name: school-master-data
     tables:
     - historyShared: true
       id: a126c5bc-1543-4dc2-89d4-cf2acb20ef19
