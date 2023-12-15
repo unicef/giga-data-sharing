@@ -13,11 +13,13 @@ def main():
         config = yaml.safe_load(f)
 
     for index, _ in enumerate(config["shares"][0]["schemas"]):
+        schema_name = config["shares"][0]["schemas"][index]["name"]
+
         config["shares"][0]["schemas"][index]["tables"] = [
             dict(
                 id=country["id"],
                 name=country["name"],
-                location=f"wasbs://{{{{.CONTAINER_NAME}}}}@{{{{.STORAGE_ACCOUNT_NAME}}}}.blob.core.windows.net/{{{{.CONTAINER_PATH}}}}/school-reference/{country['name']}",
+                location=f"wasbs://{{{{.CONTAINER_NAME}}}}@{{{{.STORAGE_ACCOUNT_NAME}}}}.blob.core.windows.net/{{{{.CONTAINER_PATH}}}}/{schema_name}/{country['name']}",
                 historyShared=True,
             )
             for country in countries
