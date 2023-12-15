@@ -5,6 +5,8 @@ metadata:
   labels:
     {{- include "data-sharing-proxy.labels" . | nindent 4 }}
     giga-data-sharing/deployment-timestamp: {{ now | quote }}
+  annotations:
+    giga-data-sharing/deployment-timestamp: {{ now | quote }}
 spec:
   {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
