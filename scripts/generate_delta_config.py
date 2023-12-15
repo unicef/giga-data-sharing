@@ -12,9 +12,6 @@ def main():
     with open(BASE_DIR / "conf-template" / "delta-sharing-server.yaml", "r") as f:
         config = yaml.safe_load(f)
 
-    number_of_schemas = config["shares"][0]["schemas"]
-    print(len(number_of_schemas))
-
     for index, _ in enumerate(config["shares"][0]["schemas"]):
         config["shares"][0]["schemas"][index]["tables"] = [
             dict(
