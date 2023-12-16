@@ -13,8 +13,6 @@ metadata:
   name: {{ include "data-sharing-delta.fullname" . }}
   labels:
     {{- include "data-sharing-delta.labels" . | nindent 4 }}
-  annotations:
-    giga-data-sharing/deployment-timestamp: {{ now | quote }}
 spec:
   {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
@@ -24,8 +22,9 @@ spec:
       {{- include "data-sharing-delta.selectorLabels" . | nindent 6 }}
   template:
     metadata:
-      {{- with .Values.podAnnotations }}
       annotations:
+        giga-data-sharing/deployment-timestamp: {{ now | quote }}
+      {{- with .Values.podAnnotations }}
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
