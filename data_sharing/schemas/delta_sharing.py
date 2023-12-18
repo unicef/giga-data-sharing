@@ -13,7 +13,7 @@ T = TypeVar("T")
 
 
 class Pagination(BaseModel, Generic[T]):
-    items: list[T]
+    items: list[T] = Field([])
     nextPageToken: str = Field("")
 
 

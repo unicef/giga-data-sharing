@@ -6,7 +6,7 @@ import orjson
 from fastapi import APIRouter, Depends, Header, Path, Query, Security
 from fastapi.requests import Request
 from fastapi.responses import ORJSONResponse, Response
-from pydantic import BaseModel
+from pydantic import BaseModel, conint
 
 from data_sharing.annotations.delta_sharing import (
     delta_sharing_capabilities_header_description,
@@ -87,7 +87,9 @@ async def forward_sharing_request(
 async def list_shares(
     request: Request,
     response: Response,
-    maxResults: Annotated[int, Query(description=max_results_description)] = None,
+    maxResults: Annotated[
+        conint(ge=0), Query(description=max_results_description)
+    ] = None,
     pageToken: Annotated[str, Query(description=page_token_description)] = None,
 ):
     query_params = dict(maxResults=maxResults, pageToken=pageToken)
@@ -106,7 +108,9 @@ async def get_share(
     share_name: Annotated[str, Path(description=share_name_description)],
     request: Request,
     response: Response,
-    maxResults: Annotated[int, Query(description=max_results_description)] = None,
+    maxResults: Annotated[
+        conint(ge=0), Query(description=max_results_description)
+    ] = None,
     pageToken: Annotated[str, Query(description=page_token_description)] = None,
 ):
     query_params = dict(maxResults=maxResults, pageToken=pageToken)
@@ -126,7 +130,9 @@ async def list_schemas(
     share_name: Annotated[str, Path(description=share_name_description)],
     request: Request,
     response: Response,
-    maxResults: Annotated[int, Query(description=max_results_description)] = None,
+    maxResults: Annotated[
+        conint(ge=0), Query(description=max_results_description)
+    ] = None,
     pageToken: Annotated[str, Query(description=page_token_description)] = None,
 ):
     query_params = dict(maxResults=maxResults, pageToken=pageToken)
@@ -147,7 +153,9 @@ async def list_tables(
     schema_name: Annotated[str, Path(description=schema_name_description)],
     request: Request,
     response: Response,
-    maxResults: Annotated[int, Query(description=max_results_description)] = None,
+    maxResults: Annotated[
+        conint(ge=0), Query(description=max_results_description)
+    ] = None,
     pageToken: Annotated[str, Query(description=page_token_description)] = None,
     current_user: ApiKey = Depends(get_current_user),
 ):
@@ -176,7 +184,9 @@ async def list_tables_in_share(
     share_name: Annotated[str, Path(description=share_name_description)],
     request: Request,
     response: Response,
-    maxResults: Annotated[int, Query(description=max_results_description)] = None,
+    maxResults: Annotated[
+        conint(ge=0), Query(description=max_results_description)
+    ] = None,
     pageToken: Annotated[str, Query(description=page_token_description)] = None,
     current_user: ApiKey = Depends(get_current_user),
 ):
