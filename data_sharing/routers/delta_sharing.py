@@ -88,7 +88,7 @@ async def list_shares(
     request: Request,
     response: Response,
     maxResults: Annotated[int, Query(description=max_results_description)] = None,
-    pageToken: Annotated[int, Query(description=page_token_description)] = None,
+    pageToken: Annotated[str, Query(description=page_token_description)] = None,
 ):
     query_params = dict(maxResults=maxResults, pageToken=pageToken)
     parametrized_query = query_parametrize(query_params)
@@ -107,7 +107,7 @@ async def get_share(
     request: Request,
     response: Response,
     maxResults: Annotated[int, Query(description=max_results_description)] = None,
-    pageToken: Annotated[int, Query(description=page_token_description)] = None,
+    pageToken: Annotated[str, Query(description=page_token_description)] = None,
 ):
     query_params = dict(maxResults=maxResults, pageToken=pageToken)
     parametrized_query = query_parametrize(query_params)
@@ -127,7 +127,7 @@ async def list_schemas(
     request: Request,
     response: Response,
     maxResults: Annotated[int, Query(description=max_results_description)] = None,
-    pageToken: Annotated[int, Query(description=page_token_description)] = None,
+    pageToken: Annotated[str, Query(description=page_token_description)] = None,
 ):
     query_params = dict(maxResults=maxResults, pageToken=pageToken)
     parametrized_query = query_parametrize(query_params)
@@ -148,7 +148,7 @@ async def list_tables(
     request: Request,
     response: Response,
     maxResults: Annotated[int, Query(description=max_results_description)] = None,
-    pageToken: Annotated[int, Query(description=page_token_description)] = None,
+    pageToken: Annotated[str, Query(description=page_token_description)] = None,
     current_user: ApiKey = Depends(get_current_user),
 ):
     query_params = dict(maxResults=maxResults, pageToken=pageToken)
@@ -177,7 +177,7 @@ async def list_tables_in_share(
     request: Request,
     response: Response,
     maxResults: Annotated[int, Query(description=max_results_description)] = None,
-    pageToken: Annotated[int, Query(description=page_token_description)] = None,
+    pageToken: Annotated[str, Query(description=page_token_description)] = None,
     current_user: ApiKey = Depends(get_current_user),
 ):
     sharing_res, error = await forward_sharing_request(
