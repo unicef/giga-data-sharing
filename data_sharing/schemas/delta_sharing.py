@@ -13,7 +13,7 @@ T = TypeVar("T")
 
 
 class Pagination(BaseModel, Generic[T]):
-    items: list[T] = Field([])
+    items: list[T] = Field(default_factory=list)
     nextPageToken: str = Field(None)
 
 
@@ -72,3 +72,8 @@ class TableQueryRequest(BaseModel):
             "examples": [{}],
         }
     }
+
+
+class Error(BaseModel):
+    errorCode: str
+    message: str

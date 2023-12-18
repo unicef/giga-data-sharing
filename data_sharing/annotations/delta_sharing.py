@@ -55,6 +55,61 @@ table_name_description = "The table name to query. It's case-insensitive."
 
 table_version_description = "A value which represents the current table version."
 
+query_metadata_ndjson_description = """
+A sequence of JSON strings delimited by newline. Each line is a JSON object defined in
+[API Response Format in Parquet](https://github.com/delta-io/delta-sharing/blob/main/PROTOCOL.md#api-response-format-in-parquet).
+The response contains two lines:
+- The first line is a [JSON wrapper object](https://github.com/delta-io/delta-sharing/blob/main/PROTOCOL.md#json-wrapper-object-in-each-line) containing the table [Protocol](https://github.com/delta-io/delta-sharing/blob/main/PROTOCOL.md#protocol) object.
+- The second line is a [JSON wrapper object](https://github.com/delta-io/delta-sharing/blob/main/PROTOCOL.md#json-wrapper-object-in-each-line) containing the table [Metadata](https://github.com/delta-io/delta-sharing/blob/main/PROTOCOL.md#metadata) object.
+
+When `responseFormat=delta`, each line is a JSON object defined in
+[API Response Format in Delta](https://github.com/delta-io/delta-sharing/blob/main/PROTOCOL.md#api-response-format-in-delta).
+The response contains two lines:
+- The first line is a [JSON wrapper object](https://github.com/delta-io/delta-sharing/blob/main/PROTOCOL.md#json-wrapper-object-in-each-line-in-delta) containing the table [Protocol](https://github.com/delta-io/delta-sharing/blob/main/PROTOCOL.md#protocol-in-delta-format) object.
+- The second line is a [JSON wrapper object](https://github.com/delta-io/delta-sharing/blob/main/PROTOCOL.md#json-wrapper-object-in-each-line-in-delta) containing the table [Metadata](https://github.com/delta-io/delta-sharing/blob/main/PROTOCOL.md#metadata-in-delta-format) object.
+"""
+
+query_data_ndjson_description = """
+A sequence of JSON strings delimited by newline. Each line is a JSON object defined in
+[API Response Format in Parquet](https://github.com/delta-io/delta-sharing/blob/main/PROTOCOL.md#api-response-format-in-parquet).
+The response contains multiple lines:
+- The first line is a [JSON wrapper object](https://github.com/delta-io/delta-sharing/blob/main/PROTOCOL.md#json-wrapper-object-in-each-line) containing the table [Protocol](https://github.com/delta-io/delta-sharing/blob/main/PROTOCOL.md#protocol) object.
+- The second line is a [JSON wrapper object](https://github.com/delta-io/delta-sharing/blob/main/PROTOCOL.md#json-wrapper-object-in-each-line) containing the table [Metadata](https://github.com/delta-io/delta-sharing/blob/main/PROTOCOL.md#metadata) object.
+- The rest of the lines are [JSON wrapper objects](https://github.com/delta-io/delta-sharing/blob/main/PROTOCOL.md#json-wrapper-object-in-each-line) for [data change files](https://github.com/delta-io/delta-sharing/blob/main/PROTOCOL.md#data-change-files), [Metadata](https://github.com/delta-io/delta-sharing/blob/main/PROTOCOL.md#metadata), or [files](https://github.com/delta-io/delta-sharing/blob/main/PROTOCOL.md#file).
+  - The lines are [data change files](https://github.com/delta-io/delta-sharing/blob/main/PROTOCOL.md#data-change-files) with possible historical [Metadata](https://github.com/delta-io/delta-sharing/blob/main/PROTOCOL.md#metadata) (when `startingVersion` is set).
+  - The lines are [files](https://github.com/delta-io/delta-sharing/blob/main/PROTOCOL.md#file) in the table (otherwise).
+  - The ordering of the lines doesn't matter.
+
+When `responseFormat=delta`, each line is a JSON object defined in
+[API Response Format in Delta](https://github.com/delta-io/delta-sharing/blob/main/PROTOCOL.md#api-response-format-in-delta).
+The response contains multiple lines:
+- The first line is a [JSON wrapper object](https://github.com/delta-io/delta-sharing/blob/main/PROTOCOL.md#json-wrapper-object-in-each-line-in-delta) containing the table [Protocol](https://github.com/delta-io/delta-sharing/blob/main/PROTOCOL.md#protocol-in-delta-format) object.
+- The second line is a [JSON wrapper object](https://github.com/delta-io/delta-sharing/blob/main/PROTOCOL.md#json-wrapper-object-in-each-line-in-delta) containing the table [Metadata](https://github.com/delta-io/delta-sharing/blob/main/PROTOCOL.md#metadata-in-delta-format) object.
+- The rest of the lines are [JSON wrapper objects](https://github.com/delta-io/delta-sharing/blob/main/PROTOCOL.md#json-wrapper-object-in-each-line-in-delta) for [data change files](https://github.com/delta-io/delta-sharing/blob/main/PROTOCOL.md#data-change-files), [Metadata](https://github.com/delta-io/delta-sharing/blob/main/PROTOCOL.md#metadata-in-delta-format), or [files](https://github.com/delta-io/delta-sharing/blob/main/PROTOCOL.md#file-in-delta-format).
+  - The lines are [files](https://github.com/delta-io/delta-sharing/blob/main/PROTOCOL.md#file-in-delta-format) which wraps the delta single action in the table (otherwise), with possible historical [Metadata](https://github.com/delta-io/delta-sharing/blob/main/PROTOCOL.md#metadata-in-delta-format) (when `startingVersion` is set).
+  - The ordering of the lines doesn't matter.
+"""
+
+query_cdf_ndjson_description = """
+A sequence of JSON strings delimited by newline. Each line is a JSON object defined in
+[API Response Format in Parquet](https://github.com/delta-io/delta-sharing/blob/main/PROTOCOL.md#api-response-format-in-parquet).
+The response contains multiple lines:
+- The first line is a [JSON wrapper object](https://github.com/delta-io/delta-sharing/blob/main/PROTOCOL.md#json-wrapper-object-in-each-line) containing the table [Protocol](https://github.com/delta-io/delta-sharing/blob/main/PROTOCOL.md#protocol) object.
+- The second line is a [JSON wrapper object](https://github.com/delta-io/delta-sharing/blob/main/PROTOCOL.md#json-wrapper-object-in-each-line) containing the table [Metadata](https://github.com/delta-io/delta-sharing/blob/main/PROTOCOL.md#metadata) object.
+- The rest of the lines are [JSON wrapper objects](https://github.com/delta-io/delta-sharing/blob/main/PROTOCOL.md#json-wrapper-object-in-each-line) for [Data Change Files](https://github.com/delta-io/delta-sharing/blob/main/PROTOCOL.md#data-change-files) of the change data feed.
+  - Historical [Metadata](https://github.com/delta-io/delta-sharing/blob/main/PROTOCOL.md#metadata) will be returned if `includeHistoricalMetadata` is set to true.
+  - The ordering of the lines doesn't matter.
+
+When `responseFormat=delta`, each line is a JSON object defined in
+[API Response Format in Delta](https://github.com/delta-io/delta-sharing/blob/main/PROTOCOL.md#api-response-format-in-delta).
+The response contains multiple lines:
+- The first line is a [JSON wrapper object](https://github.com/delta-io/delta-sharing/blob/main/PROTOCOL.md#json-wrapper-object-in-each-line-in-delta) containing the table [Protocol](https://github.com/delta-io/delta-sharing/blob/main/PROTOCOL.md#protocol-in-delta-format) object.
+- The second line is a [JSON wrapper object](https://github.com/delta-io/delta-sharing/blob/main/PROTOCOL.md#json-wrapper-object-in-each-line-in-delta) containing the table [Metadata](https://github.com/delta-io/delta-sharing/blob/main/PROTOCOL.md#metadata-in-delta-format) object.
+- The rest of the lines are [JSON wrapper objects](https://github.com/delta-io/delta-sharing/blob/main/PROTOCOL.md#json-wrapper-object-in-each-line-in-delta) for [Files](https://github.com/delta-io/delta-sharing/blob/main/PROTOCOL.md#file-in-delta-format) of the change data feed.
+  - Historical [Metadata](https://github.com/delta-io/delta-sharing/blob/main/PROTOCOL.md#metadata) will be returned if `includeHistoricalMetadata` is set to true.
+  - The ordering of the lines doesn't matter.
+"""
+
 
 class ProfileFileDescriptions:
     share_credentials_version = (
