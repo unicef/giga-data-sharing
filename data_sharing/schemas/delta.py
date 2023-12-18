@@ -83,10 +83,11 @@ class RemoveWrapper(BaseModel):
 
 class CDC(BaseModel):
     path: str
+    pathAsUri: str = Field(None)
     partitionValues: dict[str, str]
     size: conint(ge=0)
     dataChange: bool
-    tags: dict[str, str]
+    tags: dict[str, str] = Field(None)
 
 
 class CDCWrapper(BaseModel):
