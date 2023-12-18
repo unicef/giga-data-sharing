@@ -110,7 +110,6 @@ tasks:
       - kubectl apply -f k8s/namespace.yaml
       - kubectl apply -f k8s/configmap.yaml --namespace giga-data-sharing
       - kubectl apply -f k8s/secrets.yaml --namespace giga-data-sharing
-      - helm dependency update helm/data-sharing-proxy
       - >
         helm upgrade --install data-sharing-delta ./helm/data-sharing-delta
         --namespace giga-data-sharing
@@ -128,6 +127,11 @@ tasks:
     cmds:
       - helm uninstall data-sharing-proxy --namespace giga-data-sharing
       - helm uninstall data-sharing-delta --namespace giga-data-sharing
+
+  helm-dependency:
+    desc: Update Helm dependencies
+    cmds:
+      - helm dependency update helm/data-sharing-proxy
 
   helm-clean:
     desc: Clean K8s resources
