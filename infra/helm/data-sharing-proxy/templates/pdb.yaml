@@ -1,3 +1,4 @@
+{{- if .Values.podDisruptionBudget.enabled }}
 apiVersion: policy/v1
 kind: PodDisruptionBudget
 metadata:
@@ -6,4 +7,6 @@ spec:
   selector:
     matchLabels:
       {{- include "data-sharing-proxy.selectorLabels" . | nindent 6 }}
-  minAvailable: 50%
+  minAvailable: {{ .Values.podDisruptionBudget.minAvailable }}
+  maxUnavailable: {{ .Values.podDisruptionBudget.maxUnavailable }}
+{{- end }}

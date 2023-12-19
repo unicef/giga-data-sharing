@@ -154,12 +154,13 @@ tasks:
     cmds:
       - helm uninstall data-sharing-proxy --namespace giga-data-sharing
       - helm uninstall data-sharing-delta --namespace giga-data-sharing
+      - kubectl delete jobs --all
 
   helm-clean:
     desc: Clean K8s resources
-    dir: infra
+    dir: infra/k8s
     cmds:
-      - kubectl delete -f k8s/namespace.yaml
+      - kubectl delete -f namespace.yaml
 
   generate-delta-config:
     desc: Generate Delta Sharing config
