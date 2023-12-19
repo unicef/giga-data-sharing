@@ -14,7 +14,7 @@ T = TypeVar("T")
 
 class Pagination(BaseModel, Generic[T]):
     items: list[T] = Field([])
-    nextPageToken: str = Field("")
+    nextPageToken: str = Field(None)
 
 
 class Share(BaseModel):
