@@ -22,7 +22,8 @@ serviceAccount:
   # If not set and create is true, a name is generated using the fullname template
   name: ""
 
-podAnnotations: { }
+podAnnotations:
+  giga-dataops-platform/application: "data-sharing"
 
 podSecurityContext: { }
 # fsGroup: 2000
@@ -71,22 +72,20 @@ resources:
     memory: 256Mi
 
 autoscaling:
-  enabled: false
+  enabled: true
   minReplicas: 2
   maxReplicas: 10
   targetCPUUtilizationPercentage: 80
   # targetMemoryUtilizationPercentage: 80
 
 podDisruptionBudget:
-  enabled: false
-  minAvailable: 50%
+  enabled: true
+  minAvailable: 1
   maxUnavailable: ~
 
 nodeSelector: { }
 
 tolerations: [ ]
-
-affinity: { }
 
 envConfigMaps:
   - name: giga-data-sharing

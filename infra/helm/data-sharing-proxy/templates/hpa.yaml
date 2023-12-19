@@ -12,6 +12,19 @@ spec:
     name: {{ include "data-sharing-proxy.fullname" . }}
   minReplicas: {{ .Values.autoscaling.minReplicas }}
   maxReplicas: {{ .Values.autoscaling.maxReplicas }}
+  behavior:
+    scaleUp:
+      stabilizationWindowSeconds: 0
+      policies:
+        - periodSeconds: 15
+          type: Pods
+          value: 2
+    scaleDown:
+      stabilizationWindowSeconds: 300
+      policies:
+        - periodSeconds: 60
+          type: Pods
+          value: 1
   metrics:
     {{- if .Values.autoscaling.targetCPUUtilizationPercentage }}
     - type: Resource

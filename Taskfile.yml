@@ -115,14 +115,14 @@ tasks:
         helm upgrade --install data-sharing-delta ./helm/data-sharing-delta
         --namespace giga-data-sharing
         --set image.repository={{.DATA_SHARING_DELTA_IMAGE_REPOSITORY}}
-        --set image.tag={{.SHORT_SHA}}
+        --set-string image.tag={{.SHORT_SHA}}
       - >
         helm upgrade --install data-sharing-proxy bitnami/postgresql
         --namespace giga-data-sharing
         --values helm/pg-values.yaml
 
   helm-up:
-    desc: Install/upgrade Helm chart
+    desc: Install/upgrade Helm chart for localhost access
     dir: infra
     cmds:
       - task: helm-up-resources
@@ -130,7 +130,7 @@ tasks:
         helm upgrade --install data-sharing-proxy ./helm/data-sharing-proxy
         --namespace giga-data-sharing
         --set image.repository={{.DATA_SHARING_PROXY_IMAGE_REPOSITORY}}
-        --set image.tag={{.SHORT_SHA}}
+        --set-string image.tag={{.SHORT_SHA}}
         --set service.type=LoadBalancer
 
   helm-upi:
@@ -142,7 +142,7 @@ tasks:
         helm upgrade --install data-sharing-proxy ./helm/data-sharing-proxy
         --namespace giga-data-sharing
         --set image.repository={{.DATA_SHARING_PROXY_IMAGE_REPOSITORY}}
-        --set image.tag={{.SHORT_SHA}}
+        --set-string image.tag={{.SHORT_SHA}}
         --set ingress.enabled=true
         --set ingress.hosts[0].host={{.DATA_SHARING_INGRESS_HOST}}
         --set ingress.hosts[0].paths[0].path="/"

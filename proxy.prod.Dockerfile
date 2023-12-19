@@ -1,9 +1,9 @@
-FROM python:3.11 as base
+FROM python:3.11 AS base
 
 ENV PYTHONUNBUFFERED 1
 ENV PYTHONDONTWRITEBYTECODE 1
 
-FROM base as builder
+FROM base AS builder
 
 ARG POETRY_VERSION=1.6.1
 
@@ -15,7 +15,7 @@ COPY pyproject.toml poetry.lock ./
 
 RUN poetry export -f requirements.txt --without-hashes --without dev > requirements.txt
 
-FROM base as prod
+FROM base AS prod
 
 WORKDIR /tmp
 
