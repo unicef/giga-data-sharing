@@ -6,4 +6,4 @@ metadata:
     app: giga-data-sharing
 data:
   DELTA_SHARING_HOST: "data-sharing-delta:8890"
-  DB_HOST: "data-sharing-proxy-postgresql"
+  DB_HOST: "postgres-postgresql"

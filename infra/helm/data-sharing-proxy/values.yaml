@@ -22,8 +22,7 @@ serviceAccount:
   # If not set and create is true, a name is generated using the fullname template
   name: ""
 
-podAnnotations:
-  giga-dataops-platform/application: "data-sharing"
+podAnnotations: { }
 
 podSecurityContext: { }
 # fsGroup: 2000

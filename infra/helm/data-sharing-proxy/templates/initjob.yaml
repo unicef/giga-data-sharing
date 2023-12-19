@@ -6,7 +6,7 @@ metadata:
     {{- include "data-sharing-proxy.labels" . | nindent 4 }}
   annotations:
     helm.sh/hook: pre-install,pre-upgrade
-    helm.sh/hook-weight: "-10"
+    helm.sh/hook-weight: "-5"
     helm.sh/hook-delete-policy: before-hook-creation
 spec:
   template:
@@ -20,12 +20,21 @@ spec:
             - -c
             - >
               until pg_isready
-              --host data-sharing-proxy-postgresql
+              --host $DB_HOST
               --port 5432
-              --username giga-data-sharing;
+              --username $POSTGRESQL_USERNAME;
               do echo waiting for database;
               sleep 2;
               done;
+          envFrom:
+            {{- range .Values.envSecrets }}
+            - secretRef:
+              {{- toYaml . | nindent 16 }}
+            {{- end }}
+            {{- range .Values.envConfigMaps }}
+            - configMapRef:
+              {{- toYaml . | nindent 16 }}
+            {{- end }}
 ---
 apiVersion: batch/v1
 kind: Job
@@ -35,7 +44,7 @@ metadata:
       {{- include "data-sharing-proxy.labels" . | nindent 4 }}
   annotations:
     helm.sh/hook: pre-install,pre-upgrade
-    helm.sh/hook-weight: "-5"
+    helm.sh/hook-weight: "-4"
     helm.sh/hook-delete-policy: before-hook-creation
 spec:
   template:
@@ -48,6 +57,37 @@ spec:
             - /bin/bash
             - -c
             - alembic upgrade head
+          envFrom:
+            {{- range .Values.envSecrets }}
+            - secretRef:
+              {{- toYaml . | nindent 16 }}
+            {{- end }}
+            {{- range .Values.envConfigMaps }}
+            - configMapRef:
+              {{- toYaml . | nindent 16 }}
+            {{- end }}
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: "{{ include "data-sharing-proxy.fullname" . }}-init-db-fixtures"
+  labels:
+      {{- include "data-sharing-proxy.labels" . | nindent 4 }}
+  annotations:
+    helm.sh/hook: pre-install,pre-upgrade
+    helm.sh/hook-weight: "-3"
+    helm.sh/hook-delete-policy: before-hook-creation
+spec:
+  template:
+    spec:
+      restartPolicy: OnFailure
+      containers:
+        - name: "{{ include "data-sharing-proxy.fullname" . }}-init-db-fixtures"
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          command:
+            - /bin/bash
+            - -c
+            - python -m scripts.load_fixtures roles api_keys
           envFrom:
             {{- range .Values.envSecrets }}
             - secretRef:

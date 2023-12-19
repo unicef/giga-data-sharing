@@ -3,6 +3,7 @@ kind: Deployment
 metadata:
   name: {{ include "data-sharing-proxy.fullname" . }}
   labels:
+    giga-dataops-platform/application: "data-sharing"
     {{- include "data-sharing-proxy.labels" . | nindent 4 }}
 spec:
   {{- if not .Values.autoscaling.enabled }}

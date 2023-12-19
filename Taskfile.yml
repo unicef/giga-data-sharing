@@ -117,7 +117,7 @@ tasks:
         --set image.repository={{.DATA_SHARING_DELTA_IMAGE_REPOSITORY}}
         --set-string image.tag={{.SHORT_SHA}}
       - >
-        helm upgrade --install data-sharing-proxy bitnami/postgresql
+        helm upgrade --install postgres bitnami/postgresql
         --namespace giga-data-sharing
         --values helm/pg-values.yaml
 
@@ -154,6 +154,7 @@ tasks:
     cmds:
       - helm uninstall data-sharing-proxy --namespace giga-data-sharing
       - helm uninstall data-sharing-delta --namespace giga-data-sharing
+      - helm uninstall postgres --namespace giga-data-sharing
       - kubectl delete jobs --all
 
   helm-clean:
