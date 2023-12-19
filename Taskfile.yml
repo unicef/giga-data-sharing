@@ -103,9 +103,10 @@ tasks:
       - docker push {{.DATA_SHARING_PROXY_IMAGE_REPOSITORY}}:{{.SHORT_SHA}}
       - docker push {{.DATA_SHARING_DELTA_IMAGE_REPOSITORY}}:{{.SHORT_SHA}}
 
-  helm-up:
-    desc: Install/upgrade Helm chart
+  helm-up-resources:
+    internal: true
     dir: infra
+    desc: Apply base Kubernetes resources
     cmds:
       - kubectl apply -f k8s/namespace.yaml
       - kubectl apply -f k8s/configmap.yaml --namespace giga-data-sharing
@@ -115,12 +116,34 @@ tasks:
         --namespace giga-data-sharing
         --set image.repository={{.DATA_SHARING_DELTA_IMAGE_REPOSITORY}}
         --set image.tag={{.SHORT_SHA}}
+
+  helm-up:
+    desc: Install/upgrade Helm chart
+    dir: infra
+    cmds:
+      - task: helm-up-resources
       - >
         helm upgrade --install data-sharing-proxy ./helm/data-sharing-proxy
         --namespace giga-data-sharing
         --set image.repository={{.DATA_SHARING_PROXY_IMAGE_REPOSITORY}}
         --set image.tag={{.SHORT_SHA}}
         --set service.type=LoadBalancer
+
+  helm-upi:
+    desc: Install/upgrade Helm chart with ingress
+    dir: infra
+    cmds:
+      - task: helm-up-resources
+      - >
+        helm upgrade --install data-sharing-proxy ./helm/data-sharing-proxy
+        --namespace giga-data-sharing
+        --set image.repository={{.DATA_SHARING_PROXY_IMAGE_REPOSITORY}}
+        --set image.tag={{.SHORT_SHA}}
+        --set ingress.enabled=true
+        --set ingress.hosts[0].host={{.DATA_SHARING_INGRESS_HOST}}
+        --set ingress.hosts[0].paths[0].path="/"
+        --set ingress.hosts[0].paths[0].pathType=Prefix
+        --set ingress.annotations=null
 
   helm-down:
     desc: Uninstall Helm chart
