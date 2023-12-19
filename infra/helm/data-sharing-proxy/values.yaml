@@ -1,17 +1,6 @@
 # Default values for data-sharing-proxy.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
-global:
-  postgresql:
-    auth:
-      username: giga-data-sharing
-      database: giga-data-sharing
-      existingSecret: giga-data-sharing
-      secretKeys:
-        adminPasswordKey: POSTGRESQL_PASSWORD
-        replicationPasswordKey: POSTGRESQL_PASSWORD
-        userPasswordKey: POSTGRESQL_PASSWORD
-
 replicaCount: 1
 
 image:

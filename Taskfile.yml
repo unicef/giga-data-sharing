@@ -116,6 +116,10 @@ tasks:
         --namespace giga-data-sharing
         --set image.repository={{.DATA_SHARING_DELTA_IMAGE_REPOSITORY}}
         --set image.tag={{.SHORT_SHA}}
+      - >
+        helm upgrade --install data-sharing-proxy bitnami/postgresql
+        --namespace giga-data-sharing
+        --values helm/pg-values.yaml
 
   helm-up:
     desc: Install/upgrade Helm chart
@@ -150,11 +154,6 @@ tasks:
     cmds:
       - helm uninstall data-sharing-proxy --namespace giga-data-sharing
       - helm uninstall data-sharing-delta --namespace giga-data-sharing
-
-  helm-dependency:
-    desc: Update Helm dependencies
-    cmds:
-      - helm dependency update helm/data-sharing-proxy
 
   helm-clean:
     desc: Clean K8s resources
