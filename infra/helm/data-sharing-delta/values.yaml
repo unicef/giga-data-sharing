@@ -1,7 +1,6 @@
 # Default values for data-sharing-delta.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
-
 replicaCount: 1
 
 image:
@@ -74,6 +73,11 @@ autoscaling:
   maxReplicas: 10
   targetCPUUtilizationPercentage: 80
   # targetMemoryUtilizationPercentage: 80
+
+podDisruptionBudget:
+  enabled: true
+  minAvailable: 1
+  maxUnavailable: ~
 
 nodeSelector: { }
 

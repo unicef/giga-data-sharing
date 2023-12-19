@@ -1,17 +1,9 @@
-x-health-check: &health-check
-  command:
-    - /bin/sh
-    - -c
-    - >-
-      wget --spider
-      --header "Authorization: Bearer $DELTA_BEARER_TOKEN"
-      http://localhost:{{ .Values.service.port }}/sharing/shares
-
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ include "data-sharing-delta.fullname" . }}
   labels:
+    giga-dataops-platform/application: "data-sharing"
     {{- include "data-sharing-delta.labels" . | nindent 4 }}
 spec:
   {{- if not .Values.autoscaling.enabled }}
@@ -57,9 +49,11 @@ spec:
               containerPort: {{ .Values.service.port }}
               protocol: TCP
           livenessProbe:
-            exec: *health-check
+            exec:
+              {{- include "data-sharing-delta.healthCheck" . | nindent 14 }}
           readinessProbe:
-            exec: *health-check
+            exec:
+              {{- include "data-sharing-delta.healthCheck" . | nindent 14 }}
 
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
@@ -67,10 +61,18 @@ spec:
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- with .Values.affinity }}
       affinity:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                topologyKey: kubernetes.io/hostname
+                labelSelector:
+                  matchExpressions:
+                    - key: app.kubernetes.io/name
+                      operator: In
+                      values:
+                        - {{ include "data-sharing-delta.name" . }}
       {{- with .Values.tolerations }}
       tolerations:
         {{- toYaml . | nindent 8 }}

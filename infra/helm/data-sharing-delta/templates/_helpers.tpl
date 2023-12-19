@@ -60,3 +60,16 @@ Create the name of the service account to use
 {{- default "default" .Values.serviceAccount.name }}
 {{- end }}
 {{- end }}
+
+{{/*
+Define Delta Sharing health checks
+*/}}
+{{- define "data-sharing-delta.healthCheck" }}
+command:
+  - /bin/sh
+  - -c
+  - >-
+    wget --spider
+    --header "Authorization: Bearer $DELTA_BEARER_TOKEN"
+    http://{{ include "data-sharing-delta.fullname" . }}:{{ .Values.service.port }}/sharing/shares
+{{- end}}
