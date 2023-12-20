@@ -237,7 +237,6 @@ async def query_table_version(
 
 @router.get(
     "/shares/{share_name}/schemas/{schema_name}/tables/{table_name}/metadata",
-    response_model=parquet.TableMetadataResponse | delta.TableMetadataResponse,
     dependencies=[Depends(HasTablePermissions.raises(True))],
 )
 async def query_table_metadata(
@@ -264,28 +263,15 @@ async def query_table_metadata(
     if error:
         return sharing_res
 
-    res_split = [s for s in sharing_res.text.split("\n") if s != ""]
-
-    response.headers["delta-table-version"] = sharing_res.headers.get(
-        "delta-table-version"
+    return Response(
+        content=sharing_res.content,
+        headers=dict(sharing_res.headers),
+        status_code=sharing_res.status_code,
     )
-
-    if len(res_split) == 1:
-        return ORJSONResponse(sharing_res.json(), status_code=sharing_res.status_code)
-    else:
-        protocol, metadata = res_split
-        output_dict = {**orjson.loads(protocol), **orjson.loads(metadata)}
-        if (
-            parse_capabilities_header(delta_sharing_capabilities).get("responseFormat")
-            == "delta"
-        ):
-            return delta.TableMetadataResponse(**output_dict)
-        return parquet.TableMetadataResponse(**output_dict)
 
 
 @router.post(
     "/shares/{share_name}/schemas/{schema_name}/tables/{table_name}/query",
-    response_model=parquet.TableDataResponse | delta.TableDataResponse,
     dependencies=[Depends(HasTablePermissions.raises(True))],
 )
 async def query_table_data(
@@ -321,40 +307,15 @@ async def query_table_data(
     if error:
         return sharing_res
 
-    res_split = [s for s in sharing_res.text.split("\n") if s != ""]
-    response.headers["delta-table-version"] = sharing_res.headers.get(
-        "delta-table-version"
+    return Response(
+        content=sharing_res.content,
+        headers=dict(sharing_res.headers),
+        status_code=sharing_res.status_code,
     )
-    if len(res_split) == 2:
-        protocol, metadata = res_split
-        return {
-            **orjson.loads(protocol),
-            **orjson.loads(metadata),
-            "files": [],
-        }
-
-    else:
-        protocol, metadata, *files = res_split
-        non_empty_files = [
-            orjson.loads(file).get("file") for file in files if len(file) > 0
-        ]
-        output_dict = {
-            **orjson.loads(protocol),
-            **orjson.loads(metadata),
-            "files": non_empty_files,
-        }
-
-        if (
-            parse_capabilities_header(delta_sharing_capabilities).get("responseFormat")
-            == "delta"
-        ):
-            return delta.TableDataResponse(**output_dict)
-        return parquet.TableDataResponse(**output_dict)
 
 
 @router.get(
     "/shares/{share_name}/schemas/{schema_name}/tables/{table_name}/changes",
-    response_model=parquet.TableDataChangeResponse | delta.TableDataChangeResponse,
     dependencies=[Depends(HasTablePermissions.raises(True))],
 )
 async def query_table_change_data_feed(
@@ -408,25 +369,8 @@ async def query_table_change_data_feed(
     if error:
         return sharing_res
 
-    res_split = [s for s in sharing_res.text.split("\n") if s != ""]
-    response.headers["delta-table-version"] = sharing_res.headers.get(
-        "delta-table-version"
+    return Response(
+        content=sharing_res.content,
+        headers=dict(sharing_res.headers),
+        status_code=sharing_res.status_code,
     )
-    if len(res_split) == 1:
-        json_content = sharing_res.json()
-        status_code = sharing_res.status_code
-        return ORJSONResponse(json_content, status_code=status_code)
-    else:
-        protocol, metadata, *remaining_items = res_split
-        change_data_feed = [orjson.loads(item) for item in remaining_items]
-        merged_dict = {
-            **orjson.loads(protocol),
-            **orjson.loads(metadata),
-            "files": change_data_feed,
-        }
-        if (
-            parse_capabilities_header(delta_sharing_capabilities).get("responseFormat")
-            == "delta"
-        ):
-            return delta.TableDataChangeResponse(**merged_dict)
-        return parquet.TableDataChangeResponse(**merged_dict)
