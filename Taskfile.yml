@@ -23,6 +23,7 @@ tasks:
     cmds:
       - task: setup-pre-commit
       - task: setup-python
+      - task: setup-helm
 
   setup-pre-commit:
     internal: true
@@ -37,6 +38,12 @@ tasks:
     cmds:
       - poetry env use 3.11
       - poetry install
+
+  setup-helm:
+    internal: true
+    desc: Setup Helm repositories
+    cmds:
+      - helm dependency update helm/data-sharing-proxy
 
   config:
     desc: Generate config files
@@ -94,8 +101,8 @@ tasks:
     internal: true
     desc: Build Docker image
     cmds:
-      - docker build --tag {{.DATA_SHARING_PROXY_IMAGE_REPOSITORY}}:{{.COMMIT_SHA}} -f proxy.prod.Dockerfile .
-      - docker build --tag {{.DATA_SHARING_DELTA_IMAGE_REPOSITORY}}:{{.COMMIT_SHA}} -f delta.prod.Dockerfile .
+      - docker build --network host --tag {{.DATA_SHARING_PROXY_IMAGE_REPOSITORY}}:{{.COMMIT_SHA}} -f proxy.prod.Dockerfile .
+      - docker build --network host --tag {{.DATA_SHARING_DELTA_IMAGE_REPOSITORY}}:{{.COMMIT_SHA}} -f delta.prod.Dockerfile .
 
   push:
     internal: true
@@ -111,7 +118,6 @@ tasks:
       - kubectl apply -f k8s/namespace.yaml
       - kubectl apply -f k8s/configmap.yaml --namespace giga-data-sharing
       - kubectl apply -f k8s/secrets.yaml --namespace giga-data-sharing
-      - helm dependency update helm/data-sharing-proxy
       - >
         helm upgrade --install data-sharing-delta ./helm/data-sharing-delta
         --namespace giga-data-sharing
