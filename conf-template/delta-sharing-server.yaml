@@ -345,11 +345,5 @@ shares:
             id: 71162e0e-952b-421f-8d38-3f01683d03f5
             location: wasbs://{{.CONTAINER_NAME}}@{{.STORAGE_ACCOUNT_NAME}}.blob.core.windows.net/{{.CONTAINER_PATH}}/qos/BRA
             name: BRA
-      - name: test
-        tables:
-          - historyShared: true
-            id: 0571ae23-571c-4890-b4f4-7441a5971f92
-            location: wasbs://{{.CONTAINER_NAME}}@{{.STORAGE_ACCOUNT_NAME}}.blob.core.windows.net/raw_dev/SCHEMA_VER_TEST
-            name: TEST
 stalenessAcceptable: false
 version: 1
