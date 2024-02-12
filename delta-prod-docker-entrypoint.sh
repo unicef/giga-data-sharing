@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -euxo pipefail
+
 sed -e "s|{{.STORAGE_ACCESS_KEY}}|$STORAGE_ACCESS_KEY|" \
     -e "s|{{.STORAGE_ACCOUNT_NAME}}|$STORAGE_ACCOUNT_NAME|" \
     -i conf/core-site.xml
