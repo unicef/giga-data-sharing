@@ -3,10 +3,12 @@ version: '3'
 dotenv:
   - .env
 
+env:
+  COMMIT_SHA:
+    sh: git rev-parse --short HEAD
+
 vars:
   PROJECT_NAME: giga-dataops_data-sharing
-  SHORT_SHA:
-    sh: git rev-parse --short HEAD
 
 tasks:
   default:
@@ -92,15 +94,15 @@ tasks:
     internal: true
     desc: Build Docker image
     cmds:
-      - docker build --tag {{.DATA_SHARING_PROXY_IMAGE_REPOSITORY}}:{{.SHORT_SHA}} -f proxy.prod.Dockerfile .
-      - docker build --tag {{.DATA_SHARING_DELTA_IMAGE_REPOSITORY}}:{{.SHORT_SHA}} -f delta.prod.Dockerfile .
+      - docker build --tag {{.DATA_SHARING_PROXY_IMAGE_REPOSITORY}}:{{.COMMIT_SHA}} -f proxy.prod.Dockerfile .
+      - docker build --tag {{.DATA_SHARING_DELTA_IMAGE_REPOSITORY}}:{{.COMMIT_SHA}} -f delta.prod.Dockerfile .
 
   push:
     internal: true
     desc: Push Docker image
     cmds:
-      - docker push {{.DATA_SHARING_PROXY_IMAGE_REPOSITORY}}:{{.SHORT_SHA}}
-      - docker push {{.DATA_SHARING_DELTA_IMAGE_REPOSITORY}}:{{.SHORT_SHA}}
+      - docker push {{.DATA_SHARING_PROXY_IMAGE_REPOSITORY}}:{{.COMMIT_SHA}}
+      - docker push {{.DATA_SHARING_DELTA_IMAGE_REPOSITORY}}:{{.COMMIT_SHA}}
 
   helm-up:
     desc: Install/upgrade Helm chart
@@ -114,12 +116,12 @@ tasks:
         helm upgrade --install data-sharing-delta ./helm/data-sharing-delta
         --namespace giga-data-sharing
         --set image.repository={{.DATA_SHARING_DELTA_IMAGE_REPOSITORY}}
-        --set image.tag={{.SHORT_SHA}}
+        --set image.tag={{.COMMIT_SHA}}
       - >
         helm upgrade --install data-sharing-proxy ./helm/data-sharing-proxy
         --namespace giga-data-sharing
         --set image.repository={{.DATA_SHARING_PROXY_IMAGE_REPOSITORY}}
-        --set image.tag={{.SHORT_SHA}}
+        --set image.tag={{.COMMIT_SHA}}
         --set service.type=LoadBalancer
 
   helm-down:

@@ -1,21 +1,8 @@
-trigger:
-  branches:
-    include:
-      - staging
-
-pr: none
-
-pool:
-  vmImage: ubuntu-latest
-
-variables:
-  - template: templates/variables.yaml
-
 stages:
   - stage: BuildAndPushProxy
     displayName: Build and push Data Sharing Proxy image
     jobs:
-      - template: templates/build-and-push.yaml
+      - template: build-and-push.yaml
         parameters:
           displayName: Data Sharing proxy
           repository: giga-data-sharing-proxy
@@ -25,7 +12,7 @@ stages:
     displayName: Build and push Delta Sharing server image
     dependsOn: [ ]
     jobs:
-      - template: templates/build-and-push.yaml
+      - template: build-and-push.yaml
         parameters:
           displayName: Delta Sharing server
           repository: giga-data-sharing-delta
@@ -35,7 +22,7 @@ stages:
     displayName: Create/update K8s configuration resources
     dependsOn: [ ]
     jobs:
-      - template: templates/create-config.yaml
+      - template: create-config.yaml
 
   - stage: Deploy
     displayName: Deploy Data Sharing
@@ -44,4 +31,4 @@ stages:
       - BuildAndPushDeltaSharing
       - CreateConfig
     jobs:
-      - template: templates/helm-deploy.yaml
+      - template: helm-deploy.yaml

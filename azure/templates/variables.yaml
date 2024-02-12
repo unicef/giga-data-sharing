@@ -13,4 +13,6 @@ variables:
   storageAccountName: $(STORAGE_ACCOUNT_NAME)
   storageContainerName: $(STORAGE_CONTAINER_NAME)
   storageContainerPath: $(STORAGE_CONTAINER_PATH)
+  sentryDsn: $(SENTRY_DSN)
+  deployEnv: $(DEPLOY_ENV)
   system.debug: true

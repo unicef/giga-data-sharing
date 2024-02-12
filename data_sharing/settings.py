@@ -11,7 +11,8 @@ class Settings(BaseSettings):
         env_file = ".env"
         extra = "ignore"
 
-    PYTHON_ENV: Literal["development", "staging", "production"] = "production"
+    PYTHON_ENV: Literal["local", "development", "staging", "production"] = "production"
+    DEPLOY_ENV: Literal["local", "dev", "stg", "prd"] = "local"
     BASE_DIR: Path = Path(__file__).parent.parent
     SECRET_KEY: str
     CORS_ALLOWED_ORIGINS: list[str] = ["*"]
@@ -24,10 +25,12 @@ class Settings(BaseSettings):
     DB_HOST: str
     APP_DOMAIN: str
     ADMIN_API_KEY: UUID4
+    SENTRY_DSN: str = ""
+    COMMIT_SHA: str = ""
 
     @property
     def IN_PRODUCTION(self) -> bool:
-        return self.PYTHON_ENV == "production"
+        return self.PYTHON_ENV != "local"
 
     @property
     def DATABASE_URL(self) -> str:
