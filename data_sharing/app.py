@@ -12,6 +12,8 @@ if settings.SENTRY_DSN:
         dsn=settings.SENTRY_DSN,
         traces_sample_rate=1.0,
         profiles_sample_rate=1.0,
+        environment=settings.DEPLOY_ENV,
+        release=settings.COMMIT_SHA,
     )
 
 app = FastAPI(

@@ -45,3 +45,5 @@ jobs:
                     SECRET_KEY: "$(secretKey)"
                     APP_DOMAIN: "$(appDomain)"
                     SENTRY_DSN: "$(sentryDsn)"
+                    COMMIT_SHA: "$(Build.SourceVersion)"
+                    DEPLOY_ENV: "$(deployEnv)"
