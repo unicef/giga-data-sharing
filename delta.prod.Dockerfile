@@ -19,7 +19,7 @@ WORKDIR /app
 
 COPY --from=extract /tmp/delta-sharing-server-1.0.2 ./
 COPY --from=build /tmp/custom-sas-provider/target/custom-sas-provider-1.0-SNAPSHOT.jar ./lib/internal.giga.customSasProvider.custom-sas-provider-1.0-SNAPSHOT.jar
-COPY delta-prod-docker-entrypoint.sh docker-entrypoint.sh
+COPY ./delta-prod-docker-entrypoint.sh docker-entrypoint.sh
 COPY ./conf-template ./conf
 
-CMD [ "./docker-entrypoint.sh" ]
+CMD [ "/app/docker-entrypoint.sh" ]
