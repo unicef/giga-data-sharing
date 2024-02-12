@@ -1,25 +1,16 @@
-FROM maven:3.9-eclipse-temurin-11-alpine as build
+FROM eclipse-temurin:11-jre-alpine
 
-WORKDIR /tmp/custom-sas-provider
-
-COPY ./custom-sas-provider ./
-
-RUN mvn clean package
-
-FROM eclipse-temurin:11-jre-alpine as extract
+ARG DELTA_SHARING_VERSION=1.0.4
 
 WORKDIR /tmp
 
-RUN wget https://github.com/delta-io/delta-sharing/releases/download/v1.0.2/delta-sharing-server-1.0.2.zip && \
-    unzip delta-sharing-server-1.0.2.zip
-
-FROM eclipse-temurin:11-jre-alpine as prod
+RUN wget "https://github.com/delta-io/delta-sharing/releases/download/v$DELTA_SHARING_VERSION/delta-sharing-server-$DELTA_SHARING_VERSION.zip" && \
+    unzip "delta-sharing-server-$DELTA_SHARING_VERSION.zip"
 
 WORKDIR /app
 
-COPY --from=extract /tmp/delta-sharing-server-1.0.2 ./
-COPY --from=build /tmp/custom-sas-provider/target/custom-sas-provider-1.0-SNAPSHOT.jar ./lib/internal.giga.customSasProvider.custom-sas-provider-1.0-SNAPSHOT.jar
+COPY /tmp/delta-sharing-server-$DELTA_SHARING_VERSION ./
 COPY ./delta-prod-docker-entrypoint.sh docker-entrypoint.sh
 COPY ./conf-template ./conf
 
-CMD [ "/app/docker-entrypoint.sh" ]
+ENTRYPOINT [ "./docker-entrypoint.sh" ]
