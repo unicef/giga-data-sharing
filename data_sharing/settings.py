@@ -24,6 +24,7 @@ class Settings(BaseSettings):
     DB_HOST: str
     APP_DOMAIN: str
     ADMIN_API_KEY: UUID4
+    SENTRY_DSN: str = ""
 
     @property
     def IN_PRODUCTION(self) -> bool:

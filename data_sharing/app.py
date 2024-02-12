@@ -1,3 +1,4 @@
+import sentry_sdk
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import ORJSONResponse
@@ -5,6 +6,13 @@ from fastapi.responses import ORJSONResponse
 from data_sharing.constants import __version__
 from data_sharing.routers import api_key, delta_sharing, role
 from data_sharing.settings import settings
+
+if settings.SENTRY_DSN:
+    sentry_sdk.init(
+        dsn=settings.SENTRY_DSN,
+        traces_sample_rate=1.0,
+        profiles_sample_rate=1.0,
+    )
 
 app = FastAPI(
     title="Giga Data Sharing",
