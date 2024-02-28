@@ -18,6 +18,9 @@ class Settings(BaseSettings):
     CORS_ALLOWED_ORIGINS: list[str] = ["*"]
     DELTA_BEARER_TOKEN: str
     STORAGE_ACCESS_KEY: str
+    STORAGE_ACCOUNT_NAME: str
+    CONTAINER_NAME: str
+    CONTAINER_PATH: str
     DELTA_SHARING_HOST: str
     POSTGRESQL_USERNAME: str
     POSTGRESQL_PASSWORD: str

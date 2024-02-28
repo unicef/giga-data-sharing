@@ -3,24 +3,76 @@
   id: ADMIN
   model: Role
 - fields:
+    description: Afghanistan
+  id: AFG
+  model: Role
+- fields:
     description: Anguilla
   id: AIA
+  model: Role
+- fields:
+    description: United Arab Emirates
+  id: ARE
+  model: Role
+- fields:
+    description: Argentina
+  id: ARG
+  model: Role
+- fields:
+    description: Armenia
+  id: ARM
   model: Role
 - fields:
     description: Antigua and Barbuda
   id: ATG
   model: Role
 - fields:
+    description: Australia
+  id: AUS
+  model: Role
+- fields:
+    description: Austria
+  id: AUT
+  model: Role
+- fields:
+    description: Azerbaijan
+  id: AZE
+  model: Role
+- fields:
+    description: Belgium
+  id: BEL
+  model: Role
+- fields:
     description: Benin
   id: BEN
+  model: Role
+- fields:
+    description: Burkina Faso
+  id: BFA
+  model: Role
+- fields:
+    description: Bangladesh
+  id: BGD
+  model: Role
+- fields:
+    description: Bulgaria
+  id: BGR
   model: Role
 - fields:
     description: Bosnia and Herzegovina
   id: BIH
   model: Role
 - fields:
+    description: Belarus
+  id: BLR
+  model: Role
+- fields:
     description: Belize
   id: BLZ
+  model: Role
+- fields:
+    description: Bolivia
+  id: BOL
   model: Role
 - fields:
     description: Brazil
@@ -31,16 +83,108 @@
   id: BRB
   model: Role
 - fields:
+    description: Bhutan
+  id: BTN
+  model: Role
+- fields:
     description: Botswana
   id: BWA
+  model: Role
+- fields:
+    description: Central African Republic
+  id: CAF
+  model: Role
+- fields:
+    description: Canada
+  id: CAN
+  model: Role
+- fields:
+    description: Switzerland
+  id: CHE
+  model: Role
+- fields:
+    description: Chile
+  id: CHL
+  model: Role
+- fields:
+    description: China
+  id: CHN
+  model: Role
+- fields:
+    description: Cote d'Ivoire
+  id: CIV
+  model: Role
+- fields:
+    description: Cameroon
+  id: CMR
+  model: Role
+- fields:
+    description: DR Congo
+  id: COD
+  model: Role
+- fields:
+    description: Congo Republic
+  id: COG
+  model: Role
+- fields:
+    description: Colombia
+  id: COL
   model: Role
 - fields:
     description: Costa Rica
   id: CRI
   model: Role
 - fields:
+    description: Cuba
+  id: CUB
+  model: Role
+- fields:
+    description: Germany
+  id: DEU
+  model: Role
+- fields:
     description: Dominica
   id: DMA
+  model: Role
+- fields:
+    description: Denmark
+  id: DNK
+  model: Role
+- fields:
+    description: Dominican Republic
+  id: DOM
+  model: Role
+- fields:
+    description: Algeria
+  id: DZA
+  model: Role
+- fields:
+    description: Ecuador
+  id: ECU
+  model: Role
+- fields:
+    description: Egypt
+  id: EGY
+  model: Role
+- fields:
+    description: Ethiopia
+  id: ETH
+  model: Role
+- fields:
+    description: Finland
+  id: FIN
+  model: Role
+- fields:
+    description: France
+  id: FRA
+  model: Role
+- fields:
+    description: United Kingdom
+  id: GBR
+  model: Role
+- fields:
+    description: Georgia
+  id: GEO
   model: Role
 - fields:
     description: Ghana
@@ -51,16 +195,68 @@
   id: GIN
   model: Role
 - fields:
+    description: Greece
+  id: GRC
+  model: Role
+- fields:
     description: Grenada
   id: GRD
+  model: Role
+- fields:
+    description: Guatemala
+  id: GTM
   model: Role
 - fields:
     description: Honduras
   id: HND
   model: Role
 - fields:
+    description: Croatia
+  id: HRV
+  model: Role
+- fields:
+    description: Haiti
+  id: HTI
+  model: Role
+- fields:
     description: Hungary
   id: HUN
+  model: Role
+- fields:
+    description: Indonesia
+  id: IDN
+  model: Role
+- fields:
+    description: India
+  id: IND
+  model: Role
+- fields:
+    description: Ireland
+  id: IRL
+  model: Role
+- fields:
+    description: Iran
+  id: IRN
+  model: Role
+- fields:
+    description: Iraq
+  id: IRQ
+  model: Role
+- fields:
+    description: Israel
+  id: ISR
+  model: Role
+- fields:
+    description: Italy
+  id: ITA
+  model: Role
+- fields:
+    description: Jamaica
+  id: JAM
+  model: Role
+- fields:
+    description: Japan
+  id: JPN
   model: Role
 - fields:
     description: Kazakhstan
@@ -71,6 +267,14 @@
   id: KEN
   model: Role
 - fields:
+    description: Kyrgyz Republic
+  id: KGZ
+  model: Role
+- fields:
+    description: Cambodia
+  id: KHM
+  model: Role
+- fields:
     description: Kiribati
   id: KIR
   model: Role
@@ -79,12 +283,68 @@
   id: KNA
   model: Role
 - fields:
+    description: Liberia
+  id: LBR
+  model: Role
+- fields:
+    description: Libya
+  id: LBY
+  model: Role
+- fields:
     description: St. Lucia
   id: LCA
   model: Role
 - fields:
+    description: Sri Lanka
+  id: LKA
+  model: Role
+- fields:
+    description: Lesotho
+  id: LSO
+  model: Role
+- fields:
+    description: Lithuania
+  id: LTU
+  model: Role
+- fields:
+    description: Latvia
+  id: LVA
+  model: Role
+- fields:
+    description: Morocco
+  id: MAR
+  model: Role
+- fields:
+    description: Moldova
+  id: MDA
+  model: Role
+- fields:
+    description: Madagascar
+  id: MDG
+  model: Role
+- fields:
+    description: Mexico
+  id: MEX
+  model: Role
+- fields:
+    description: Mali
+  id: MLI
+  model: Role
+- fields:
+    description: Myanmar
+  id: MMR
+  model: Role
+- fields:
     description: Mongolia
   id: MNG
+  model: Role
+- fields:
+    description: Mozambique
+  id: MOZ
+  model: Role
+- fields:
+    description: Mauritania
+  id: MRT
   model: Role
 - fields:
     description: Montserrat
@@ -93,6 +353,10 @@
 - fields:
     description: Malawi
   id: MWI
+  model: Role
+- fields:
+    description: Malaysia
+  id: MYS
   model: Role
 - fields:
     description: Namibia
@@ -107,12 +371,84 @@
   id: NGA
   model: Role
 - fields:
+    description: Nicaragua
+  id: NIC
+  model: Role
+- fields:
+    description: Netherlands
+  id: NLD
+  model: Role
+- fields:
+    description: Norway
+  id: NOR
+  model: Role
+- fields:
+    description: Nepal
+  id: NPL
+  model: Role
+- fields:
+    description: New Zealand
+  id: NZL
+  model: Role
+- fields:
+    description: Pakistan
+  id: PAK
+  model: Role
+- fields:
     description: Panama
   id: PAN
   model: Role
 - fields:
+    description: Peru
+  id: PER
+  model: Role
+- fields:
+    description: Philippines
+  id: PHL
+  model: Role
+- fields:
+    description: Papua New Guinea
+  id: PNG
+  model: Role
+- fields:
+    description: Poland
+  id: POL
+  model: Role
+- fields:
+    description: Portugal
+  id: PRT
+  model: Role
+- fields:
+    description: Paraguay
+  id: PRY
+  model: Role
+- fields:
+    description: Palestine
+  id: PSE
+  model: Role
+- fields:
+    description: Romania
+  id: ROU
+  model: Role
+- fields:
+    description: Russia
+  id: RUS
+  model: Role
+- fields:
     description: Rwanda
   id: RWA
+  model: Role
+- fields:
+    description: Saudi Arabia
+  id: SAU
+  model: Role
+- fields:
+    description: Sudan
+  id: SDN
+  model: Role
+- fields:
+    description: Senegal
+  id: SEN
   model: Role
 - fields:
     description: Sierra Leone
@@ -123,20 +459,76 @@
   id: SLV
   model: Role
 - fields:
+    description: Serbia
+  id: SRB
+  model: Role
+- fields:
     description: South Sudan
   id: SSD
+  model: Role
+- fields:
+    description: Sao Tome and Principe
+  id: STP
+  model: Role
+- fields:
+    description: Slovakia
+  id: SVK
+  model: Role
+- fields:
+    description: Slovenia
+  id: SVN
+  model: Role
+- fields:
+    description: Sweden
+  id: SWE
+  model: Role
+- fields:
+    description: Syria
+  id: SYR
+  model: Role
+- fields:
+    description: Togo
+  id: TGO
   model: Role
 - fields:
     description: Thailand
   id: THA
   model: Role
 - fields:
+    description: Tajikistan
+  id: TJK
+  model: Role
+- fields:
     description: Trinidad and Tobago
   id: TTO
   model: Role
 - fields:
+    description: Tunisia
+  id: TUN
+  model: Role
+- fields:
+    description: Türkiye
+  id: TUR
+  model: Role
+- fields:
+    description: Taiwan
+  id: TWN
+  model: Role
+- fields:
+    description: Tanzania
+  id: TZA
+  model: Role
+- fields:
+    description: Uganda
+  id: UGA
+  model: Role
+- fields:
     description: Ukraine
   id: UKR
+  model: Role
+- fields:
+    description: United States
+  id: USA
   model: Role
 - fields:
     description: Uzbekistan
@@ -147,18 +539,30 @@
   id: VCT
   model: Role
 - fields:
+    description: Venezuela
+  id: VEN
+  model: Role
+- fields:
     description: British Virgin Islands
   id: VGB
+  model: Role
+- fields:
+    description: Vietnam
+  id: VNM
   model: Role
 - fields:
     description: South Africa
   id: ZAF
   model: Role
 - fields:
-    description: Zimbabwe
-  id: ZWE
+    description: CDF test
+  id: ZCDF
   model: Role
 - fields:
-    description: CDF Demo
-  id: ZCDF
+    description: Zambia
+  id: ZMB
+  model: Role
+- fields:
+    description: Zimbabwe
+  id: ZWE
   model: Role
