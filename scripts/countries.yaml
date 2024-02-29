@@ -80,6 +80,8 @@
   name: ECU
 - id: d7be0325-a6b6-45df-8060-398650cdcf85
   name: EGY
+- id: c4b57c14-cfe7-496f-84c4-d1caad7ef817
+  name: ESP
 - id: 5878c9c6-45b4-44da-a1fe-e247aeebcac9
   name: ETH
 - id: 17148b6e-4803-4f2b-9783-7a9cb95bf2ff

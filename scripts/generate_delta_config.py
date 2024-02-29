@@ -23,22 +23,24 @@ def get_available_countries():
     reference = []
 
     try:
-        master_path = f"{settings.CONTAINER_PATH}/school_master.db"
+        master_path = "updated_master_schema/master"
         logger.info(f"Looking in {master_path}...")
         for path in fs_client.get_paths(master_path, recursive=False):
             path: PathProperties
-            if path.is_directory:
-                master.append({"id": "", "name": path.name.split("/")[-1].upper()})
+            if not path.is_directory:
+                name = path.name.split("/")[-1].split("_")[0].upper()
+                master.append({"id": "", "name": name})
     except ResourceNotFoundError:
         pass
 
     try:
-        reference_path = f"{settings.CONTAINER_PATH}/school_reference.db"
+        reference_path = "updated_master_schema/reference"
         logger.info(f"Looking in {reference_path}...")
         for path in fs_client.get_paths(reference_path, recursive=False):
             path: PathProperties
-            if path.is_directory:
-                reference.append({"id": "", "name": path.name.split("/")[-1].upper()})
+            if not path.is_directory:
+                name = path.name.split("/")[-1].split("_")[0].upper()
+                reference.append({"id": "", "name": name})
     except ResourceNotFoundError:
         pass
 
