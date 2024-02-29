@@ -25,6 +25,7 @@ passlib = { extras = ["argon2"], version = "^1.7.4" }
 asyncpg = "^0.29.0"
 country-converter = "^1.1.1"
 sentry-sdk = {extras = ["fastapi"], version = "^1.40.3"}
+azure-storage-file-datalake = "^12.14.0"
 
 [tool.poetry.group.dev.dependencies]
 ipython = "^8.16.1"
