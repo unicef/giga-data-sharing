@@ -10,52 +10,60 @@ from data_sharing.settings import settings
 
 MASTER_SCHEMA_INDEX = 0
 REFERENCE_SCHEMA_INDEX = 1
+QOS_SCHEMA_INDEX = 2
 
 
-def get_available_countries():
+def get_paths(root_path: str, are_directories: bool = False):
     service_client = DataLakeServiceClient(
         account_url=f"https://{settings.STORAGE_ACCOUNT_NAME}.dfs.core.windows.net",
         credential=settings.STORAGE_ACCESS_KEY,
     )
     fs_client = service_client.get_file_system_client(settings.CONTAINER_NAME)
 
-    master = [{"id": "", "name": "ZCDF"}]
-    reference = []
+    out = []
 
     try:
-        master_path = "updated_master_schema/master"
-        logger.info(f"Looking in {master_path}...")
-        for path in fs_client.get_paths(master_path, recursive=False):
+        logger.info(f"Looking in {root_path}...")
+        for path in fs_client.get_paths(root_path, recursive=False):
             path: PathProperties
-            if not path.is_directory:
+            condition = path.is_directory if are_directories else not path.is_directory
+
+            if condition:
                 name = path.name.split("/")[-1].split("_")[0].upper()
-                master.append({"id": "", "name": name})
+                out.append({"id": "", "name": name})
     except ResourceNotFoundError:
         pass
 
-    try:
-        reference_path = "updated_master_schema/reference"
-        logger.info(f"Looking in {reference_path}...")
-        for path in fs_client.get_paths(reference_path, recursive=False):
-            path: PathProperties
-            if not path.is_directory:
-                name = path.name.split("/")[-1].split("_")[0].upper()
-                reference.append({"id": "", "name": name})
-    except ResourceNotFoundError:
-        pass
+    return out
 
-    return master, reference
+
+def get_available_countries():
+    master = get_paths("updated_master_schema/master")
+    master.append({"id": "", "name": "ZCDF"})
+
+    reference = get_paths("updated_master_schema/reference")
+    qos = get_paths("gold/qos", are_directories=True)
+
+    return master, reference, qos
+
+
+def enrich_id(country: dict[str, str], countries: list[dict[str, str]]):
+    if country["name"] in [c["name"] for c in countries]:
+        country["id"] = next(c["id"] for c in countries if c["name"] == country["name"])
+    else:
+        country["id"] = str(uuid4())
 
 
 def enrich_master_reference_list():
     with open(settings.BASE_DIR / "scripts" / "countries.yaml") as f:
         countries: list[dict[str, str]] = yaml.safe_load(f)
 
-    master, reference = get_available_countries()
+    master, reference, qos = get_available_countries()
 
     unique_countries = {
         *[m["name"] for m in master],
         *[r["name"] for r in reference],
+        *[q["name"] for q in qos],
     }
 
     for country in unique_countries:
@@ -63,20 +71,11 @@ def enrich_master_reference_list():
             countries.append({"id": str(uuid4()), "name": country})
 
     for country in master:
-        if country["name"] in [c["name"] for c in countries]:
-            country["id"] = next(
-                c["id"] for c in countries if c["name"] == country["name"]
-            )
-        else:
-            country["id"] = str(uuid4())
-
+        enrich_id(country, countries)
     for country in reference:
-        if country["name"] in [c["name"] for c in countries]:
-            country["id"] = next(
-                c["id"] for c in countries if c["name"] == country["name"]
-            )
-        else:
-            country["id"] = str(uuid4())
+        enrich_id(country, countries)
+    for country in qos:
+        enrich_id(country, countries)
 
     countries = sorted(countries, key=lambda x: x["name"])
     with open(settings.BASE_DIR / "scripts" / "countries.yaml", "w") as f:
@@ -85,11 +84,12 @@ def enrich_master_reference_list():
     return (
         sorted(master, key=lambda x: x["name"]),
         sorted(reference, key=lambda x: x["name"]),
+        sorted(qos, key=lambda x: x["name"]),
     )
 
 
 def main():
-    master, reference = enrich_master_reference_list()
+    master, reference, qos = enrich_master_reference_list()
 
     with open(settings.BASE_DIR / "conf-template" / "delta-sharing-server.yaml") as f:
         config = yaml.safe_load(f)
@@ -114,6 +114,16 @@ def main():
             historyShared=True,
         )
         for country in reference
+    ]
+
+    share.schemas[QOS_SCHEMA_INDEX].tables = [
+        Table(
+            id=country["id"],
+            name=country["name"],
+            location=f"wasbs://{{{{.CONTAINER_NAME}}}}@{{{{.STORAGE_ACCOUNT_NAME}}}}.blob.core.windows.net/{{{{.CONTAINER_PATH}}}}/qos.db/{country['name'].lower()}",
+            historyShared=True,
+        )
+        for country in qos
     ]
 
     config["shares"][0] = share.model_dump(mode="json")
