@@ -769,5 +769,9 @@ shares:
       id: 6f92a3bf-36dd-4cad-8858-1fa38849605b
       location: wasbs://{{.CONTAINER_NAME}}@{{.STORAGE_ACCOUNT_NAME}}.blob.core.windows.net/{{.CONTAINER_PATH}}/qos.db/bra
       name: BRA
+    - historyShared: true
+      id: e2d72471-61dc-4e81-8124-bd16c4b97d2b
+      location: wasbs://{{.CONTAINER_NAME}}@{{.STORAGE_ACCOUNT_NAME}}.blob.core.windows.net/{{.CONTAINER_PATH}}/qos.db/ken
+      name: KEN
 stalenessAcceptable: false
 version: 1
