@@ -179,6 +179,10 @@
   id: FIN
   model: Role
 - fields:
+    description: Fiji
+  id: FJI
+  model: Role
+- fields:
     description: France
   id: FRA
   model: Role

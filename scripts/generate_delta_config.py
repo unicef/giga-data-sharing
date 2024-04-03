@@ -39,6 +39,9 @@ def get_paths(root_path: str, are_directories: bool = False):
 
 def get_available_countries():
     master = get_paths("updated_master_schema/master")
+    master.extend(
+        get_paths("updated_master_schema/master_updates", are_directories=True)
+    )
     master.append({"id": "", "name": "ZCDF"})
 
     reference = get_paths("updated_master_schema/reference")

@@ -194,6 +194,10 @@ shares:
       location: wasbs://{{.CONTAINER_NAME}}@{{.STORAGE_ACCOUNT_NAME}}.blob.core.windows.net/{{.CONTAINER_PATH}}/school_master.db/fin
       name: FIN
     - historyShared: true
+      id: de2bd8ae-466c-45ad-a0ed-a999633e0c24
+      location: wasbs://{{.CONTAINER_NAME}}@{{.STORAGE_ACCOUNT_NAME}}.blob.core.windows.net/{{.CONTAINER_PATH}}/school_master.db/fji
+      name: FJI
+    - historyShared: true
       id: 924b4695-443b-4d19-8663-4e034d17bf81
       location: wasbs://{{.CONTAINER_NAME}}@{{.STORAGE_ACCOUNT_NAME}}.blob.core.windows.net/{{.CONTAINER_PATH}}/school_master.db/fra
       name: FRA
@@ -313,6 +317,10 @@ shares:
       id: b3315d9d-c2df-4671-a004-268cd7fc2dd7
       location: wasbs://{{.CONTAINER_NAME}}@{{.STORAGE_ACCOUNT_NAME}}.blob.core.windows.net/{{.CONTAINER_PATH}}/school_master.db/lca
       name: LCA
+    - historyShared: true
+      id: e02e873c-e7a5-40c6-b933-10ec82cd55b4
+      location: wasbs://{{.CONTAINER_NAME}}@{{.STORAGE_ACCOUNT_NAME}}.blob.core.windows.net/{{.CONTAINER_PATH}}/school_master.db/lka
+      name: LKA
     - historyShared: true
       id: e02e873c-e7a5-40c6-b933-10ec82cd55b4
       location: wasbs://{{.CONTAINER_NAME}}@{{.STORAGE_ACCOUNT_NAME}}.blob.core.windows.net/{{.CONTAINER_PATH}}/school_master.db/lka
@@ -569,6 +577,10 @@ shares:
       id: 26f953b2-01de-4356-a881-225e83268697
       location: wasbs://{{.CONTAINER_NAME}}@{{.STORAGE_ACCOUNT_NAME}}.blob.core.windows.net/{{.CONTAINER_PATH}}/school_master.db/vnm
       name: VNM
+    - historyShared: true
+      id: 1d668ded-c276-4592-805e-8fc2604ef477
+      location: wasbs://{{.CONTAINER_NAME}}@{{.STORAGE_ACCOUNT_NAME}}.blob.core.windows.net/{{.CONTAINER_PATH}}/school_master.db/zaf
+      name: ZAF
     - historyShared: true
       id: 1d668ded-c276-4592-805e-8fc2604ef477
       location: wasbs://{{.CONTAINER_NAME}}@{{.STORAGE_ACCOUNT_NAME}}.blob.core.windows.net/{{.CONTAINER_PATH}}/school_master.db/zaf
