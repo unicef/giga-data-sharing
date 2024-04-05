@@ -1,3 +1,5 @@
+from socket import gethostname
+
 import sentry_sdk
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
@@ -7,13 +9,16 @@ from data_sharing.constants import __version__
 from data_sharing.routers import api_key, delta_sharing, role
 from data_sharing.settings import settings
 
-if settings.SENTRY_DSN:
+if settings.SENTRY_DSN and settings.IN_PRODUCTION:
     sentry_sdk.init(
         dsn=settings.SENTRY_DSN,
+        sample_rate=1.0,
+        enable_tracing=True,
         traces_sample_rate=1.0,
         profiles_sample_rate=1.0,
         environment=settings.DEPLOY_ENV,
-        release=settings.COMMIT_SHA,
+        release=f"github.com/unicef/giga-data-sharing:{settings.COMMIT_SHA}",
+        server_name=f"data-sharing-proxy-{settings.DEPLOY_ENV}@{gethostname()}",
     )
 
 app = FastAPI(
