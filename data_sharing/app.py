@@ -23,6 +23,10 @@ if settings.SENTRY_DSN and settings.IN_PRODUCTION:
 
 app = FastAPI(
     title="Giga Data Sharing",
+    description=(
+        "For feedback or issues, visit our "
+        "[GitHub Issues page](https://github.com/unicef/giga-data-sharing/issues/new)."
+    ),
     version=__version__,
     docs_url="/",
     redoc_url="/redoc",
