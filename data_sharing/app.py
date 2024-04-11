@@ -24,12 +24,8 @@ if settings.SENTRY_DSN and settings.IN_PRODUCTION:
 app = FastAPI(
     title="Giga Data Sharing",
     description=(
-        "The Data Sharing API is a lightweight custom proxy"
-        " layer written with FastAPI on top of the Delta Sharing reference server."
-        " The proxy layer implements token-based access control, "
-        "and API documentation using Swagger UI."
         "For feedback or issues, visit our "
-        "[GitHub Issues page](https://github.com/unicef/giga-data-sharing/issues)."
+        "[GitHub Issues page](https://github.com/unicef/giga-data-sharing/issues/new)."
     ),
     version=__version__,
     docs_url="/",
