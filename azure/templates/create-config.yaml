@@ -43,7 +43,7 @@ jobs:
                     ADMIN_API_KEY: "$(adminApiKey)"
                     ADMIN_API_SECRET: "$(adminApiSecret)"
                     SECRET_KEY: "$(secretKey)"
-                    APP_DOMAIN: "$(appDomain)"
+                    APP_DOMAIN: "$(ingressHost)"
                     SENTRY_DSN: "$(sentryDsn)"
                     COMMIT_SHA: "$(Build.SourceVersion)"
                     DEPLOY_ENV: "$(deployEnv)"

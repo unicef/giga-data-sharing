@@ -5,7 +5,6 @@ variables:
   kubernetesNamespace: $(KUBERNETES_NAMESPACE)
   adminApiKey: $(ADMIN_API_KEY)
   adminApiSecret: $(ADMIN_API_SECRET)
-  appDomain: $(APP_DOMAIN)
   secretKey: $(APPLICATION_SECRET_KEY)
   deltaBearerToken: $(DELTA_BEARER_TOKEN)
   postgresqlPassword: $(POSTGRESQL_PASSWORD)
@@ -15,4 +14,5 @@ variables:
   storageContainerPath: $(STORAGE_CONTAINER_PATH)
   sentryDsn: $(SENTRY_DSN)
   deployEnv: $(DEPLOY_ENV)
+  ingressHost: $(INGRESS_HOST)
   system.debug: true
