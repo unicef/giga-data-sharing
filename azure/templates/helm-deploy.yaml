@@ -22,6 +22,7 @@ jobs:
 
             - task: HelmDeploy@0
               displayName: Helm deploy Data Sharing proxy
+              condition: or(eq(variables.environment, 'dev'), eq(variables.environment, 'stg'))
               inputs:
                 command: upgrade
                 chartType: FilePath
@@ -34,4 +35,22 @@ jobs:
                   --set ingress.enabled=true
                   --set ingress.hosts[0].host="$(ingressHost)"
                   --set ingress.hosts[0].paths[0].path="/"
-                  --set ingress.hosts[0].paths[0].pathType=Exact
+                  --set ingress.hosts[0].paths[0].pathType=Prefix
+
+            - task: HelmDeploy@0
+              displayName: Helm deploy production-config Data Sharing proxy
+              condition: eq(variables.environment, 'prd')
+              inputs:
+                command: upgrade
+                chartType: FilePath
+                chartPath: infra/helm/data-sharing-proxy
+                releaseName: data-sharing-proxy
+                namespace: $(kubernetesNamespace)
+                arguments: >
+                  --set image.repository="$(containerRegistryName).azurecr.io/giga-data-sharing-proxy"
+                  --set image.tag="$(Build.SourceVersion)"
+                  --set ingress.enabled=true
+                  --set ingress.hosts[0].host="$(ingressHost)"
+                  --set ingress.hosts[0].paths[0].path="/"
+                  --set ingress.hosts[0].paths[0].pathType=Prefix
+                  --set ingress.annotations."appgw\.ingress\.kubernetes\.io/appgw-ssl-certificate"=kv-cert-gigaglobal

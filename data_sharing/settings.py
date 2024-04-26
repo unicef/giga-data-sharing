@@ -26,7 +26,7 @@ class Settings(BaseSettings):
     POSTGRESQL_PASSWORD: str
     POSTGRESQL_DATABASE: str
     DB_HOST: str
-    APP_DOMAIN: str
+    INGRESS_HOST: str
     ADMIN_API_KEY: UUID4
     SENTRY_DSN: str = ""
     COMMIT_SHA: str = ""

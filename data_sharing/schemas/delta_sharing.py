@@ -50,7 +50,7 @@ class ProfileFile(BaseModel):
         1, description=ProfileFileDescriptions.share_credentials_version
     )
     endpoint: AnyHttpUrl = Field(
-        f"https://{settings.APP_DOMAIN}", description=ProfileFileDescriptions.endpoint
+        f"https://{settings.INGRESS_HOST}", description=ProfileFileDescriptions.endpoint
     )
     bearerToken: str = Field(description=ProfileFileDescriptions.bearer_token)
     expirationTime: datetime | None = Field(
