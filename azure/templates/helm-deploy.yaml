@@ -9,7 +9,8 @@ jobs:
             - checkout: self
 
             - task: HelmDeploy@0
-              displayName: Helm deploy Data Sharing Delta
+              displayName: Helm deploy Data Sharing Delta dev
+              condition: eq(variables.environment, 'dev')
               inputs:
                 command: upgrade
                 chartType: FilePath
@@ -21,8 +22,23 @@ jobs:
                   --set image.tag="$(Build.SourceVersion)"
 
             - task: HelmDeploy@0
-              displayName: Helm deploy Data Sharing proxy
-              condition: or(eq(variables.environment, 'dev'), eq(variables.environment, 'stg'))
+              displayName: Helm deploy Data Sharing Delta stg/prd
+              condition: or(eq(variables.environment, 'stg'), eq(variables.environment, 'prd'))
+              inputs:
+                command: upgrade
+                chartType: FilePath
+                chartPath: infra/helm/data-sharing-delta
+                releaseName: data-sharing-delta
+                namespace: $(kubernetesNamespace)
+                arguments: >
+                  --set image.repository="$(containerRegistryName).azurecr.io/giga-data-sharing-delta"
+                  --set image.tag="$(Build.SourceVersion)"
+                  --set autoscaling.enabled=true
+                  --set podDisruptionBudget.enabled=true
+
+            - task: HelmDeploy@0
+              displayName: Helm deploy Data Sharing proxy dev
+              condition: eq(variables.environment, 'dev')
               inputs:
                 command: upgrade
                 chartType: FilePath
@@ -38,7 +54,26 @@ jobs:
                   --set ingress.hosts[0].paths[0].pathType=Prefix
 
             - task: HelmDeploy@0
-              displayName: Helm deploy production-config Data Sharing proxy
+              displayName: Helm deploy Data Sharing proxy
+              condition: eq(variables.environment, 'stg')
+              inputs:
+                command: upgrade
+                chartType: FilePath
+                chartPath: infra/helm/data-sharing-proxy
+                releaseName: data-sharing-proxy
+                namespace: $(kubernetesNamespace)
+                arguments: >
+                  --set image.repository="$(containerRegistryName).azurecr.io/giga-data-sharing-proxy"
+                  --set image.tag="$(Build.SourceVersion)"
+                  --set ingress.enabled=true
+                  --set ingress.hosts[0].host="$(ingressHost)"
+                  --set ingress.hosts[0].paths[0].path="/"
+                  --set ingress.hosts[0].paths[0].pathType=Prefix
+                  --set autoscaling.enabled=true
+                  --set podDisruptionBudget.enabled=true
+
+            - task: HelmDeploy@0
+              displayName: Helm deploy Data Sharing proxy prd
               condition: eq(variables.environment, 'prd')
               inputs:
                 command: upgrade
@@ -54,3 +89,5 @@ jobs:
                   --set ingress.hosts[0].paths[0].path="/"
                   --set ingress.hosts[0].paths[0].pathType=Prefix
                   --set ingress.annotations."appgw\.ingress\.kubernetes\.io/appgw-ssl-certificate"=kv-cert-gigaglobal
+                  --set autoscaling.enabled=true
+                  --set podDisruptionBudget.enabled=true
