@@ -91,3 +91,10 @@ jobs:
                   --set ingress.annotations."appgw\.ingress\.kubernetes\.io/appgw-ssl-certificate"=kv-cert-gigaglobal
                   --set autoscaling.enabled=true
                   --set podDisruptionBudget.enabled=true
+
+            - task: Kubernetes@1
+              displayName: Force restart deployments
+              inputs:
+                namespace: $(kubernetesNamespace)
+                command: rollout
+                arguments: restart deployment
