@@ -16,4 +16,4 @@ RUN poetry install
 
 WORKDIR /app
 
-CMD [ "uvicorn", "main:app", "--host", "0.0.0.0", "--port", "5000", "--reload" ]
+CMD [ "/bin/sh", "-c", "uvicorn main:app --host 0.0.0.0 --port 5000 --reload" ]

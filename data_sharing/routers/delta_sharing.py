@@ -2,7 +2,7 @@ from datetime import datetime
 from typing import Annotated, Any, Literal, Optional
 
 import httpx
-from fastapi import APIRouter, Depends, Header, Path, Query, Security
+from fastapi import APIRouter, Depends, Header, Path, Query, Security, status
 from fastapi.requests import Request
 from fastapi.responses import ORJSONResponse, Response
 from pydantic import BaseModel, conint
@@ -96,7 +96,7 @@ async def list_shares(
     ] = None,
     pageToken: Annotated[str, Query(description=page_token_description)] = None,
 ):
-    query_params = dict(maxResults=maxResults, pageToken=pageToken)
+    query_params = {"maxResults": maxResults, "pageToken": pageToken}
     parametrized_query = query_parametrize(query_params)
     sharing_res, _ = await forward_sharing_request(
         request, response, parametrized_query
@@ -118,7 +118,7 @@ async def get_share(
     ] = None,
     pageToken: Annotated[str, Query(description=page_token_description)] = None,
 ):
-    query_params = dict(maxResults=maxResults, pageToken=pageToken)
+    query_params = {"maxResults": maxResults, "pageToken": pageToken}
     parametrized_query = query_parametrize(query_params)
 
     sharing_res, _ = await forward_sharing_request(
@@ -141,7 +141,7 @@ async def list_schemas(
     ] = None,
     pageToken: Annotated[str, Query(description=page_token_description)] = None,
 ):
-    query_params = dict(maxResults=maxResults, pageToken=pageToken)
+    query_params = {"maxResults": maxResults, "pageToken": pageToken}
     parametrized_query = query_parametrize(query_params)
 
     sharing_res, _ = await forward_sharing_request(
@@ -166,7 +166,7 @@ async def list_tables(
     pageToken: Annotated[str, Query(description=page_token_description)] = None,
     current_user: ApiKey = Depends(get_current_user),
 ):
-    query_params = dict(maxResults=maxResults, pageToken=pageToken)
+    query_params = {"maxResults": maxResults, "pageToken": pageToken}
     parametrized_query = query_parametrize(query_params)
     sharing_res, error = await forward_sharing_request(
         request, response, parametrized_query
@@ -201,7 +201,7 @@ async def list_tables_in_share(
     sharing_res, error = await forward_sharing_request(
         request,
         response,
-        query_parametrize(dict(maxResults=maxResults, pageToken=pageToken)),
+        query_parametrize({"maxResults": maxResults, "pageToken": pageToken}),
         response_type="full",
     )
     if error:
@@ -235,12 +235,19 @@ async def query_table_version(
     sharing_res, _ = await forward_sharing_request(
         request,
         response,
-        query_parametrize(dict(startingTimestamp=startingTimestamp)),
+        query_parametrize({"startingTimestamp": startingTimestamp}),
         response_type="full",
     )
-    response.headers["delta-table-version"] = sharing_res.headers.get(
-        "delta-table-version"
-    )
+
+    if (version := sharing_res.headers.get("delta-table-version")) is None:
+        return ORJSONResponse(
+            {
+                "detail": f"Could not find version for table `{share_name}`.`{schema_name}`.`{table_name}`. Ensure that all parameters are spelled correctly."
+            },
+            status_code=status.HTTP_404_NOT_FOUND,
+        )
+
+    response.headers["delta-table-version"] = version
     return sharing_res.headers
 
 
@@ -373,13 +380,13 @@ async def query_table_change_data_feed(
         request,
         response,
         query_parametrize(
-            dict(
-                startingVersion=startingVersion,
-                startingTimestamp=startingTimestamp,
-                endingVersion=endingVersion,
-                endingTimestamp=endingTimestamp,
-                includeHistoricalMetadata=includeHistoricalMetadata,
-            ),
+            {
+                "startingVersion": startingVersion,
+                "startingTimestamp": startingTimestamp,
+                "endingVersion": endingVersion,
+                "endingTimestamp": endingTimestamp,
+                "includeHistoricalMetadata": includeHistoricalMetadata,
+            },
         ),
         response_type="full",
         additional_headers=additional_headers,
