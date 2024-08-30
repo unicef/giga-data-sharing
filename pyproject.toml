@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "giga-data-sharing"
-version = "0.3.0"
-description = ""
+version = "1.0.0"
+description = "Giga Data Sharing API built with a lightweight FastAPI proxy on top of the reference Delta Sharing server implementation."
 authors = ["Thinking Machines <hello@thinkingmachin.es>"]
 readme = "README.md"
 
@@ -24,8 +24,11 @@ psycopg2-binary = "^2.9.9"
 passlib = { extras = ["argon2"], version = "^1.7.4" }
 asyncpg = "^0.29.0"
 country-converter = "^1.1.1"
-sentry-sdk = { extras = ["fastapi"], version = "^1.40.3" }
+sentry-sdk = { extras = ["fastapi"], version = ">=2.8.0" }
 azure-storage-file-datalake = "^12.14.0"
+aiohttp = ">=3.10.2"
+urllib3 = ">=2.2.2"
+certifi = ">=2024.07.04"
 
 [tool.poetry.group.dev.dependencies]
 ipython = "^8.16.1"

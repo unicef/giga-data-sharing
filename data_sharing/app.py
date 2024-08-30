@@ -22,14 +22,16 @@ if settings.SENTRY_DSN and settings.IN_PRODUCTION:
     )
 
 app = FastAPI(
-    title="Giga Data Sharing",
-    description=(
-        "For feedback or issues, visit our "
-        "[GitHub Issues page](https://github.com/unicef/giga-data-sharing/issues/new)."
-    ),
+    title="Giga Data Sharing API",
+    description="""
+    For feedback or issues, visit our [GitHub Issues page](https://github.com/unicef/giga-data-sharing/issues/new).
+    """.strip(),
     version=__version__,
     docs_url="/",
     redoc_url="/redoc",
+    swagger_ui_parameters={
+        "persistAuthorization": True,
+    },
     default_response_class=ORJSONResponse,
 )
 

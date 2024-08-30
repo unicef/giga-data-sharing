@@ -32,6 +32,7 @@ services:
       - "5000:5000"
     volumes:
       - ./:/app
+      - ./.venv-docker:/app/.venv
 
   db:
     image: bitnami/postgresql:16
