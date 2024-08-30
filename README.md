@@ -39,7 +39,7 @@ certain branches. The branch-environment mapping is as follows:
 |--------------|----------------------------------------------|
 | `main`       | [DEV](https://io-datasharing-dev.unitst.org) |
 | `staging`    | [STG](https://io-datasharing-stg.unitst.org) |
-| `production` | PRD (WIP)                                    |
+| `production` | [PRD](https://datasharing.giga.global)       |
 
 To get the initial bearer token, you can either:
 
