@@ -510,6 +510,10 @@ shares:
             location: wasbs://{{.CONTAINER_NAME}}@{{.STORAGE_ACCOUNT_NAME}}.blob.core.windows.net/{{.CONTAINER_PATH}}/school_master.db/swe
             name: SWE
           - historyShared: true
+            id: 147cd544-af21-4e01-8174-4632287d9331
+            location: wasbs://{{.CONTAINER_NAME}}@{{.STORAGE_ACCOUNT_NAME}}.blob.core.windows.net/{{.CONTAINER_PATH}}/school_master.db/swz
+            name: SWZ
+          - historyShared: true
             id: 40051166-106f-4369-b72a-4f6c317a1d61
             location: wasbs://{{.CONTAINER_NAME}}@{{.STORAGE_ACCOUNT_NAME}}.blob.core.windows.net/{{.CONTAINER_PATH}}/school_master.db/syr
             name: SYR
