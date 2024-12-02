@@ -491,6 +491,10 @@
   id: SWE
   model: Role
 - fields:
+    description: Eswatini
+  id: SWZ
+  model: Role
+- fields:
     description: Syria
   id: SYR
   model: Role
