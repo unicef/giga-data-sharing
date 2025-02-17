@@ -23,7 +23,7 @@ async def main(fixtures: list[str]):
         if not fixture_file.exists():
             raise FileNotFoundError(f"Fixture `{fixture}` could not be found.")
 
-        with open(fixture_file, "r") as f:
+        with open(fixture_file) as f:
             data = yaml.safe_load(f)
 
         try:
