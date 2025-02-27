@@ -242,8 +242,12 @@
   name: SVN
 - id: 1f9aad31-c50e-448c-8065-25d2716065f7
   name: SWE
+- id: 147cd544-af21-4e01-8174-4632287d9331
+  name: SWZ
 - id: 40051166-106f-4369-b72a-4f6c317a1d61
   name: SYR
+- id: a0198d9e-e2cf-4f6f-974a-b3f9f369d691
+  name: TCA
 - id: 7b9b41c3-1b37-4e6d-896d-db72bd0b277f
   name: TGO
 - id: 9d120955-2d58-4d93-b55a-4a472bd3e6fa

@@ -518,6 +518,10 @@ shares:
             location: wasbs://{{.CONTAINER_NAME}}@{{.STORAGE_ACCOUNT_NAME}}.blob.core.windows.net/{{.CONTAINER_PATH}}/school_master.db/syr
             name: SYR
           - historyShared: true
+            id: a0198d9e-e2cf-4f6f-974a-b3f9f369d691
+            location: wasbs://{{.CONTAINER_NAME}}@{{.STORAGE_ACCOUNT_NAME}}.blob.core.windows.net/{{.CONTAINER_PATH}}/school_master.db/tca
+            name: TCA
+          - historyShared: true
             id: 7b9b41c3-1b37-4e6d-896d-db72bd0b277f
             location: wasbs://{{.CONTAINER_NAME}}@{{.STORAGE_ACCOUNT_NAME}}.blob.core.windows.net/{{.CONTAINER_PATH}}/school_master.db/tgo
             name: TGO
