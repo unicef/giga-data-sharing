@@ -793,5 +793,11 @@ shares:
             id: ec9d2151-9490-4c39-b1e8-35c64abba812
             location: wasbs://{{.CONTAINER_NAME}}@{{.STORAGE_ACCOUNT_NAME}}.blob.core.windows.net/{{.CONTAINER_PATH}}/qos.db/mng
             name: MNG
+      - name: school-geolocation-error
+        tables:
+          - historyShared: true
+            id: aef874fd-37f7-48bc-8ff7-2f13e7b31abb
+            location: wasbs://{{.CONTAINER_NAME}}@{{.STORAGE_ACCOUNT_NAME}}.blob.core.windows.net/{{.CONTAINER_PATH}}/school_geolocation_error.db/sen-eb1e6eeb9e244aac9257ac603f2d2d23
+            name: SEN
 stalenessAcceptable: false
 version: 1
