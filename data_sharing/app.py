@@ -13,9 +13,7 @@ if settings.SENTRY_DSN and settings.IN_PRODUCTION:
     sentry_sdk.init(
         dsn=settings.SENTRY_DSN,
         sample_rate=1.0,
-        enable_tracing=True,
         traces_sample_rate=1.0,
-        profiles_sample_rate=1.0,
         environment=settings.DEPLOY_ENV,
         release=f"github.com/unicef/giga-data-sharing:{settings.COMMIT_SHA}",
         server_name=f"data-sharing-proxy-{settings.DEPLOY_ENV}@{gethostname()}",
