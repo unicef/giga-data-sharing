@@ -158,6 +158,10 @@ shares:
             location: wasbs://{{.CONTAINER_NAME}}@{{.STORAGE_ACCOUNT_NAME}}.blob.core.windows.net/{{.CONTAINER_PATH}}/school_master.db/deu
             name: DEU
           - historyShared: true
+            id: 00d4acb0-e64f-474b-9e16-13f90cbed43e
+            location: wasbs://{{.CONTAINER_NAME}}@{{.STORAGE_ACCOUNT_NAME}}.blob.core.windows.net/{{.CONTAINER_PATH}}/school_master.db/dji
+            name: DJI
+          - historyShared: true
             id: ef5c7feb-6cbc-4a3e-a3c0-983d9998321d
             location: wasbs://{{.CONTAINER_NAME}}@{{.STORAGE_ACCOUNT_NAME}}.blob.core.windows.net/{{.CONTAINER_PATH}}/school_master.db/dma
             name: DMA

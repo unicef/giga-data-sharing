@@ -143,6 +143,10 @@
   id: DEU
   model: Role
 - fields:
+    description: Djibouti
+  id: DJI
+  model: Role
+- fields:
     description: Dominica
   id: DMA
   model: Role
