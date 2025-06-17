@@ -3,6 +3,26 @@
   id: ADMIN
   model: Role
 - fields:
+    description: School Master Schema Access
+  id: SCHM
+  model: Role
+
+- fields:
+    description: QoS Schema Access
+  id: QOS
+  model: Role
+
+- fields:
+    description: School Reference Schema Access
+  id: REF
+  model: Role
+
+- fields:
+    description: Geolocation Error Schema Access
+  id: GERR
+  model: Role
+
+- fields:
     description: Afghanistan
   id: AFG
   model: Role

@@ -4,7 +4,7 @@ from data_sharing.annotations.api_key import ApiKeyDescriptions
 
 
 class Role(BaseModel):
-    id: constr(min_length=3, max_length=5)
+    id: constr(min_length=3, max_length=5)  # Supports e.g., 'KEN', 'SCHM', 'ADMIN'
     description: str = Field(None)
 
 

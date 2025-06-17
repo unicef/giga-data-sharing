@@ -1,31 +1,19 @@
 from datetime import datetime
-from typing import Annotated, Any, Literal, Optional
+from typing import Any, Literal, Optional
 
 import httpx
-from fastapi import APIRouter, Depends, Header, Path, Query, Security, status
+from fastapi import APIRouter, Depends, Header, Security, status
 from fastapi.requests import Request
 from fastapi.responses import ORJSONResponse, Response
-from pydantic import BaseModel, conint
+from pydantic import BaseModel
 
-from data_sharing.annotations.delta_sharing import (
-    delta_sharing_capabilities_header_description,
-    ending_timestamp_description,
-    ending_version_description,
-    include_historical_metadata_description,
-    max_results_description,
-    page_token_description,
-    query_cdf_ndjson_description,
-    query_data_ndjson_description,
-    query_metadata_ndjson_description,
-    schema_name_description,
-    share_name_description,
-    starting_timestamp_description,
-    starting_version_description,
-    table_name_description,
-)
 from data_sharing.annotations.responses import other_common_responses
 from data_sharing.models import ApiKey
 from data_sharing.permissions import HasTablePermissions, IsAuthenticated
+from data_sharing.permissions.access_control import (
+    filter_schemas_by_access,
+    filter_tables_by_access,
+)
 from data_sharing.permissions.utils import get_current_user
 from data_sharing.schemas import delta_sharing
 from data_sharing.schemas.delta_sharing import TableVersion
@@ -65,11 +53,7 @@ async def forward_sharing_request(
     sharing_res = await sharing_client.send(sharing_req)
     if sharing_res.is_error:
         json_content = sharing_res.json()
-        status_code = sharing_res.status_code
-        return (
-            ORJSONResponse(json_content, status_code=status_code),
-            True,
-        )
+        return ORJSONResponse(json_content, status_code=sharing_res.status_code), True
 
     response.status_code = sharing_res.status_code
     match response_type:
@@ -89,19 +73,13 @@ async def forward_sharing_request(
     responses=other_common_responses,
 )
 async def list_shares(
-    request: Request,
-    response: Response,
-    maxResults: Annotated[
-        conint(ge=0), Query(description=max_results_description)
-    ] = None,
-    pageToken: Annotated[str, Query(description=page_token_description)] = None,
+    request: Request, response: Response, maxResults: int = None, pageToken: str = None
 ):
-    query_params = {"maxResults": maxResults, "pageToken": pageToken}
-    parametrized_query = query_parametrize(query_params)
-    sharing_res, _ = await forward_sharing_request(
-        request, response, parametrized_query
-    )
-    return sharing_res
+    query = query_parametrize({"maxResults": maxResults, "pageToken": pageToken})
+    res, error = await forward_sharing_request(request, response, query)
+    if error:
+        return res
+    return res
 
 
 @router.get(
@@ -110,21 +88,17 @@ async def list_shares(
     responses=other_common_responses,
 )
 async def get_share(
-    share_name: Annotated[str, Path(description=share_name_description)],
+    share_name: str,
     request: Request,
     response: Response,
-    maxResults: Annotated[
-        conint(ge=0), Query(description=max_results_description)
-    ] = None,
-    pageToken: Annotated[str, Query(description=page_token_description)] = None,
+    maxResults: int = None,
+    pageToken: str = None,
 ):
-    query_params = {"maxResults": maxResults, "pageToken": pageToken}
-    parametrized_query = query_parametrize(query_params)
-
-    sharing_res, _ = await forward_sharing_request(
-        request, response, parametrized_query
-    )
-    return sharing_res
+    query = query_parametrize({"maxResults": maxResults, "pageToken": pageToken})
+    res, error = await forward_sharing_request(request, response, query)
+    if error:
+        return res
+    return res
 
 
 @router.get(
@@ -133,21 +107,19 @@ async def get_share(
     responses=other_common_responses,
 )
 async def list_schemas(
-    share_name: Annotated[str, Path(description=share_name_description)],
+    share_name: str,
     request: Request,
     response: Response,
-    maxResults: Annotated[
-        conint(ge=0), Query(description=max_results_description)
-    ] = None,
-    pageToken: Annotated[str, Query(description=page_token_description)] = None,
+    maxResults: int = None,
+    pageToken: str = None,
+    current_user: ApiKey = Depends(get_current_user),
 ):
-    query_params = {"maxResults": maxResults, "pageToken": pageToken}
-    parametrized_query = query_parametrize(query_params)
-
-    sharing_res, _ = await forward_sharing_request(
-        request, response, parametrized_query
-    )
-    return sharing_res
+    query = query_parametrize({"maxResults": maxResults, "pageToken": pageToken})
+    res, error = await forward_sharing_request(request, response, query)
+    if error:
+        return res
+    res["items"] = filter_schemas_by_access(res["items"], current_user)
+    return res
 
 
 @router.get(
@@ -156,31 +128,23 @@ async def list_schemas(
     responses=other_common_responses,
 )
 async def list_tables(
-    share_name: Annotated[str, Path(description=share_name_description)],
-    schema_name: Annotated[str, Path(description=schema_name_description)],
+    share_name: str,
+    schema_name: str,
     request: Request,
     response: Response,
-    maxResults: Annotated[
-        conint(ge=0), Query(description=max_results_description)
-    ] = None,
-    pageToken: Annotated[str, Query(description=page_token_description)] = None,
+    maxResults: int = None,
+    pageToken: str = None,
     current_user: ApiKey = Depends(get_current_user),
 ):
-    query_params = {"maxResults": maxResults, "pageToken": pageToken}
-    parametrized_query = query_parametrize(query_params)
-    sharing_res, error = await forward_sharing_request(
-        request, response, parametrized_query
-    )
+    query = query_parametrize({"maxResults": maxResults, "pageToken": pageToken})
+    res, error = await forward_sharing_request(request, response, query)
     if error:
-        return sharing_res
+        return res
+    res["items"] = filter_tables_by_access(schema_name, res["items"], current_user)
+    return res
 
-    role_codes = [r.id for r in current_user.roles]
-    if "ADMIN" not in role_codes:
-        sharing_res["items"] = list(
-            filter(lambda s: s["name"] in role_codes, sharing_res["items"])
-        )
 
-    return sharing_res
+from collections import defaultdict
 
 
 @router.get(
@@ -188,214 +152,172 @@ async def list_tables(
     response_model=delta_sharing.Pagination[delta_sharing.Table],
     responses=other_common_responses,
 )
-async def list_tables_in_share(
-    share_name: Annotated[str, Path(description=share_name_description)],
+async def list_all_tables(
+    share_name: str,
     request: Request,
     response: Response,
-    maxResults: Annotated[
-        conint(ge=0), Query(description=max_results_description)
-    ] = None,
-    pageToken: Annotated[str, Query(description=page_token_description)] = None,
+    maxResults: int = None,
+    pageToken: str = None,
     current_user: ApiKey = Depends(get_current_user),
 ):
-    sharing_res, error = await forward_sharing_request(
-        request,
-        response,
-        query_parametrize({"maxResults": maxResults, "pageToken": pageToken}),
-        response_type="full",
+    query = query_parametrize({"maxResults": maxResults, "pageToken": pageToken})
+    res, error = await forward_sharing_request(
+        request, response, query, response_type="full"
     )
     if error:
-        return sharing_res
+        return res
 
-    sharing_json = sharing_res.json()
-    role_codes = [r.id for r in current_user.roles]
-    if "ADMIN" not in role_codes:
-        sharing_json["items"] = list(
-            filter(lambda s: s["name"] in role_codes, sharing_json["items"])
-        )
-    return sharing_json
+    res_json = res.json()
+    role_ids = [r.id for r in current_user.roles]
+
+    if "ADMIN" in role_ids:
+        return res_json
+
+    # 🔧 FIXED: Use correct key 'schema' instead of 'schemaName'
+    schema_map = defaultdict(list)
+    for t in res_json.get("items", []):
+        schema = t.get("schema")  # <- previously: schemaName
+        if schema:
+            schema_map[schema].append(t)
+
+    filtered = []
+    for schema, tables in schema_map.items():
+        filtered.extend(filter_tables_by_access(schema, tables, current_user))
+
+    res_json["items"] = filtered
+    return res_json
 
 
 @router.get(
     "/shares/{share_name}/schemas/{schema_name}/tables/{table_name}/version",
-    dependencies=[Depends(HasTablePermissions.raises(True))],
     response_model=TableVersion,
     responses=other_common_responses,
+    dependencies=[Depends(HasTablePermissions.raises(True))],
 )
 async def query_table_version(
-    share_name: Annotated[str, Path(description=share_name_description)],
-    schema_name: Annotated[str, Path(description=schema_name_description)],
-    table_name: Annotated[str, Path(description=table_name_description)],
+    share_name: str,
+    schema_name: str,
+    table_name: str,
     request: Request,
     response: Response,
-    startingTimestamp: Annotated[
-        datetime, Query(description=starting_timestamp_description)
-    ] = None,
+    startingTimestamp: Optional[datetime] = None,
 ):
-    sharing_res, _ = await forward_sharing_request(
-        request,
-        response,
-        query_parametrize({"startingTimestamp": startingTimestamp}),
-        response_type="full",
+    # ❌ Don't allow 'None' in query
+    params = {}
+    if startingTimestamp:
+        params["startingTimestamp"] = startingTimestamp.isoformat()
+
+    query = query_parametrize(params)
+
+    # 🔁 Forward request
+    res, _ = await forward_sharing_request(
+        request, response, query=query, response_type="full"
     )
 
-    if (version := sharing_res.headers.get("delta-table-version")) is None:
+    version = res.headers.get("delta-table-version")
+    if version is None:
         return ORJSONResponse(
-            {
-                "detail": f"Could not find version for table `{share_name}`.`{schema_name}`.`{table_name}`. Ensure that all parameters are spelled correctly."
-            },
+            {"detail": f"Could not find version for `{table_name}`."},
             status_code=status.HTTP_404_NOT_FOUND,
         )
 
     response.headers["delta-table-version"] = version
-    return sharing_res.headers
+    return {"version": version}
 
 
 @router.get(
     "/shares/{share_name}/schemas/{schema_name}/tables/{table_name}/metadata",
-    dependencies=[Depends(HasTablePermissions.raises(True))],
     response_class=NDJSONResponse,
-    response_description=query_metadata_ndjson_description,
-    responses=other_common_responses,
+    dependencies=[Depends(HasTablePermissions.raises(True))],
 )
 async def query_table_metadata(
-    share_name: Annotated[str, Path(description=share_name_description)],
-    schema_name: Annotated[str, Path(description=schema_name_description)],
-    table_name: Annotated[str, Path(description=table_name_description)],
+    share_name: str,
+    schema_name: str,
+    table_name: str,
     request: Request,
     response: Response,
-    delta_sharing_capabilities: Annotated[
-        str | None,
-        Header(
-            alias="delta-sharing-capabilities",
-            description=delta_sharing_capabilities_header_description,
-        ),
-    ] = None,
+    delta_sharing_capabilities: str = Header(None, alias="delta-sharing-capabilities"),
 ):
-    additional_headers = {}
-    if delta_sharing_capabilities is not None:
-        additional_headers["delta-sharing-capabilities"] = delta_sharing_capabilities
-
-    sharing_res, error = await forward_sharing_request(
-        request, response, response_type="full", additional_headers=additional_headers
+    headers = (
+        {"delta-sharing-capabilities": delta_sharing_capabilities}
+        if delta_sharing_capabilities
+        else {}
+    )
+    res, error = await forward_sharing_request(
+        request, response, response_type="full", additional_headers=headers
     )
     if error:
-        return sharing_res
-
-    response.headers["delta-table-version"] = sharing_res.headers.get(
-        "delta-table-version"
-    )
-    response.status_code = sharing_res.status_code
-    return sharing_res.content
+        return res
+    response.headers["delta-table-version"] = res.headers.get("delta-table-version")
+    return res.content
 
 
 @router.post(
     "/shares/{share_name}/schemas/{schema_name}/tables/{table_name}/query",
-    dependencies=[Depends(HasTablePermissions.raises(True))],
     response_class=NDJSONResponse,
-    response_description=query_data_ndjson_description,
-    responses=other_common_responses,
+    dependencies=[Depends(HasTablePermissions.raises(True))],
 )
 async def query_table_data(
-    share_name: Annotated[str, Path(description=share_name_description)],
-    schema_name: Annotated[str, Path(description=schema_name_description)],
-    table_name: Annotated[str, Path(description=table_name_description)],
+    share_name: str,
+    schema_name: str,
+    table_name: str,
     request: Request,
     response: Response,
     body: delta_sharing.TableQueryRequest = None,
-    content_type: str | None = Header(None, alias="Content-Type"),
-    delta_sharing_capabilities: Annotated[
-        str | None,
-        Header(
-            alias="delta-sharing-capabilities",
-            description=delta_sharing_capabilities_header_description,
-        ),
-    ] = None,
+    content_type: str = Header(None, alias="Content-Type"),
+    delta_sharing_capabilities: str = Header(None, alias="delta-sharing-capabilities"),
 ):
-    additional_headers = {}
-    if delta_sharing_capabilities is not None:
-        additional_headers["delta-sharing-capabilities"] = delta_sharing_capabilities
+    headers = {}
+    if delta_sharing_capabilities:
+        headers["delta-sharing-capabilities"] = delta_sharing_capabilities
+    if content_type:
+        headers["Content-Type"] = content_type
 
-    if content_type is not None:
-        additional_headers["Content-Type"] = content_type
-
-    sharing_res, error = await forward_sharing_request(
-        request,
-        response,
-        body=body,
-        response_type="full",
-        additional_headers=additional_headers,
+    res, error = await forward_sharing_request(
+        request, response, body=body, response_type="full", additional_headers=headers
     )
     if error:
-        return sharing_res
-
-    response.headers["delta-table-version"] = sharing_res.headers.get(
-        "delta-table-version"
-    )
-    response.status_code = sharing_res.status_code
-    return sharing_res.content
+        return res
+    response.headers["delta-table-version"] = res.headers.get("delta-table-version")
+    return res.content
 
 
 @router.get(
     "/shares/{share_name}/schemas/{schema_name}/tables/{table_name}/changes",
-    dependencies=[Depends(HasTablePermissions.raises(True))],
     response_class=NDJSONResponse,
-    response_description=query_cdf_ndjson_description,
-    responses=other_common_responses,
+    dependencies=[Depends(HasTablePermissions.raises(True))],
 )
-async def query_table_change_data_feed(
-    share_name: Annotated[str, Path(description=share_name_description)],
-    schema_name: Annotated[str, Path(description=schema_name_description)],
-    table_name: Annotated[str, Path(description=table_name_description)],
+async def query_table_changes(
+    share_name: str,
+    schema_name: str,
+    table_name: str,
     request: Request,
     response: Response,
-    delta_sharing_capabilities: Annotated[
-        str | None,
-        Header(
-            alias="delta-sharing-capabilities",
-            description=delta_sharing_capabilities_header_description,
-        ),
-    ] = None,
-    startingVersion: Annotated[
-        Optional[int], Query(description=starting_version_description)
-    ] = 0,
-    startingTimestamp: Annotated[
-        Optional[str], Query(description=starting_timestamp_description)
-    ] = None,
-    endingVersion: Annotated[
-        Optional[int], Query(description=ending_version_description)
-    ] = None,
-    endingTimestamp: Annotated[
-        Optional[str], Query(description=ending_timestamp_description)
-    ] = None,
-    includeHistoricalMetadata: Annotated[
-        Optional[bool], Query(description=include_historical_metadata_description)
-    ] = None,
+    startingVersion: int = None,
+    endingVersion: int = None,
+    startingTimestamp: str = None,
+    endingTimestamp: str = None,
+    includeHistoricalMetadata: bool = None,
+    delta_sharing_capabilities: str = Header(None, alias="delta-sharing-capabilities"),
 ):
-    additional_headers = {}
-    if delta_sharing_capabilities is not None:
-        additional_headers["delta-sharing-capabilities"] = delta_sharing_capabilities
-
-    sharing_res, error = await forward_sharing_request(
-        request,
-        response,
-        query_parametrize(
-            {
-                "startingVersion": startingVersion,
-                "startingTimestamp": startingTimestamp,
-                "endingVersion": endingVersion,
-                "endingTimestamp": endingTimestamp,
-                "includeHistoricalMetadata": includeHistoricalMetadata,
-            },
-        ),
-        response_type="full",
-        additional_headers=additional_headers,
+    headers = (
+        {"delta-sharing-capabilities": delta_sharing_capabilities}
+        if delta_sharing_capabilities
+        else {}
+    )
+    query = query_parametrize(
+        {
+            "startingVersion": startingVersion,
+            "endingVersion": endingVersion,
+            "startingTimestamp": startingTimestamp,
+            "endingTimestamp": endingTimestamp,
+            "includeHistoricalMetadata": includeHistoricalMetadata,
+        }
+    )
+    res, error = await forward_sharing_request(
+        request, response, query=query, response_type="full", additional_headers=headers
     )
     if error:
-        return sharing_res
-
-    response.headers["delta-table-version"] = sharing_res.headers.get(
-        "delta-table-version"
-    )
-    response.status_code = sharing_res.status_code
-    return sharing_res.content
+        return res
+    response.headers["delta-table-version"] = res.headers.get("delta-table-version")
+    return res.content

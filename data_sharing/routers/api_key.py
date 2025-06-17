@@ -3,7 +3,7 @@ from secrets import token_urlsafe
 from zoneinfo import ZoneInfo
 
 from fastapi import APIRouter, Depends, HTTPException, Security, status
-from pydantic import UUID4
+from pydantic import UUID4, BaseModel
 from sqlalchemy import delete, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -22,6 +22,10 @@ router = APIRouter(
     tags=["api_key"],
     dependencies=[Security(IsAuthenticated.raises(True))],
 )
+
+
+class UpdateApiKeyRolesRequest(BaseModel):
+    roles: list[str]
 
 
 @router.get(
@@ -60,43 +64,74 @@ async def view_api_key_details(
     "",
     response_model=ProfileFile,
     response_description=(
-        "On successful key generation, the Delta Sharing Protocol Profile File is"
-        " returned, which contains the API key. Save this in a secure location as it"
-        " will not be shown again."
+        "On successful key generation, the Delta Sharing Protocol Profile File is "
+        "returned. Save this in a secure location as it will not be shown again."
     ),
     dependencies=[Security(IsAdmin.raises(True))],
 )
 async def generate_api_key(
     body: CreateApiKeyRequest, db: AsyncSession = Depends(get_async_db)
 ):
-    new_key = token_urlsafe(constants.API_KEY_BYTES_LENGTH)
-    now = datetime.now().astimezone(ZoneInfo("UTC"))
-    api_key = ApiKey(
-        description=body.description,
-        secret=get_key_hash(new_key),
-        expiration=now + timedelta(days=body.validity) if body.validity > 0 else None,
-    )
-    roles = await db.execute(select(Role).where(Role.id.in_(body.roles)))
-    roles = roles.scalars().all()
-    role_ids = {role.id for role in roles}
-    if len(diff := set(body.roles).difference(role_ids)) > 0:
+    # Validate role IDs exist
+    role_query = await db.execute(select(Role).where(Role.id.in_(body.roles)))
+    roles = role_query.scalars().all()
+    valid_role_ids = {role.id for role in roles}
+    invalid_roles = set(body.roles) - valid_role_ids
+    if invalid_roles:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail=f"Invalid role(s): {', '.join([f'`{d}`' for d in diff])}",
+            detail=f"Invalid roles: {', '.join(sorted(invalid_roles))}",
         )
 
-    api_key.roles.update(roles)
-    db.add(api_key)
-    await db.commit()
-    return dict(
-        bearerToken=f"{api_key.id}:{new_key}", expirationTime=api_key.expiration
+    now = datetime.now().astimezone(ZoneInfo("UTC"))
+    new_secret = token_urlsafe(constants.API_KEY_BYTES_LENGTH)
+    new_api_key = ApiKey(
+        description=body.description,
+        secret=get_key_hash(new_secret),
+        expiration=(now + timedelta(days=body.validity)) if body.validity > 0 else None,
     )
+    new_api_key.roles.update(roles)
+    db.add(new_api_key)
+    await db.commit()
+
+    return {
+        "bearerToken": f"{new_api_key.id}:{new_secret}",
+        "expirationTime": new_api_key.expiration,
+    }
+
+
+@router.patch("/{api_key_id}/roles", dependencies=[Security(IsAdmin.raises(True))])
+async def update_api_key_roles(
+    api_key_id: UUID4,
+    body: UpdateApiKeyRolesRequest,
+    db: AsyncSession = Depends(get_async_db),
+):
+    api_key = await db.scalar(select(ApiKey).where(ApiKey.id == str(api_key_id)))
+    if not api_key:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="API key not found"
+        )
+
+    role_query = await db.execute(select(Role).where(Role.id.in_(body.roles)))
+    roles = role_query.scalars().all()
+    valid_role_ids = {r.id for r in roles}
+    invalid_roles = set(body.roles) - valid_role_ids
+    if invalid_roles:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Invalid roles: {', '.join(sorted(invalid_roles))}",
+        )
+
+    api_key.roles.clear()
+    api_key.roles.update(roles)
+    await db.commit()
+
+    return {"detail": "Roles updated successfully"}
 
 
 @router.delete(
     "/{api_key_id}",
     status_code=status.HTTP_204_NO_CONTENT,
-    response_model=None,
     dependencies=[Security(IsAdmin.raises(True))],
 )
 async def revoke_api_key(api_key_id: UUID4, db: AsyncSession = Depends(get_async_db)):
@@ -105,6 +140,5 @@ async def revoke_api_key(api_key_id: UUID4, db: AsyncSession = Depends(get_async
             status_code=status.HTTP_403_FORBIDDEN,
             detail="Cannot delete the admin token",
         )
-
     await db.execute(delete(ApiKey).where(ApiKey.id == str(api_key_id)))
     await db.commit()
