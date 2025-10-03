@@ -7,6 +7,10 @@
   id: AFG
   model: Role
 - fields:
+    description: Angola
+  id: AGO
+  model: Role
+- fields:
     description: Anguilla
   id: AIA
   model: Role
@@ -345,6 +349,10 @@
 - fields:
     description: Myanmar
   id: MMR
+  model: Role
+- fields:
+    description: Montenegro
+  id: MNE
   model: Role
 - fields:
     description: Mongolia
