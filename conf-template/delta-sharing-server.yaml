@@ -23,7 +23,7 @@ shares:
             name: AFG
           - historyShared: true
             id: 7b8e7320-4d01-40a4-9caf-7853b18d9e93
-            location: wasbs://{.CONTAINER_NAME}@{.STORAGE_ACCOUNT_NAME}.blob.core.windows.net/{.CONTAINER_PATH}/school_master.db/ago
+            location: wasbs://{{.CONTAINER_NAME}}@{{.STORAGE_ACCOUNT_NAME}}.blob.core.windows.net/{{.CONTAINER_PATH}}/school_master.db/ago
             name: AGO
           - historyShared: true
             id: a126c5bc-1543-4dc2-89d4-cf2acb20ef19
@@ -371,7 +371,7 @@ shares:
             name: MMR
           - historyShared: true
             id: 8f786dfb-5bc1-4c2b-9420-a87103d088bc
-            location: wasbs://{.CONTAINER_NAME}@{.STORAGE_ACCOUNT_NAME}.blob.core.windows.net/{.CONTAINER_PATH}/school_master.db/mne
+            location: wasbs://{{.CONTAINER_NAME}}@{{.STORAGE_ACCOUNT_NAME}}.blob.core.windows.net/{{.CONTAINER_PATH}}/school_master.db/mne
             name: MNE
           - historyShared: true
             id: dbad4c39-bba1-4289-8483-70a6f43ced50
