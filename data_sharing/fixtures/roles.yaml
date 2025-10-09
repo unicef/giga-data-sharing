@@ -555,6 +555,9 @@
   id: UKR
   model: Role
 - fields:
+    description: Uruguay
+  id: URY
+- fields:
     description: United States
   id: USA
   model: Role
