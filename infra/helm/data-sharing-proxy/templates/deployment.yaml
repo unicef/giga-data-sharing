@@ -59,7 +59,7 @@ spec:
             {{- toYaml .Values.resources | nindent 12 }}
       initContainers:
         - name: init-wait-db
-          image: bitnamilegacy/postgresql:16.1.0-debian-11-r13
+          image: public.ecr.aws/bitnami/postgresql:16.1.0-debian-11-r13
           command:
             - /bin/sh
             - -c
