@@ -35,7 +35,7 @@ services:
       - ./.venv-docker:/app/.venv
 
   db:
-    image: bitnami/postgresql:16
+    image: public.ecr.aws/bitnami/postgresql:16
     restart: unless-stopped
     init: true
     env_file: .env
