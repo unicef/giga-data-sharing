@@ -30,10 +30,6 @@ shares:
       location: wasbs://{{.CONTAINER_NAME}}@{{.STORAGE_ACCOUNT_NAME}}.blob.core.windows.net/{{.CONTAINER_PATH}}/school_master.db/ago
       name: AGO
     - historyShared: true
-      id: 8e62b398-e250-4d43-b094-903ac7d5c8af
-      location: wasbs://{{.CONTAINER_NAME}}@{{.STORAGE_ACCOUNT_NAME}}.blob.core.windows.net/{{.CONTAINER_PATH}}/school_master.db/ago
-      name: AGO
-    - historyShared: true
       id: a126c5bc-1543-4dc2-89d4-cf2acb20ef19
       location: wasbs://{{.CONTAINER_NAME}}@{{.STORAGE_ACCOUNT_NAME}}.blob.core.windows.net/{{.CONTAINER_PATH}}/school_master.db/aia
       name: AIA
@@ -619,10 +615,6 @@ shares:
       name: MMR
     - historyShared: true
       id: 8f786dfb-5bc1-4c2b-9420-a87103d088bc
-      location: wasbs://{{.CONTAINER_NAME}}@{{.STORAGE_ACCOUNT_NAME}}.blob.core.windows.net/{{.CONTAINER_PATH}}/school_master.db/mne
-      name: MNE
-    - historyShared: true
-      id: bc88987e-013b-4b12-a844-a20abf727f2a
       location: wasbs://{{.CONTAINER_NAME}}@{{.STORAGE_ACCOUNT_NAME}}.blob.core.windows.net/{{.CONTAINER_PATH}}/school_master.db/mne
       name: MNE
     - historyShared: true
