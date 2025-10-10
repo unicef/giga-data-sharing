@@ -574,6 +574,10 @@ shares:
             location: wasbs://{{.CONTAINER_NAME}}@{{.STORAGE_ACCOUNT_NAME}}.blob.core.windows.net/{{.CONTAINER_PATH}}/school_master.db/ukr
             name: UKR
           - historyShared: true
+            id: a687286b-61df-40a6-ba12-5809b09cfeb0
+            location: wasbs://{{.CONTAINER_NAME}}@{{.STORAGE_ACCOUNT_NAME}}.blob.core.windows.net/{{.CONTAINER_PATH}}/school_master.db/ury
+            name: URY
+          - historyShared: true
             id: 133d3b38-8c50-45c7-ac25-20eb59672270
             location: wasbs://{{.CONTAINER_NAME}}@{{.STORAGE_ACCOUNT_NAME}}.blob.core.windows.net/{{.CONTAINER_PATH}}/school_master.db/usa
             name: USA
@@ -775,10 +779,6 @@ shares:
             id: bc1b9963-dcb4-4321-9fc9-9a4c3475b241
             location: wasbs://{{.CONTAINER_NAME}}@{{.STORAGE_ACCOUNT_NAME}}.blob.core.windows.net/{{.CONTAINER_PATH}}/school_reference.db/ukr
             name: UKR
-          - historyShared: true
-            id: a687286b-61df-40a6-ba12-5809b09cfeb0
-            location: wasbs://{{.CONTAINER_NAME}}@{{.STORAGE_ACCOUNT_NAME}}.blob.core.windows.net/{{.CONTAINER_PATH}}/school_master.db/ury
-            name: URY
           - historyShared: true
             id: e52b5b55-16f2-4881-8992-54b22691a4d4
             location: wasbs://{{.CONTAINER_NAME}}@{{.STORAGE_ACCOUNT_NAME}}.blob.core.windows.net/{{.CONTAINER_PATH}}/school_reference.db/uzb
