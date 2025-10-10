@@ -10,6 +10,8 @@ postgresql:
       adminPasswordKey: POSTGRESQL_PASSWORD
       replicationPasswordKey: POSTGRESQL_PASSWORD
       userPasswordKey: POSTGRESQL_PASSWORD
+  global:
+    imageRegistry: "public.ecr.aws"
 
 replicaCount: 1
 
