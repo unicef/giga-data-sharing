@@ -147,7 +147,6 @@ tasks:
         --set image.repository={{.DATA_SHARING_DELTA_IMAGE_REPOSITORY}}
         --set image.tag={{.COMMIT_SHA}}
         --set autoscaling.enabled=true
-        --set podDisruptionBudget.enabled=true
       - >
         helm upgrade --install data-sharing-proxy ./helm/data-sharing-proxy
         --namespace giga-data-sharing
@@ -161,7 +160,6 @@ tasks:
         --set postgresql.primary.readinessProbe.enabled=false  
         --set postgresql.primary.livenessProbe.enabled=false
         --set autoscaling.enabled=true
-        --set podDisruptionBudget.enabled=true
 
   helm-down:
     desc: Uninstall Helm chart

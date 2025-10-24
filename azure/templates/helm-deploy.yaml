@@ -34,7 +34,6 @@ jobs:
                   --set image.repository="$(containerRegistryName).azurecr.io/giga-data-sharing-delta"
                   --set image.tag="$(Build.SourceVersion)"
                   --set autoscaling.enabled=true
-                  --set podDisruptionBudget.enabled=true
 
             - task: HelmDeploy@0
               displayName: Helm deploy Data Sharing proxy dev
@@ -70,7 +69,6 @@ jobs:
                   --set ingress.hosts[0].paths[0].path="/"
                   --set ingress.hosts[0].paths[0].pathType=Prefix
                   --set autoscaling.enabled=true
-                  --set podDisruptionBudget.enabled=true
 
             - task: HelmDeploy@0
               displayName: Helm deploy Data Sharing proxy prd
@@ -90,7 +88,6 @@ jobs:
                   --set ingress.hosts[0].paths[0].pathType=Prefix
                   --set ingress.annotations."appgw\.ingress\.kubernetes\.io/appgw-ssl-certificate"=kv-cert-gigaglobal
                   --set autoscaling.enabled=true
-                  --set podDisruptionBudget.enabled=true
 
             - task: Kubernetes@1
               displayName: Force restart deployments
