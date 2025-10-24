@@ -73,7 +73,6 @@ autoscaling:
 
 podDisruptionBudget:
   enabled: false
-  minAvailable: 2
 
 nodeSelector: { }
 
