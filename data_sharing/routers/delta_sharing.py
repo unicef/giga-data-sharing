@@ -25,7 +25,11 @@ from data_sharing.annotations.delta_sharing import (
 )
 from data_sharing.annotations.responses import other_common_responses
 from data_sharing.models import ApiKey
-from data_sharing.permissions import HasTablePermissions, IsAuthenticated
+from data_sharing.permissions import (
+    HasSchemaPermissions,
+    HasTablePermissions,
+    IsAuthenticated,
+)
 from data_sharing.permissions.utils import get_current_user
 from data_sharing.schemas import delta_sharing
 from data_sharing.schemas.delta_sharing import TableVersion
@@ -140,13 +144,29 @@ async def list_schemas(
         conint(ge=0), Query(description=max_results_description)
     ] = None,
     pageToken: Annotated[str, Query(description=page_token_description)] = None,
+    current_user: ApiKey = Depends(get_current_user),
 ):
     query_params = {"maxResults": maxResults, "pageToken": pageToken}
     parametrized_query = query_parametrize(query_params)
 
-    sharing_res, _ = await forward_sharing_request(
+    sharing_res, error = await forward_sharing_request(
         request, response, parametrized_query
     )
+    if error:
+        return sharing_res
+    
+    # Filter schemas based on permissions
+    role_codes = [r.id for r in current_user.roles]
+    schema_ids = [s.id for s in current_user.schemas]
+    
+    if "ADMIN" not in role_codes:
+        if schema_ids:
+            sharing_res["items"] = list(
+                filter(lambda s: s["name"] in schema_ids, sharing_res["items"])
+            )
+        else:
+            sharing_res["items"] = []
+    
     return sharing_res
 
 
@@ -154,6 +174,7 @@ async def list_schemas(
     "/shares/{share_name}/schemas/{schema_name}/tables",
     response_model=delta_sharing.Pagination[delta_sharing.Table],
     responses=other_common_responses,
+    dependencies=[Depends(HasSchemaPermissions.raises(True))],
 )
 async def list_tables(
     share_name: Annotated[str, Path(description=share_name_description)],
@@ -175,10 +196,17 @@ async def list_tables(
         return sharing_res
 
     role_codes = [r.id for r in current_user.roles]
+    schema_ids = [s.id for s in current_user.schemas]
+    
     if "ADMIN" not in role_codes:
-        sharing_res["items"] = list(
-            filter(lambda s: s["name"] in role_codes, sharing_res["items"])
-        )
+        # Filter by schema
+        if schema_name not in schema_ids:
+            sharing_res["items"] = []
+        # Filter by roles (countries) if specified
+        elif role_codes:
+            sharing_res["items"] = list(
+                filter(lambda s: s["name"] in role_codes, sharing_res["items"])
+            )
 
     return sharing_res
 
