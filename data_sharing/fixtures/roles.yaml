@@ -1,4 +1,12 @@
 - fields:
+    description: Aruba
+  id: ABW
+  model: Role
+- fields:
+    description: Aruba
+  id: ABW
+  model: Role
+- fields:
     description: Administrator
   id: ADMIN
   model: Role
@@ -15,6 +23,30 @@
   id: AIA
   model: Role
 - fields:
+    description: "\xC5land Islands"
+  id: ALA
+  model: Role
+- fields:
+    description: Aland Islands
+  id: ALA
+  model: Role
+- fields:
+    description: Albania
+  id: ALB
+  model: Role
+- fields:
+    description: Albania
+  id: ALB
+  model: Role
+- fields:
+    description: Andorra
+  id: AND
+  model: Role
+- fields:
+    description: Andorra
+  id: AND
+  model: Role
+- fields:
     description: United Arab Emirates
   id: ARE
   model: Role
@@ -25,6 +57,22 @@
 - fields:
     description: Armenia
   id: ARM
+  model: Role
+- fields:
+    description: Antarctica
+  id: ATA
+  model: Role
+- fields:
+    description: Antarctica
+  id: ATA
+  model: Role
+- fields:
+    description: French Southern Territories
+  id: ATF
+  model: Role
+- fields:
+    description: French Southern Territories
+  id: ATF
   model: Role
 - fields:
     description: Antigua and Barbuda
@@ -43,12 +91,28 @@
   id: AZE
   model: Role
 - fields:
+    description: Burundi
+  id: BDI
+  model: Role
+- fields:
+    description: Burundi
+  id: BDI
+  model: Role
+- fields:
     description: Belgium
   id: BEL
   model: Role
 - fields:
     description: Benin
   id: BEN
+  model: Role
+- fields:
+    description: Bonaire
+  id: BES
+  model: Role
+- fields:
+    description: Bonaire
+  id: BES
   model: Role
 - fields:
     description: Burkina Faso
@@ -63,8 +127,32 @@
   id: BGR
   model: Role
 - fields:
+    description: Bahrain
+  id: BHR
+  model: Role
+- fields:
+    description: Bahrain
+  id: BHR
+  model: Role
+- fields:
+    description: Bahamas
+  id: BHS
+  model: Role
+- fields:
+    description: Bahamas
+  id: BHS
+  model: Role
+- fields:
     description: Bosnia and Herzegovina
   id: BIH
+  model: Role
+- fields:
+    description: "Saint Barth\xE9lemy"
+  id: BLM
+  model: Role
+- fields:
+    description: Saint Barthelemy
+  id: BLM
   model: Role
 - fields:
     description: Belarus
@@ -73,6 +161,14 @@
 - fields:
     description: Belize
   id: BLZ
+  model: Role
+- fields:
+    description: Bermuda
+  id: BMU
+  model: Role
+- fields:
+    description: Bermuda
+  id: BMU
   model: Role
 - fields:
     description: Bolivia
@@ -87,8 +183,24 @@
   id: BRB
   model: Role
 - fields:
+    description: Brunei Darussalam
+  id: BRN
+  model: Role
+- fields:
+    description: Brunei Darussalam
+  id: BRN
+  model: Role
+- fields:
     description: Bhutan
   id: BTN
+  model: Role
+- fields:
+    description: Bouvet Island
+  id: BVT
+  model: Role
+- fields:
+    description: Bouvet Island
+  id: BVT
   model: Role
 - fields:
     description: Botswana
@@ -101,6 +213,14 @@
 - fields:
     description: Canada
   id: CAN
+  model: Role
+- fields:
+    description: Cocos (Keeling) Islands
+  id: CCK
+  model: Role
+- fields:
+    description: Cocos (Keeling) Islands
+  id: CCK
   model: Role
 - fields:
     description: Switzerland
@@ -131,8 +251,32 @@
   id: COG
   model: Role
 - fields:
+    description: Cook Islands
+  id: COK
+  model: Role
+- fields:
+    description: Cook Islands
+  id: COK
+  model: Role
+- fields:
     description: Colombia
   id: COL
+  model: Role
+- fields:
+    description: Comoros
+  id: COM
+  model: Role
+- fields:
+    description: Comoros
+  id: COM
+  model: Role
+- fields:
+    description: Cabo Verde
+  id: CPV
+  model: Role
+- fields:
+    description: Cabo Verde
+  id: CPV
   model: Role
 - fields:
     description: Costa Rica
@@ -141,6 +285,46 @@
 - fields:
     description: Cuba
   id: CUB
+  model: Role
+- fields:
+    description: "Cura\xE7ao"
+  id: CUW
+  model: Role
+- fields:
+    description: Curacao
+  id: CUW
+  model: Role
+- fields:
+    description: Christmas Island
+  id: CXR
+  model: Role
+- fields:
+    description: Christmas Island
+  id: CXR
+  model: Role
+- fields:
+    description: Cayman Islands
+  id: CYM
+  model: Role
+- fields:
+    description: Cayman Islands
+  id: CYM
+  model: Role
+- fields:
+    description: Cyprus
+  id: CYP
+  model: Role
+- fields:
+    description: Cyprus
+  id: CYP
+  model: Role
+- fields:
+    description: Czechia
+  id: CZE
+  model: Role
+- fields:
+    description: Czechia
+  id: CZE
   model: Role
 - fields:
     description: Germany
@@ -175,8 +359,32 @@
   id: EGY
   model: Role
 - fields:
+    description: Eritrea
+  id: ERI
+  model: Role
+- fields:
+    description: Eritrea
+  id: ERI
+  model: Role
+- fields:
+    description: Western Sahara
+  id: ESH
+  model: Role
+- fields:
+    description: Western Sahara
+  id: ESH
+  model: Role
+- fields:
     description: Spain
   id: ESP
+  model: Role
+- fields:
+    description: Estonia
+  id: EST
+  model: Role
+- fields:
+    description: Estonia
+  id: EST
   model: Role
 - fields:
     description: Ethiopia
@@ -191,8 +399,40 @@
   id: FJI
   model: Role
 - fields:
+    description: Falkland Islands (Malvinas)
+  id: FLK
+  model: Role
+- fields:
+    description: Falkland Islands (Malvinas)
+  id: FLK
+  model: Role
+- fields:
     description: France
   id: FRA
+  model: Role
+- fields:
+    description: Faroe Islands
+  id: FRO
+  model: Role
+- fields:
+    description: Faroe Islands
+  id: FRO
+  model: Role
+- fields:
+    description: Micronesia (Federated States of)
+  id: FSM
+  model: Role
+- fields:
+    description: Micronesia (Federated States of)
+  id: FSM
+  model: Role
+- fields:
+    description: Gabon
+  id: GAB
+  model: Role
+- fields:
+    description: Gabon
+  id: GAB
   model: Role
 - fields:
     description: United Kingdom
@@ -203,12 +443,60 @@
   id: GEO
   model: Role
 - fields:
+    description: Guernsey
+  id: GGY
+  model: Role
+- fields:
+    description: Guernsey
+  id: GGY
+  model: Role
+- fields:
     description: Ghana
   id: GHA
   model: Role
 - fields:
+    description: Gibraltar
+  id: GIB
+  model: Role
+- fields:
+    description: Gibraltar
+  id: GIB
+  model: Role
+- fields:
     description: Guinea
   id: GIN
+  model: Role
+- fields:
+    description: Guadeloupe
+  id: GLP
+  model: Role
+- fields:
+    description: Guadeloupe
+  id: GLP
+  model: Role
+- fields:
+    description: Gambia
+  id: GMB
+  model: Role
+- fields:
+    description: Gambia
+  id: GMB
+  model: Role
+- fields:
+    description: Guinea-Bissau
+  id: GNB
+  model: Role
+- fields:
+    description: Guinea-Bissau
+  id: GNB
+  model: Role
+- fields:
+    description: Equatorial Guinea
+  id: GNQ
+  model: Role
+- fields:
+    description: Equatorial Guinea
+  id: GNQ
   model: Role
 - fields:
     description: Greece
@@ -219,8 +507,56 @@
   id: GRD
   model: Role
 - fields:
+    description: Greenland
+  id: GRL
+  model: Role
+- fields:
+    description: Greenland
+  id: GRL
+  model: Role
+- fields:
     description: Guatemala
   id: GTM
+  model: Role
+- fields:
+    description: French Guiana
+  id: GUF
+  model: Role
+- fields:
+    description: French Guiana
+  id: GUF
+  model: Role
+- fields:
+    description: Guam
+  id: GUM
+  model: Role
+- fields:
+    description: Guam
+  id: GUM
+  model: Role
+- fields:
+    description: Guyana
+  id: GUY
+  model: Role
+- fields:
+    description: Guyana
+  id: GUY
+  model: Role
+- fields:
+    description: Hong Kong
+  id: HKG
+  model: Role
+- fields:
+    description: Hong Kong
+  id: HKG
+  model: Role
+- fields:
+    description: Heard Island and McDonald Islands
+  id: HMD
+  model: Role
+- fields:
+    description: Heard Island and McDonald Islands
+  id: HMD
   model: Role
 - fields:
     description: Honduras
@@ -243,8 +579,24 @@
   id: IDN
   model: Role
 - fields:
+    description: Isle of Man
+  id: IMN
+  model: Role
+- fields:
+    description: Isle of Man
+  id: IMN
+  model: Role
+- fields:
     description: India
   id: IND
+  model: Role
+- fields:
+    description: Chagos Archipelagio
+  id: IOT
+  model: Role
+- fields:
+    description: Chagos Archipelagio
+  id: IOT
   model: Role
 - fields:
     description: Ireland
@@ -259,6 +611,14 @@
   id: IRQ
   model: Role
 - fields:
+    description: Iceland
+  id: ISL
+  model: Role
+- fields:
+    description: Iceland
+  id: ISL
+  model: Role
+- fields:
     description: Israel
   id: ISR
   model: Role
@@ -269,6 +629,22 @@
 - fields:
     description: Jamaica
   id: JAM
+  model: Role
+- fields:
+    description: Jersey
+  id: JEY
+  model: Role
+- fields:
+    description: Jersey
+  id: JEY
+  model: Role
+- fields:
+    description: Jordan
+  id: JOR
+  model: Role
+- fields:
+    description: Jordan
+  id: JOR
   model: Role
 - fields:
     description: Japan
@@ -299,6 +675,38 @@
   id: KNA
   model: Role
 - fields:
+    description: Republic of Korea
+  id: KOR
+  model: Role
+- fields:
+    description: Republic of Korea
+  id: KOR
+  model: Role
+- fields:
+    description: Kuwait
+  id: KWT
+  model: Role
+- fields:
+    description: Kuwait
+  id: KWT
+  model: Role
+- fields:
+    description: Lao People's Democratic Republic
+  id: LAO
+  model: Role
+- fields:
+    description: Lao People's Democratic Republic
+  id: LAO
+  model: Role
+- fields:
+    description: Lebanon
+  id: LBN
+  model: Role
+- fields:
+    description: Lebanon
+  id: LBN
+  model: Role
+- fields:
     description: Liberia
   id: LBR
   model: Role
@@ -309,6 +717,14 @@
 - fields:
     description: St. Lucia
   id: LCA
+  model: Role
+- fields:
+    description: Liechtenstein
+  id: LIE
+  model: Role
+- fields:
+    description: Liechtenstein
+  id: LIE
   model: Role
 - fields:
     description: Sri Lanka
@@ -323,12 +739,44 @@
   id: LTU
   model: Role
 - fields:
+    description: Luxembourg
+  id: LUX
+  model: Role
+- fields:
+    description: Luxembourg
+  id: LUX
+  model: Role
+- fields:
     description: Latvia
   id: LVA
   model: Role
 - fields:
+    description: Macao
+  id: MAC
+  model: Role
+- fields:
+    description: Macao
+  id: MAC
+  model: Role
+- fields:
+    description: Saint Martin
+  id: MAF
+  model: Role
+- fields:
+    description: Saint Martin
+  id: MAF
+  model: Role
+- fields:
     description: Morocco
   id: MAR
+  model: Role
+- fields:
+    description: Monaco
+  id: MCO
+  model: Role
+- fields:
+    description: Monaco
+  id: MCO
   model: Role
 - fields:
     description: Moldova
@@ -339,12 +787,52 @@
   id: MDG
   model: Role
 - fields:
+    description: Maldives
+  id: MDV
+  model: Role
+- fields:
+    description: Maldives
+  id: MDV
+  model: Role
+- fields:
     description: Mexico
   id: MEX
   model: Role
 - fields:
+    description: Marshall Islands
+  id: MHL
+  model: Role
+- fields:
+    description: Marshall Islands
+  id: MHL
+  model: Role
+- fields:
+    description: Midway Islands
+  id: MID
+  model: Role
+- fields:
+    description: Midway Islands
+  id: MID
+  model: Role
+- fields:
+    description: North Macedonia
+  id: MKD
+  model: Role
+- fields:
+    description: North Macedonia
+  id: MKD
+  model: Role
+- fields:
     description: Mali
   id: MLI
+  model: Role
+- fields:
+    description: Malta
+  id: MLT
+  model: Role
+- fields:
+    description: Malta
+  id: MLT
   model: Role
 - fields:
     description: Myanmar
@@ -359,6 +847,14 @@
   id: MNG
   model: Role
 - fields:
+    description: Northern Mariana Islands
+  id: MNP
+  model: Role
+- fields:
+    description: Northern Mariana Islands
+  id: MNP
+  model: Role
+- fields:
     description: Mozambique
   id: MOZ
   model: Role
@@ -371,6 +867,22 @@
   id: MSR
   model: Role
 - fields:
+    description: Martinique
+  id: MTQ
+  model: Role
+- fields:
+    description: Martinique
+  id: MTQ
+  model: Role
+- fields:
+    description: Mauritius
+  id: MUS
+  model: Role
+- fields:
+    description: Mauritius
+  id: MUS
+  model: Role
+- fields:
     description: Malawi
   id: MWI
   model: Role
@@ -379,12 +891,36 @@
   id: MYS
   model: Role
 - fields:
+    description: Mayotte
+  id: MYT
+  model: Role
+- fields:
+    description: Mayotte
+  id: MYT
+  model: Role
+- fields:
     description: Namibia
   id: NAM
   model: Role
 - fields:
+    description: New Caledonia
+  id: NCL
+  model: Role
+- fields:
+    description: New Caledonia
+  id: NCL
+  model: Role
+- fields:
     description: Niger
   id: NER
+  model: Role
+- fields:
+    description: Norfolk Island
+  id: NFK
+  model: Role
+- fields:
+    description: Norfolk Island
+  id: NFK
   model: Role
 - fields:
     description: Nigeria
@@ -393,6 +929,14 @@
 - fields:
     description: Nicaragua
   id: NIC
+  model: Role
+- fields:
+    description: Niue
+  id: NIU
+  model: Role
+- fields:
+    description: Niue
+  id: NIU
   model: Role
 - fields:
     description: Netherlands
@@ -407,8 +951,24 @@
   id: NPL
   model: Role
 - fields:
+    description: Nauru
+  id: NRU
+  model: Role
+- fields:
+    description: Nauru
+  id: NRU
+  model: Role
+- fields:
     description: New Zealand
   id: NZL
+  model: Role
+- fields:
+    description: Oman
+  id: OMN
+  model: Role
+- fields:
+    description: Oman
+  id: OMN
   model: Role
 - fields:
     description: Pakistan
@@ -419,6 +979,14 @@
   id: PAN
   model: Role
 - fields:
+    description: Pitcairn
+  id: PCN
+  model: Role
+- fields:
+    description: Pitcairn
+  id: PCN
+  model: Role
+- fields:
     description: Peru
   id: PER
   model: Role
@@ -427,12 +995,36 @@
   id: PHL
   model: Role
 - fields:
+    description: Palau
+  id: PLW
+  model: Role
+- fields:
+    description: Palau
+  id: PLW
+  model: Role
+- fields:
     description: Papua New Guinea
   id: PNG
   model: Role
 - fields:
     description: Poland
   id: POL
+  model: Role
+- fields:
+    description: Puerto Rico
+  id: PRI
+  model: Role
+- fields:
+    description: Puerto Rico
+  id: PRI
+  model: Role
+- fields:
+    description: Democratic People's Republic of Korea
+  id: PRK
+  model: Role
+- fields:
+    description: Democratic People's Republic of Korea
+  id: PRK
   model: Role
 - fields:
     description: Portugal
@@ -445,6 +1037,30 @@
 - fields:
     description: Palestine
   id: PSE
+  model: Role
+- fields:
+    description: French Polynesia
+  id: PYF
+  model: Role
+- fields:
+    description: French Polynesia
+  id: PYF
+  model: Role
+- fields:
+    description: Qatar
+  id: QAT
+  model: Role
+- fields:
+    description: Qatar
+  id: QAT
+  model: Role
+- fields:
+    description: "R\xE9union"
+  id: REU
+  model: Role
+- fields:
+    description: Reunion
+  id: REU
   model: Role
 - fields:
     description: Romania
@@ -471,12 +1087,76 @@
   id: SEN
   model: Role
 - fields:
+    description: Singapore
+  id: SGP
+  model: Role
+- fields:
+    description: Singapore
+  id: SGP
+  model: Role
+- fields:
+    description: South Georgia and the South Sandwich Islands
+  id: SGS
+  model: Role
+- fields:
+    description: South Georgia and the South Sandwich Islands
+  id: SGS
+  model: Role
+- fields:
+    description: Saint Helena
+  id: SHN
+  model: Role
+- fields:
+    description: Saint Helena
+  id: SHN
+  model: Role
+- fields:
+    description: Svalbard and Jan Mayen Islands
+  id: SJM
+  model: Role
+- fields:
+    description: Svalbard and Jan Mayen Islands
+  id: SJM
+  model: Role
+- fields:
+    description: Solomon Islands
+  id: SLB
+  model: Role
+- fields:
+    description: Solomon Islands
+  id: SLB
+  model: Role
+- fields:
     description: Sierra Leone
   id: SLE
   model: Role
 - fields:
     description: El Salvador
   id: SLV
+  model: Role
+- fields:
+    description: San Marino
+  id: SMR
+  model: Role
+- fields:
+    description: San Marino
+  id: SMR
+  model: Role
+- fields:
+    description: Somalia
+  id: SOM
+  model: Role
+- fields:
+    description: Somalia
+  id: SOM
+  model: Role
+- fields:
+    description: Saint Pierre et Miquelon
+  id: SPM
+  model: Role
+- fields:
+    description: Saint Pierre et Miquelon
+  id: SPM
   model: Role
 - fields:
     description: Serbia
@@ -489,6 +1169,14 @@
 - fields:
     description: Sao Tome and Principe
   id: STP
+  model: Role
+- fields:
+    description: Suriname
+  id: SUR
+  model: Role
+- fields:
+    description: Suriname
+  id: SUR
   model: Role
 - fields:
     description: Slovakia
@@ -507,12 +1195,36 @@
   id: SWZ
   model: Role
 - fields:
+    description: Sint Maarten
+  id: SXM
+  model: Role
+- fields:
+    description: Sint Maarten
+  id: SXM
+  model: Role
+- fields:
+    description: Seychelles
+  id: SYC
+  model: Role
+- fields:
+    description: Seychelles
+  id: SYC
+  model: Role
+- fields:
     description: Syria
   id: SYR
   model: Role
 - fields:
     description: Turks and Caicos Islands
   id: TCA
+  model: Role
+- fields:
+    description: Chad
+  id: TCD
+  model: Role
+- fields:
+    description: Chad
+  id: TCD
   model: Role
 - fields:
     description: Togo
@@ -527,6 +1239,38 @@
   id: TJK
   model: Role
 - fields:
+    description: Tokelau
+  id: TKL
+  model: Role
+- fields:
+    description: Tokelau
+  id: TKL
+  model: Role
+- fields:
+    description: Turkmenistan
+  id: TKM
+  model: Role
+- fields:
+    description: Turkmenistan
+  id: TKM
+  model: Role
+- fields:
+    description: Timor-Leste
+  id: TLS
+  model: Role
+- fields:
+    description: Timor-Leste
+  id: TLS
+  model: Role
+- fields:
+    description: Tonga
+  id: TON
+  model: Role
+- fields:
+    description: Tonga
+  id: TON
+  model: Role
+- fields:
     description: Trinidad and Tobago
   id: TTO
   model: Role
@@ -535,8 +1279,16 @@
   id: TUN
   model: Role
 - fields:
-    description: Türkiye
+    description: "T\xFCrkiye"
   id: TUR
+  model: Role
+- fields:
+    description: Tuvalu
+  id: TUV
+  model: Role
+- fields:
+    description: Tuvalu
+  id: TUV
   model: Role
 - fields:
     description: Taiwan
@@ -566,6 +1318,14 @@
   id: UZB
   model: Role
 - fields:
+    description: Holy See
+  id: VAT
+  model: Role
+- fields:
+    description: Holy See
+  id: VAT
+  model: Role
+- fields:
     description: St. Vincent and the Grenadines
   id: VCT
   model: Role
@@ -578,8 +1338,56 @@
   id: VGB
   model: Role
 - fields:
+    description: United States Virgin Islands
+  id: VIR
+  model: Role
+- fields:
+    description: United States Virgin Islands
+  id: VIR
+  model: Role
+- fields:
     description: Vietnam
   id: VNM
+  model: Role
+- fields:
+    description: Vanuatu
+  id: VUT
+  model: Role
+- fields:
+    description: Vanuatu
+  id: VUT
+  model: Role
+- fields:
+    description: Wallis and Futuna
+  id: WLF
+  model: Role
+- fields:
+    description: Wallis and Futuna
+  id: WLF
+  model: Role
+- fields:
+    description: Samoa
+  id: WSM
+  model: Role
+- fields:
+    description: Samoa
+  id: WSM
+  model: Role
+- fields:
+    description: Kosovo (UNSCR 1244)
+  id: XKX
+  model: Role
+- fields:
+    description: Kosovo (UNSCR 1244)
+  id: XKX
+  model: Role
+- fields:
+    description: Yemen
+  id: YEM
+  model: Role
+- fields:
+    description: Yemen
+  id: YEM
   model: Role
 - fields:
     description: South Africa
