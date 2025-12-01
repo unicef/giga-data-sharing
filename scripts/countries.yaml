@@ -1,15 +1,27 @@
+- id: 074f7073-32a0-4f30-b4ec-9fe7109471f2
+  name: ABW
 - id: 022ba5f9-2698-4d57-abb5-0f8114e8eacc
   name: AFG
 - id: 7b8e7320-4d01-40a4-9caf-7853b18d9e93
   name: AGO
 - id: a126c5bc-1543-4dc2-89d4-cf2acb20ef19
   name: AIA
+- id: d745421a-cbff-45e5-bc89-4792edbb7f36
+  name: ALA
+- id: 41c47faa-b268-40ed-a13d-49c43ef8c7fb
+  name: ALB
+- id: a093f494-208c-4018-8d4e-d78ecf43abec
+  name: AND
 - id: 3a475765-c156-4cae-9e81-17f6510ad8ff
   name: ARE
 - id: 1188dc74-c2dd-4b79-a895-0da6a9d87f51
   name: ARG
 - id: 1c8e53e7-9062-4554-8bb2-0137aa6c1fb9
   name: ARM
+- id: a9af2b5f-7005-4f4f-bacf-f197bb6eba0e
+  name: ATA
+- id: 999f32f7-8757-4c06-9ba6-8be33c81a4ca
+  name: ATF
 - id: 777bf659-4fe7-4d6b-b01b-d7d8584b490d
   name: ATG
 - id: 64c764fc-4fa3-4460-a0f3-f5d73e120778
@@ -18,36 +30,54 @@
   name: AUT
 - id: 9d5e0e49-f691-4ac6-b807-2245cf89e609
   name: AZE
+- id: 8a3b040e-b8c8-45f4-b312-03c9bad18ad7
+  name: BDI
 - id: ae945b0a-d0d4-4376-a2b5-ed7f027b34a4
   name: BEL
 - id: 54330460-1632-4530-bfab-292ce9289788
   name: BEN
+- id: c7e91460-3e2c-4c66-9193-9275771c1f53
+  name: BES
 - id: d4a7ecc0-0094-4aa1-abfc-3ed0e3e2d235
   name: BFA
 - id: fe959e1c-ef60-4e40-9a92-5c84a43b4ef0
   name: BGD
 - id: 5528ffd1-c3d1-47ad-8b03-c3de0e41f6dc
   name: BGR
+- id: 7bb3a97b-3071-4224-ba8c-d72ad6abc8ec
+  name: BHR
+- id: 06c4bb7a-fe87-4c39-9b51-7a846a7198ca
+  name: BHS
 - id: 35e8a3bf-e3d2-493a-ac76-20dc658695e9
   name: BIH
+- id: d49ace30-3304-4872-bc0e-e4a78f5f7e5a
+  name: BLM
 - id: abe1588a-ac14-4b3e-b973-2d2bf3341b63
   name: BLR
 - id: d0cdd3ca-9e57-47e3-8838-9d21db584782
   name: BLZ
+- id: 76b9daa8-39fb-4bb8-b7cb-1b30a4ee361a
+  name: BMU
 - id: d3f94893-2890-4b47-893c-42e53f139756
   name: BOL
 - id: 6f92a3bf-36dd-4cad-8858-1fa38849605b
   name: BRA
 - id: ceda2a69-f20a-4b2c-9581-f2c774384997
   name: BRB
+- id: b64cc170-b808-4fd1-b79d-e650931bb8eb
+  name: BRN
 - id: 4da6297a-f2fd-4ca9-9975-4f2ce7b89c8c
   name: BTN
+- id: 5299d67b-9a54-49f0-b2c6-498b85543331
+  name: BVT
 - id: 2c594563-2c11-49cd-8f7b-c2efecca94eb
   name: BWA
 - id: f48dc5e3-4e4d-4826-8f3a-0578d644e0b3
   name: CAF
 - id: 0d52452b-737e-4e5d-b948-6d4bf7962be4
   name: CAN
+- id: 3e1f95b6-f3fe-4a32-b406-a9e8a7c3fca4
+  name: CCK
 - id: c2866b9e-cae3-4c59-9ee8-17a806d5baa5
   name: CHE
 - id: 83fc30da-ad5e-4b85-98ba-7457605ecccd
@@ -62,12 +92,28 @@
   name: COD
 - id: 53158554-7dc4-4c15-a595-72ff39964003
   name: COG
+- id: ae11ec92-ea51-4f83-9460-269bd30feaa2
+  name: COK
 - id: 5ba606e6-9219-43cb-9c03-b3b36e385dc2
   name: COL
+- id: 6dd90992-a0de-41ab-81b5-2528d2e9ac61
+  name: COM
+- id: ada77d15-8811-49eb-a4ea-4a8ae3d5f3ab
+  name: CPV
 - id: 5286bf32-050d-4508-a23b-77efcedc139c
   name: CRI
 - id: a120d550-9a07-4518-bf65-4a258828c8eb
   name: CUB
+- id: 78892636-edd1-4d68-8f34-edb83e907013
+  name: CUW
+- id: c035c3bb-902e-4160-a960-9de64dd2298b
+  name: CXR
+- id: f91497e1-c3f3-4a6d-9d80-bd1988b3e056
+  name: CYM
+- id: b02688c6-5025-4e5c-903d-e54bed649fba
+  name: CYP
+- id: 57ff8e64-de40-4ec7-ab8d-92ddbcb04511
+  name: CZE
 - id: 937b5a98-7f4e-414c-9c3a-6f4be6937b51
   name: DEU
 - id: 00d4acb0-e64f-474b-9e16-13f90cbed43e
@@ -84,30 +130,68 @@
   name: ECU
 - id: d7be0325-a6b6-45df-8060-398650cdcf85
   name: EGY
+- id: ece171f4-07c3-4552-a249-14d86f8a3be1
+  name: ERI
+- id: cfdb0188-0614-4814-b6ec-8c4adcabd0b7
+  name: ESH
 - id: c4b57c14-cfe7-496f-84c4-d1caad7ef817
   name: ESP
+- id: 9975f458-fb63-46cd-9aa4-da9b7d12b2e9
+  name: EST
 - id: 5878c9c6-45b4-44da-a1fe-e247aeebcac9
   name: ETH
 - id: 17148b6e-4803-4f2b-9783-7a9cb95bf2ff
   name: FIN
 - id: de2bd8ae-466c-45ad-a0ed-a999633e0c24
   name: FJI
+- id: 21e90042-6b50-4ce1-89da-e59ac37dd739
+  name: FLK
 - id: 924b4695-443b-4d19-8663-4e034d17bf81
   name: FRA
+- id: d0ab2cec-9c01-48eb-a2d5-db784397357f
+  name: FRO
+- id: 6c9eeb27-0554-4b66-bd71-ec45711d6c4a
+  name: FSM
+- id: fe430a93-cf2c-4ffd-93d0-acbc1b13fd03
+  name: GAB
 - id: 726880c0-8ec1-4b60-8ae3-27084f637be4
   name: GBR
 - id: 1d112d1e-b0b6-4c0e-a4b8-a913304f6f44
   name: GEO
+- id: f11d2da0-a8b1-4b15-8fe9-f6d42c846e3a
+  name: GGY
 - id: 43bcb90c-e850-46cd-bde5-ae0aef3da875
   name: GHA
+- id: 25deed17-dfd1-432a-96dd-9e3b94aefd58
+  name: GIB
 - id: 267f991a-8a53-4ce0-9135-e5e349766c80
   name: GIN
+- id: 5cc6de83-a681-43c8-a466-11d19a985717
+  name: GLP
+- id: 0545c2f7-f14b-4912-923a-b21cf2d171b8
+  name: GMB
+- id: bc8d1a6b-6f1d-44c5-af36-4e760f496914
+  name: GNB
+- id: 7f8a0cfc-fddf-42bd-91ed-90b165ee0420
+  name: GNQ
 - id: 4f6fb0dd-dc1c-47a6-b975-46cee5a8bffe
   name: GRC
 - id: 9aadf199-a1a7-4e72-b509-7665b8286375
   name: GRD
+- id: d19e2862-da35-4a51-a6f4-2c5644fb072d
+  name: GRL
 - id: 8b01fd3b-26f2-4c02-8f3b-423324d9eaf9
   name: GTM
+- id: f117b2d6-865b-4b82-ac45-abbda3052c10
+  name: GUF
+- id: 6383d8fc-8ccf-40d8-aa2d-a8417a997bc8
+  name: GUM
+- id: 159d60b7-59f4-4b58-8879-3c634890302f
+  name: GUY
+- id: 39171c77-a8aa-4e42-badf-5c499646b47a
+  name: HKG
+- id: eddeff30-2ada-4326-bdb6-8addbb90de3e
+  name: HMD
 - id: 6da71e09-aa86-4209-a2f4-69f2c8c3cb95
   name: HND
 - id: 42d4eb67-3e4c-4936-b6b9-3a57555dd593
@@ -118,20 +202,30 @@
   name: HUN
 - id: c2578b9d-280b-4560-aa2d-a8f405c57bc5
   name: IDN
+- id: c4b3c713-80e0-47bd-99df-301a00949508
+  name: IMN
 - id: b81f74cc-3c44-4dfe-877c-ac72728a3968
   name: IND
+- id: 1562c103-6a9f-4b82-829f-4a79c73db586
+  name: IOT
 - id: 24a40e9f-3f6d-4213-aa45-5cb01c308a72
   name: IRL
 - id: 96375f38-f1be-411b-b3c3-23255a990192
   name: IRN
 - id: 42d5e024-a0bb-411d-92cf-d9a86bf008a7
   name: IRQ
+- id: 996f71f9-e687-4615-8216-48de8eb2ff64
+  name: ISL
 - id: 83dbff0d-e1af-43ef-9d94-0ca6d8849717
   name: ISR
 - id: 63627079-9faa-45c3-9577-f310cc23d71c
   name: ITA
 - id: 289bd30a-1295-4810-8a0c-cf5a4d4796b5
   name: JAM
+- id: 55cb5b6c-d0e1-4e73-878d-23ae019c6755
+  name: JEY
+- id: 123a16e3-66d5-41f1-8384-37f0a9efcb0e
+  name: JOR
 - id: 95f1f975-e3a9-45d2-bb42-ad0c3fd8ab8f
   name: JPN
 - id: d8378f2e-fbdb-4dc8-b8ec-d4b8a9752d12
@@ -146,80 +240,140 @@
   name: KIR
 - id: 6c8b0911-2150-4d24-bd1c-60a144a59b70
   name: KNA
+- id: c322553a-828d-4eac-9a7a-2f308fb36e3b
+  name: KOR
+- id: 3fcfe24d-6885-42ff-9564-45265f61dd7e
+  name: KWT
+- id: f38387fc-ab21-4a55-b168-3db8c5c498d1
+  name: LAO
+- id: b4d5cd37-43d7-4f2a-85f5-2820149320c7
+  name: LBN
 - id: 4c1529da-e05c-4976-b8eb-81b00fcdff8f
   name: LBR
 - id: e19d76bd-d92d-47e7-9f66-9dbf91ae74a1
   name: LBY
 - id: b3315d9d-c2df-4671-a004-268cd7fc2dd7
   name: LCA
+- id: 90accd3b-c141-40a4-b930-b46f6fb88bf1
+  name: LIE
 - id: e02e873c-e7a5-40c6-b933-10ec82cd55b4
   name: LKA
 - id: 061ba30c-4cfd-4f65-8bd2-5c2dfb632462
   name: LSO
 - id: cd27baa2-13c3-4d4a-ac1b-50fadcef088b
   name: LTU
+- id: 40fdef33-52b9-41a2-a771-4fe61d5fda55
+  name: LUX
 - id: 7fd94094-e9fc-421b-a1a1-eda41d1566e2
   name: LVA
+- id: 2580bd95-4a46-4e32-b309-0e9921785c8d
+  name: MAC
+- id: 3c6a34cb-8398-409a-8395-38069d258a1d
+  name: MAF
 - id: be6307c9-bbfb-46b4-b0f4-627571cf14f9
   name: MAR
+- id: d7d05ed8-6d9e-4328-9fc7-b43237918ba0
+  name: MCO
 - id: 8567aedb-928b-4cfb-8d47-40451ed9b211
   name: MDA
 - id: 3fdd65d0-0ac5-4fe3-94bf-90d479cdc908
   name: MDG
+- id: bd7e07b8-ab32-4e18-94c1-84fd2e190931
+  name: MDV
 - id: 68c1c326-1d36-4eb1-86fd-1ae5a1d80284
   name: MEX
+- id: 513640d6-141f-414c-83d6-bf171e33b97e
+  name: MHL
+- id: f4d1cb8e-a598-4235-b9be-86b66f3220cc
+  name: MID
+- id: 338733cb-2a10-48f2-9a22-1525a4de9d13
+  name: MKD
 - id: 0a0d5cd8-4f52-4806-b2bb-82d106b83141
   name: MLI
+- id: b3346f9a-b2e7-4310-838d-45227754476a
+  name: MLT
 - id: 2e3e4f8d-b2af-4765-8d74-a46f72383553
   name: MMR
 - id: 8f786dfb-5bc1-4c2b-9420-a87103d088bc
   name: MNE
 - id: dbad4c39-bba1-4289-8483-70a6f43ced50
   name: MNG
+- id: 913643df-51fd-42d6-a14a-51683059f9bf
+  name: MNP
 - id: e500f4dd-5a48-4261-a51f-f63873c980d1
   name: MOZ
 - id: ad7a924a-6e1b-4112-84d0-1fab69bc5a29
   name: MRT
 - id: 687171c1-af80-425a-a3f9-b2bb3d8b8263
   name: MSR
+- id: b6df0ed1-a4bd-4d06-955b-a874b5d9b25a
+  name: MTQ
+- id: 8194a309-ee96-4f75-adfb-59bb1ef708a2
+  name: MUS
 - id: fbd00857-5914-44b4-800f-21511737e271
   name: MWI
 - id: a3ea4628-1f9d-4c9e-89f4-931bca31033a
   name: MYS
+- id: 7b630870-5183-4d18-a7a9-d00cb2ded907
+  name: MYT
 - id: 313af191-6c4b-45cb-b88d-c67a96aa0a55
   name: NAM
+- id: 53d00a2e-c933-4950-b110-b46b29914647
+  name: NCL
 - id: a351d214-dcd3-4890-803b-e838854bd520
   name: NER
+- id: 0c58bcef-4b13-490b-90c7-1a6ee2fb264c
+  name: NFK
 - id: 3b120b9c-ed01-4d98-840e-a2c3fbf9f6a4
   name: NGA
 - id: 4affd930-3f1c-4ab7-9b13-f0b757e67b30
   name: NIC
+- id: dd976089-5032-4b8f-828a-afd8e4c4f986
+  name: NIU
 - id: 33a843f5-140c-4399-b57a-47198a21d5e4
   name: NLD
 - id: dbe0d74a-4825-4209-a71a-68188b7e7e6b
   name: NOR
 - id: 46f63df9-03f9-4d86-8063-8829507f6c33
   name: NPL
+- id: 39dcae73-482a-4db4-b314-95d3d4a3ac5d
+  name: NRU
 - id: 4c5fe1a8-eca9-4718-89f3-df940b23925d
   name: NZL
+- id: 941387be-e1b9-48df-97f8-d4bd7856fc94
+  name: OMN
 - id: 8d21af46-4478-4026-95a0-d13b86f4ae80
   name: PAK
 - id: f0952737-84ed-433f-aba7-7caa9e4ee8af
   name: PAN
+- id: fc2be24e-cd0a-4fb8-b908-ab9dab7a8b2a
+  name: PCN
 - id: 66dff706-2ceb-4159-b1b6-2876cb64a4a0
   name: PER
 - id: bdc12c79-7862-41f1-9659-4162ab751956
   name: PHL
+- id: 44b882d3-96a4-464a-b2d4-ca13ebe6a006
+  name: PLW
 - id: 0f9911b0-8e96-414e-8377-5dfef6bbfba3
   name: PNG
 - id: bb14c1e3-78f8-4c81-b40a-8d61cb0d3580
   name: POL
+- id: 015e4711-fc85-4cb9-ba55-de3441a8b2a5
+  name: PRI
+- id: e0f40bc9-4a30-41f1-a2bf-ee1f83f67c27
+  name: PRK
 - id: a4ecce86-e0d5-4c09-8665-1b6ba6c5fd24
   name: PRT
 - id: c064d247-8efa-4760-ad7f-f0dfcb057fdc
   name: PRY
 - id: 7085cdac-afa4-43e2-96a0-43aa60ebd226
   name: PSE
+- id: f52f162c-d345-4cdc-b1c7-74ccc69f222e
+  name: PYF
+- id: aa674b65-d176-4b22-b605-61dd5557b174
+  name: QAT
+- id: cf6b20c7-8e90-4fee-9910-d5cd76ff9b29
+  name: REU
 - id: 1757f732-8b7a-4150-aa53-38619b21f309
   name: ROU
 - id: f0c8d1f3-a064-405d-ad38-db498d5de577
@@ -232,16 +386,34 @@
   name: SDN
 - id: 85d28e15-c9ad-49ea-bb30-8f4923d2eb9b
   name: SEN
+- id: 7bfc2308-3e5f-48bb-b530-3f1d78e63919
+  name: SGP
+- id: c1cfc09e-e1d4-47af-95ae-e71ab2e26f51
+  name: SGS
+- id: 1376b410-3b7f-48c4-afc7-eefdced1b0ee
+  name: SHN
+- id: 191f73ce-95e8-4b6c-bc6b-12198629cb80
+  name: SJM
+- id: 547bafac-ab4a-4c38-a206-f5d81f182739
+  name: SLB
 - id: f47f6b41-77e0-4d42-be57-8917c089053f
   name: SLE
 - id: 0fc32900-0e59-46e4-9f7a-b156be010091
   name: SLV
+- id: 77154c5c-2dce-4c04-afa8-dd3f990bb9a8
+  name: SMR
+- id: d94a29cf-4a97-4478-b2cc-5caa378a5b38
+  name: SOM
+- id: 47ae337f-1600-4d3a-b524-30aa5bdf497a
+  name: SPM
 - id: b4716fac-20a3-4fbe-936a-9075746414e2
   name: SRB
 - id: c9504376-fcf7-491c-95c5-3f0eee457b27
   name: SSD
 - id: 8039f4d7-31a4-4870-b330-2d817c6a476d
   name: STP
+- id: 4f8ef021-80d4-45d7-82fc-727849abc32e
+  name: SUR
 - id: b0215c78-ad76-4c8a-8016-1b466b0aeeca
   name: SVK
 - id: 65968610-0cc6-412b-90a1-c003d8a16fe3
@@ -250,22 +422,38 @@
   name: SWE
 - id: 147cd544-af21-4e01-8174-4632287d9331
   name: SWZ
+- id: e919e14e-61ef-4c81-ba91-878c9ca691c2
+  name: SXM
+- id: 8bfae4c3-0fb7-405e-ab51-cbb139912375
+  name: SYC
 - id: 40051166-106f-4369-b72a-4f6c317a1d61
   name: SYR
 - id: a0198d9e-e2cf-4f6f-974a-b3f9f369d691
   name: TCA
+- id: 3f3524e7-03ac-4b39-9524-568874988a62
+  name: TCD
 - id: 7b9b41c3-1b37-4e6d-896d-db72bd0b277f
   name: TGO
 - id: 9d120955-2d58-4d93-b55a-4a472bd3e6fa
   name: THA
 - id: 5812d3ef-498a-422c-bfef-52aa571da41f
   name: TJK
+- id: 0d92dec8-2481-4339-85b7-a23f7ce9098e
+  name: TKL
+- id: 951ea08f-11e6-47e8-995f-d6ebf02df68e
+  name: TKM
+- id: cab19578-f4ff-48b9-8e93-a23417885452
+  name: TLS
+- id: 32cbb4ed-3a4d-4d6e-a8a2-905b6559288a
+  name: TON
 - id: 64ff2ef5-a76a-4288-8408-f69bf84373ef
   name: TTO
 - id: 7bac65c3-19b4-46ef-9fa4-867ea763dc91
   name: TUN
 - id: 175675ec-f965-4f6a-900f-94dba0e4abfd
   name: TUR
+- id: 14ec886d-2968-47e9-a6a8-6f58d9880ed0
+  name: TUV
 - id: 60385b72-636c-489d-abdd-1544f604fa73
   name: TWN
 - id: 8f1d419e-b4df-4cf6-affd-2f30e5fe8df3
@@ -280,14 +468,28 @@
   name: USA
 - id: e52b5b55-16f2-4881-8992-54b22691a4d4
   name: UZB
+- id: 416ec9d9-4e07-40ee-9bb8-04f2a30faccf
+  name: VAT
 - id: 13c91f07-d450-4838-ba2f-eb2d602d338a
   name: VCT
 - id: b34b8a3a-5b03-4c27-93a7-ca315dc2cda4
   name: VEN
 - id: 81ed8593-36ca-4ae4-8596-e7fd58dd0981
   name: VGB
+- id: 6045a838-dcbc-4621-b1f2-3e0ce66dce80
+  name: VIR
 - id: 26f953b2-01de-4356-a881-225e83268697
   name: VNM
+- id: 863d2966-5002-4ce2-9a8a-ff97613f7d78
+  name: VUT
+- id: c6bf59c4-baf5-4654-9406-907e54a8eef8
+  name: WLF
+- id: f342209f-996a-41cf-b33c-0f7f94a874f5
+  name: WSM
+- id: 5a092866-d3e2-4c76-a4c7-4e92cfd1f170
+  name: XKX
+- id: 38e1be5b-5066-4a0d-a9c9-bba6a53a0c12
+  name: YEM
 - id: 1d668ded-c276-4592-805e-8fc2604ef477
   name: ZAF
 - id: 6bbd32bc-6d3d-4533-a086-47894840e82e
