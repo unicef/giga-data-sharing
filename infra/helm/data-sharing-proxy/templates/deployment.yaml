@@ -91,7 +91,7 @@ spec:
           command:
             - /bin/bash
             - -c
-            - python -m scripts.load_fixtures roles api_keys
+            - python -m scripts.load_fixtures roles schemas api_keys
           envFrom:
             {{- range .Values.envSecrets }}
             - secretRef:

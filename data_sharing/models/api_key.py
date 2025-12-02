@@ -17,12 +17,49 @@ apikey_role_association_table = sa.Table(
     sa.Column("role_id", sa.ForeignKey("roles.id", ondelete="CASCADE"), nullable=False),
 )
 
+apikey_schema_association_table = sa.Table(
+    "apikey_schema_association_table",
+    BaseModel.metadata,
+    sa.Column(
+        "api_key_id", sa.ForeignKey("api_keys.id", ondelete="CASCADE"), nullable=False
+    ),
+    sa.Column("schema_id", sa.ForeignKey("schemas.id", ondelete="CASCADE"), nullable=False),
+)
+
+schema_role_association_table = sa.Table(
+    "schema_role_association_table",
+    BaseModel.metadata,
+    sa.Column(
+        "schema_id", sa.ForeignKey("schemas.id", ondelete="CASCADE"), nullable=False
+    ),
+    sa.Column("role_id", sa.ForeignKey("roles.id", ondelete="CASCADE"), nullable=False),
+)
+
+
+class Schema(BaseModel):
+    __tablename__ = "schemas"
+
+    id: Mapped[str] = mapped_column(sa.VARCHAR(50), primary_key=True, index=True)
+    description: Mapped[str] = mapped_column(nullable=False)
+    roles: Mapped[set["Role"]] = relationship(
+        secondary=schema_role_association_table,
+        lazy="selectin",
+        cascade="all,delete",
+        back_populates="schemas",
+    )
+
 
 class Role(BaseModel):
     __tablename__ = "roles"
 
     id: Mapped[str] = mapped_column(sa.VARCHAR(5), primary_key=True, index=True)
     description: Mapped[str] = mapped_column(nullable=False)
+    schemas: Mapped[set[Schema]] = relationship(
+        secondary=schema_role_association_table,
+        lazy="selectin",
+        cascade="all,delete",
+        back_populates="roles",
+    )
 
 
 class ApiKey(BaseModel):
@@ -39,6 +76,11 @@ class ApiKey(BaseModel):
     )
     roles: Mapped[set[Role]] = relationship(
         secondary=apikey_role_association_table,
+        lazy="selectin",
+        cascade="all,delete",
+    )
+    schemas: Mapped[set[Schema]] = relationship(
+        secondary=apikey_schema_association_table,
         lazy="selectin",
         cascade="all,delete",
     )

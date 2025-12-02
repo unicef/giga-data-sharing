@@ -165,3 +165,8 @@ cython_debug/
 conf/
 secrets.yaml
 profile.json
+
+# Local testing documentation
+SETUP_DATABASE.md
+SWAGGER_TESTING.md
+setup.sh

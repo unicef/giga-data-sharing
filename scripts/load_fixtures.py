@@ -10,7 +10,7 @@ from sqlalchemy.dialects.postgresql import insert
 from data_sharing import models
 from data_sharing.db import get_db_context
 from data_sharing.internal.hashing import get_key_hash
-from data_sharing.models import ApiKey, Role
+from data_sharing.models import ApiKey, Role, Schema
 from data_sharing.settings import settings
 
 

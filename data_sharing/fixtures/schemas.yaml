@@ -1,0 +1,16 @@
+- fields:
+    description: School Master schema
+  id: school-master
+  model: Schema
+- fields:
+    description: School Reference schema
+  id: school-reference
+  model: Schema
+- fields:
+    description: Quality of Service (QoS) schema
+  id: qos
+  model: Schema
+- fields:
+    description: Health Master schema
+  id: health-master
+  model: Schema
