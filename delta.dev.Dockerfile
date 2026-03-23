@@ -4,7 +4,7 @@ RUN apt update && \
     apt install -y wget unzip && \
     apt clean
 
-ARG DELTA_SHARING_VERSION=1.0.4
+ARG DELTA_SHARING_VERSION=1.1.1
 
 WORKDIR /tmp
 

@@ -1,6 +1,6 @@
 FROM maven:3.9-eclipse-temurin-11-focal AS deps
 
-ARG DELTA_SHARING_VERSION=1.0.4
+ARG DELTA_SHARING_VERSION=1.1.1
 
 RUN apt update && \
     apt install -y wget unzip && \
