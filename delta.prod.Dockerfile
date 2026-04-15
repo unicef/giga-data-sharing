@@ -1,25 +1,37 @@
-FROM maven:3.9-eclipse-temurin-11-focal AS deps
+FROM eclipse-temurin:11-jdk-focal AS deps
 
-ARG DELTA_SHARING_VERSION=1.0.4
+ARG DELTA_SHARING_VERSION=1.3.10
 
-RUN apt update && \
-    apt install -y wget unzip && \
-    apt clean
+RUN apt-get update && \
+    apt-get install -y wget unzip curl && \
+    apt-get clean
 
-WORKDIR /tmp
+WORKDIR /build
 
-RUN wget "https://github.com/delta-io/delta-sharing/releases/download/v$DELTA_SHARING_VERSION/delta-sharing-server-$DELTA_SHARING_VERSION.zip" && \
-    unzip "delta-sharing-server-$DELTA_SHARING_VERSION.zip" && \
-    mv "delta-sharing-server-$DELTA_SHARING_VERSION" delta-sharing-server
+# Download source
+RUN wget "https://github.com/delta-io/delta-sharing/archive/refs/tags/v${DELTA_SHARING_VERSION}.zip" \
+    -O source.zip && unzip source.zip
 
-FROM eclipse-temurin:11-jre-alpine as prod
+WORKDIR /build/delta-sharing-${DELTA_SHARING_VERSION}
 
-RUN apk add --no-cache bash libc6-compat
+RUN chmod +x build/sbt
+
+RUN build/sbt server/universal:packageBin
+
+RUN ZIP_FILE=$(ls server/target/universal/delta-sharing-server-*.zip) && \
+    unzip "$ZIP_FILE" -d /build/output && \
+    mv /build/output/delta-sharing-server-* /build/delta-sharing-server
+
+
+FROM eclipse-temurin:11-jre-focal AS prod
 
 WORKDIR /app
 
-COPY --from=deps /tmp/delta-sharing-server ./
+COPY --from=deps /build/delta-sharing-server ./
+
 COPY ./delta-prod-docker-entrypoint.sh ./docker-entrypoint.sh
 COPY ./conf-template ./conf
 
-ENTRYPOINT [ "./docker-entrypoint.sh" ]
+RUN chmod +x ./docker-entrypoint.sh
+
+ENTRYPOINT ["./docker-entrypoint.sh"]
