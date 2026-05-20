@@ -2,7 +2,6 @@ FROM eclipse-temurin:11-jdk-focal AS builder
 
 RUN apt-get update && apt-get install -y wget unzip curl
 
-
 ARG DELTA_SHARING_VERSION=1.3.10
 
 WORKDIR /build
@@ -11,6 +10,8 @@ RUN wget "https://github.com/delta-io/delta-sharing/archive/refs/tags/v${DELTA_S
     -O source.zip && unzip source.zip
 
 WORKDIR /build/delta-sharing-${DELTA_SHARING_VERSION}
+
+RUN sed -i 's/"io.delta" %% "delta-standalone" % "3.2.0" % "provided"/"io.delta" %% "delta-standalone" % "3.2.0"/' build.sbt
 
 RUN chmod +x build/sbt && build/sbt server/universal:packageBin
 
