@@ -53,7 +53,7 @@ spec:
                 - /bin/sh
                 - -c
                 - >-
-                  wget --spider
+                  wget -q -O /dev/null
                   --header "Authorization: Bearer $DELTA_BEARER_TOKEN"
                   http://localhost:{{ .Values.service.port }}/sharing/shares
           readinessProbe:
@@ -62,7 +62,7 @@ spec:
                 - /bin/sh
                 - -c
                 - >-
-                  wget --spider
+                  wget -q -O /dev/null
                   --header "Authorization: Bearer $DELTA_BEARER_TOKEN"
                   http://localhost:{{ .Values.service.port }}/sharing/shares
 
