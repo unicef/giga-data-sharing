@@ -35,7 +35,7 @@ services:
       - ./.venv-docker:/app/.venv
 
   db:
-    image: public.ecr.aws/bitnami/postgresql:16
+    image: uniappsoigiga.azurecr.io/bitnami/postgresql:16.1.0-debian-11-r13
     restart: unless-stopped
     init: true
     env_file: .env
