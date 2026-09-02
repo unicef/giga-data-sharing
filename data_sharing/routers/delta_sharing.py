@@ -1,3 +1,4 @@
+import asyncio
 from datetime import datetime
 from typing import Annotated, Any, Literal, Optional
 
@@ -36,6 +37,7 @@ from data_sharing.schemas.delta_sharing import TableVersion
 from data_sharing.settings import settings
 from data_sharing.utils.qs import query_parametrize
 from data_sharing.utils.responses import NDJSONResponse
+from data_sharing.utils.storage import get_tables_with_data
 
 router = APIRouter(
     tags=["delta_sharing"],
@@ -154,11 +156,11 @@ async def list_schemas(
     )
     if error:
         return sharing_res
-    
+
     # Filter schemas based on permissions
     role_codes = [r.id for r in current_user.roles]
     schema_ids = [s.id for s in current_user.schemas]
-    
+
     if "ADMIN" not in role_codes:
         if schema_ids:
             sharing_res["items"] = list(
@@ -166,7 +168,7 @@ async def list_schemas(
             )
         else:
             sharing_res["items"] = []
-    
+
     return sharing_res
 
 
@@ -197,7 +199,7 @@ async def list_tables(
 
     role_codes = [r.id for r in current_user.roles]
     schema_ids = [s.id for s in current_user.schemas]
-    
+
     if "ADMIN" not in role_codes:
         # Filter by schema
         if schema_name not in schema_ids:
@@ -207,6 +209,12 @@ async def list_tables(
             sharing_res["items"] = list(
                 filter(lambda s: s["name"] in role_codes, sharing_res["items"])
             )
+
+    if sharing_res["items"]:
+        existing = await get_tables_with_data(schema_name)
+        sharing_res["items"] = [
+            item for item in sharing_res["items"] if item["name"] in existing
+        ]
 
     return sharing_res
 
@@ -241,6 +249,22 @@ async def list_tables_in_share(
         sharing_json["items"] = list(
             filter(lambda s: s["name"] in role_codes, sharing_json["items"])
         )
+
+    if sharing_json["items"]:
+        schema_names = {item["schema"] for item in sharing_json["items"]}
+        existing_by_schema = dict(
+            zip(
+                schema_names,
+                await asyncio.gather(*(get_tables_with_data(s) for s in schema_names)),
+                strict=True,
+            )
+        )
+        sharing_json["items"] = [
+            item
+            for item in sharing_json["items"]
+            if item["name"] in existing_by_schema[item["schema"]]
+        ]
+
     return sharing_json
 
 
