@@ -12,4 +12,4 @@ sed -e "s!{{.DELTA_BEARER_TOKEN}}!$DELTA_BEARER_TOKEN!" \
     -e "s|{{.CONTAINER_PATH}}|$CONTAINER_PATH|" \
     -i conf/delta-sharing-server.yaml
 
-./bin/delta-sharing-server -- --config ./conf/delta-sharing-server.yaml
+./bin/delta-sharing-server --config ./conf/delta-sharing-server.yaml
